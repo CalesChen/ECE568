@@ -130,3 +130,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'polls-index'
 LOGIN_URL = 'login'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = '2500578242@qq.com'
+EMAIL_HOST_PASSWORD = 'klnegerwcfmfdhic'
+EMAIL_PORT = 568

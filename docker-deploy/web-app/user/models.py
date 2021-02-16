@@ -35,7 +35,6 @@ class Ride(models.Model):
     can_Shared = models.BooleanField(default=False)
     sharer = models.ManyToManyField(User, blank=True, related_name='sharer')
     owner= models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner')
-
     STATUS = (
         ('open', 'open'),
         ('confirmed', 'confirmed'),
@@ -45,3 +44,11 @@ class Ride(models.Model):
 
     def __str__(self):
         return self.destination
+
+class Driver(models.Model):
+    driver = models.ForeignKey(User, on_delete=models.CASCADE)
+    ride = models.ForeignKey(Ride, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.ride.destination} by {self.driver.username}'
+

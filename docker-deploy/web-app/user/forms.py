@@ -1,7 +1,7 @@
 from django import forms
 from user.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, Vehicle, Ride
+from .models import Profile, Vehicle, Ride, Driver
 from datetime import datetime, timedelta, tzinfo
 
 class UserRegisterForm(UserCreationForm):
@@ -35,6 +35,10 @@ class VehicleUpdateForm(forms.ModelForm):
         model = Vehicle 
         fields = ['type', 'license_number', 'capacity', 'comment']
 
+class DateTimeInput(forms.DateTimeInput):
+    input_type = 'datetime-local'
+
+
 class RideRequestForm(forms.ModelForm):
     destination = forms.CharField()
     arrival_time = forms.DateTimeField()
@@ -45,3 +49,28 @@ class RideRequestForm(forms.ModelForm):
     class Meta:
         model = Ride
         fields = ['destination', 'arrival_time', 'passenger_number', 'vehicle_type', 'special_request', 'can_Shared']
+
+class RideSearchForm(forms.Form):
+    destination = forms.CharField()
+    earliest_time = forms.DateTimeField(
+        input_formats = ['%Y-%m-%dT%H:%M'],
+        widget = DateTimeInput(
+            format='%Y-%m-%dT%H:%M',
+            attrs={'type': 'datetime-local'})
+        )
+
+    latest_time = forms.DateTimeField(
+        input_formats = ['%Y-%m-%dT%H:%M'],
+        widget = DateTimeInput(
+            format='%Y-%m-%dT%H:%M',
+            attrs={'type': 'datetime-local'})
+        )
+    passenger_number = forms.IntegerField()
+    #is_shared = forms.ChoiceField(initial=2,choices=((1, 'True'),(2,'False')))
+    
+class DriverUpdateForm(forms.ModelForm):
+    driver = User
+    ride = Ride
+    class Meta:
+        model = Driver 
+        fields = ['driver', 'ride']

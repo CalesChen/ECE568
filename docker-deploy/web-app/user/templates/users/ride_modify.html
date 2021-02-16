@@ -5,11 +5,11 @@
         <form method = "POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class = "border-bottom mb-4">Request Ride</legend>
+                <legend class = "border-bottom mb-4">Modify Ride</legend>
                 {{ form|crispy }}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outpline-info" type="submit">Request</button>
+                <button class="btn btn-outpline-info" type="submit">Update</button>
             </div>
         </form>
         <div class="border-top pt-3">
