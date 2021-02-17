@@ -22,7 +22,9 @@
             {% if ride.status == 'open' %}
                 <h2><a class="article-title" href="/ride_request_modify/{{ride.id}}/">Modify</a></h2>
             {% elif ride.status == 'confirmed'%}
-            <h2>Confirmed</h2>
+                <h2>Confirmed</h2>
+            {% else%}
+                <h2>Completed</h2>
             {% endif %}
         </article>
     {% endfor %}

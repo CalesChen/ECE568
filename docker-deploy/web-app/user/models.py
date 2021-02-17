@@ -14,7 +14,7 @@ class Profile(models.Model):
     is_driver = models.CharField(default='User', max_length=10)
 
     def __str__(self):
-        return f'{self.user.username} Driver'
+        return f'{self.user.username} Profile'
 
 class Vehicle(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
