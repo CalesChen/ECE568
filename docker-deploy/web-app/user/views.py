@@ -132,7 +132,7 @@ def user_ride_search(request):
             early_time =  form.cleaned_data['earliest_time']
             late_time = form.cleaned_data['latest_time']
             passenger_number = form.cleaned_data['passenger_number']
-            ride = Ride.objects.filter(arrival_time__range=(early_time,late_time), destination = dest, passenger_number__lt=passenger_number, status = 'open')
+            ride = Ride.objects.filter(arrival_time__range=(early_time,late_time), destination = dest, passenger_number__lte=passenger_number, status = 'open')
             #ride = Ride.objects.all()
             context['rides']=ride
             print(ride)
