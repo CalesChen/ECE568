@@ -1,0 +1,24 @@
+ERSS HW1 Django Web-App
+
+KeChen & Xuesen Wen
+
+Danger Log
+
+2/5
+We are designing the DateBase Structure. In the Process, we have trouble in whether create different table for Ride&User, that means we have a dependent table which only has two Foreign Keys Ride & User. Also, we can use many2many Field. For integrity of our code, we finally decide to use the many2many Field in the Ride. 
+
+For the User, we have thought using django default User rather than design it by ourself. As The Defaul User will have password Hash and other useful tools to make our web-app more robust. 
+
+2/10
+Profile Page can be accessed even though The Use has logged out. 
+In Watching the Vedio, we have found the solution. We can just add a @login_required decorator to solve this. After this, we are only able to access the profile page with authenticated users. And We believe every time we write code about it, we need to use this decorator.
+
+2/13
+In Ride search, how can we filter the range?
+in *.objects.filter(), the '.' access symbol has been replaced by __( 2*_  ), and there is a lot of range. such as __range, __lt, __gt .etc. 
+
+2/15
+We need to access sharer of the Ride, in this process, we need to add .all() to access it.
+In POST request, as there is no User&Ride model, I have to pass the Ride id into the POST OR I may not be able to access the Required Ride. But for vehicle model, there is a one2one field, which helps me to locate it. 
+
+
