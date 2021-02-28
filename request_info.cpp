@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
+  
+#include "request_info.h"
 
 
 void request::getHeader_body_contentLen(){
-	size_t pos_header_end = request.find('\r\n\r\n');
+	size_t pos_header_end = request.find("\r\n\r\n");
 	header = request.substr(0,pos_header_end);
 	if(method = "GET"){
 		body = NULL;
