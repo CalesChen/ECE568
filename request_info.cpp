@@ -4,7 +4,7 @@
 #include "request_info.h"
 
 
-void request::getHeader_body_contentLen(){
+void request_info::getHeader_body_contentLen(){
 	size_t pos_header_end = request.find("\r\n\r\n");
 	header = request.substr(0,pos_header_end);
 	if(method = "GET"){
@@ -18,7 +18,7 @@ void request::getHeader_body_contentLen(){
 	}
 }
 
-void getRequestLine(){
+void request_info::getRequestLine(){
 	size_t line_end = request.find("\r\n");
 	request_line = request.substr(0,line_end);
 }
@@ -38,7 +38,7 @@ void request_info::getHost(){
 	//?????
 }
 
-void parseRequest(){
+void request_info::parseRequest(){
 	getHeader_body_contentLen();
 	getRequestLine();
 	getMethod_URI();
