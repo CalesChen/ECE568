@@ -3,6 +3,7 @@
 
 class request_info{
   public:
+    //加一个port的处理！！！！！！！
   	std::string request;
     std::string host;
     std::string method;
@@ -11,6 +12,7 @@ class request_info{
     std::string header;
     std::string body;
     std::string content_len;
+    std::string port;
 
     request_info(std::string request):request(request){
     	parseRequest();
@@ -18,7 +20,7 @@ class request_info{
 	void getHeader_body_contentLen();
 	void getRequestLine();
     void getMethod_URI();
-    void getHost();
+    void getHost_port();
     void parseRequest();
   
 }
