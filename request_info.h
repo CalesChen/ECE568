@@ -23,4 +23,4 @@ class request_info{
     void getHost_port();
     void parseRequest();
   
-}
+};

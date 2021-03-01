@@ -2,7 +2,16 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctime>
+#include <fstream>
+#include <vector>
+#include <cstring>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <unistd.h>
 #include "request_info.h"
+#include "proxy.h"
+
 std::ofstream logFile("/var/log/erss/proxy.log");
 //必须要用portNUM吗 这是谁的portnum？？？？？？？？？
 //502报错是啥玩意儿 what's bad gateway？？？？？
@@ -25,10 +34,11 @@ void Proxy::handleProxy(){
 
 void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip){
 	//初始化？？？？？？？？？？
-	 vector<char> ori_request(1, 0);
+	 std::vector<char> ori_request(1, 0);
 	 //################
 	 //receive original message
-	 int size_req = receive(client_fd,&ori_request.data()[index],1,0);
+	 int index = 0;
+	 int size_req = recv_message(client_fd,&ori_request.data()[index],1,0);
 	 //convert it  to string and parse it
 	 std::string request;
 	 request.insert(request.begin(),ori_request.begin(),ori_request.end());
@@ -73,7 +83,7 @@ std::string Proxy::getCurrTime(){
 // }
 
 // Call this function when the HTTP is Chunk
-int Proxy::recv_message(int socket_fd, vector<char> * buffer, bool isChunk){
+int Proxy::recv_message(int socket_fd, std::vector<char> * buffer, bool isChunk){
     // May be parallel later
     int recv_len = 0;
     int i = 0;
@@ -100,7 +110,7 @@ int Proxy::recv_message(int socket_fd, vector<char> * buffer, bool isChunk){
     }
 }
 
-bool check_HTTP_tail_Chunk(vector<char> * response){
+bool check_HTTP_tail_Chunk(std::vector<char> * response){
     size_t len = (*response).size();
     if((*response)[len - 5] == '0' && (*response)[len - 4] == '\r' && (*response)[len - 3] == '\n' &&
        (*response)[len - 2] == '\r' && (*response)[len - 1] == '\n'){
@@ -109,7 +119,7 @@ bool check_HTTP_tail_Chunk(vector<char> * response){
     return false;
 }
 
-bool check_HTTP_tail(vector<char> * response){
+bool check_HTTP_tail(std::vector<char> * response){
     size_t len = (*response).size();
     if((*response)[len - 4] == '\r' && (*response)[len - 3] == '\n' &&
        (*response)[len - 2] == '\r' && (*response)[len - 1] == '\n'){

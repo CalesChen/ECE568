@@ -6,13 +6,18 @@
 #include "response.h"
 
 
-void response::getHeader_body(){
+void Response::getHeader_body(){
 	size_t pos_header_end = response.find("\r\n\r\n");
 	header = response.substr(0,pos_header_end);
-	body = request.substr(pos_header_end+4);
+	body = response.substr(pos_header_end+4);
 }
 
-void response::getStatus(){
+void Response::getFirstLine(){
+	size_t pos_FirstLine = response.find("\r\n");
+	firstLine = response.substr(0,pos_FirstLine);
+}
+
+void Response::getStatus(){
 	size_t pos_status = header.find(" ");
 	std::string mid_status = header.substr(pos_status);
 	size_t pos_status_end = mid_status.find("\r\n");
@@ -20,37 +25,42 @@ void response::getStatus(){
 
 }
 
-void response::getTransferEncoding(){
+void Response::getTransferEncoding(){
 	size_t pos_TransferEncoding = response.find("Transfer-Encoding:");
-	if(pos_TransferEncoding!=string::npos){
+	if(pos_TransferEncoding!=std::string::npos){
 		std::string mid_TransferEncoding = response.substr(pos_TransferEncoding);
 		size_t pos_TransferEncoding_end = mid_TransferEncoding.find("\r\n");
-		Transfer-Encoding = mid_TransferEncoding.substr(0,pos_TransferEncoding_end);
+		TransferEncoding = mid_TransferEncoding.substr(0,pos_TransferEncoding_end);
 	}
 }
 
-void response::getcontent_len(){
+void Response::getcontent_len(){
 	size_t pos_content_len = response.find("Content-Length:");
-	if(pos_content_len!=string::npos){
+	if(pos_content_len!=std::string::npos){
 		std::string mid_content_len = response.substr(pos_content_len);
 		size_t pos_content_len_end = mid_content_len.find("\r\n");
-		Transfer-Encoding = mid_content_len.substr(0,pos_content_len_end);
+		std::string content_len_str = mid_content_len.substr(0,pos_content_len_end);
+		content_len = atoi(content_len_str.c_str());
 	}
 }
 
-void getCacheControl(){
+void Response::getCacheControl_MaxAge(){
 	size_t pos_CacheControl = response.find("Transfer-Encoding:");
-	if(pos_CacheControl!=string::npos){
+	if(pos_CacheControl!=std::string::npos){
 		std::string mid_CacheControl = response.substr(pos_CacheControl);
 		size_t pos_CacheControl_end = mid_CacheControl.find("\r\n");
 		CacheControl = mid_CacheControl.substr(0,pos_CacheControl_end);
 	}
+	if(CacheControl.find("max-age")!=std::string::npos){
+		size_t pos_maxAge = CacheControl.find("=");
+		maxAge = atoi(CacheControl.substr(pos_maxAge+2));
+	}
 }
 
 
-time_t response::getDate_convert(){
+time_t Response::getDate_convert(){
 	size_t pos_date = response.find("Date:");
-	if(pos_date!=string::npos){
+	if(pos_date!=std::string::npos){
 		std::string mid_date = response.substr(pos_date);
 		size_t pos_date_end = mid_date.find("\r\n");
 		date = mid_date.substr(0,pos_date_end);
@@ -61,12 +71,12 @@ time_t response::getDate_convert(){
 	return convertedDate;
 }
 
-time_t response::getExpires_convert(){
+time_t Response::getExpires_convert(){
 	size_t pos_expires = response.find("Expires:");
-	if(pos_expires!=string::npos){
-		std::string mid_expires = response.substr(pos_expires);
+	if(pos_expires!=std::string::npos){
+		std::string mid_expires = response.substr(pos_expires+9);
 		size_t pos_expires_end = mid_expires.find("\r\n");
-		Expires = mid_expires.substr(0,pos_expires_end);
+		std::string Expires = mid_expires.substr(0,pos_expires_end);
 	}
 
 	tm tm_;
@@ -75,15 +85,54 @@ time_t response::getExpires_convert(){
 	return convertedExpires;
 }
 
-bool response::timeValid(){
-	if(convertedDate>convertedExpires){
+
+bool Response::timeValid(int thread_id){
+	time_t now =time(0);
+	if(now>convertedExpires){
+		std::ofstream file;
+   		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+    	file << thread_id << " : "<< "in cache, but expired at "<< Expires <<std::endl;
+    	file.close();
 		return false;
-	} else {
-		return true;
+	} 
+	if(maxAge!=NULL){
+		if(maxAge + convertedDate <= now){
+			//有别的方法进行转换嘛？？？？？？？
+		    time_t exipTime = maxAge + convertedDate;
+  			struct tm * tm = gmtime(&exipTime);
+  			//const char * time = asctime(tm);
+  			//有别的方法写到logfile里嘛
+			std::ofstream file;
+   			file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+    		file << thread_id << " : "<< "in cache, but expired at "<< std::string(asctime(tm)) <<std::endl;
+    		file.close();
+			return false;
+		} 
+	}
+	return true;
+}
+
+void Response::getEtag(){
+	size_t pos_Etag = response.find("ETag:");
+	if(pos_Etag!=std::string::npos){
+		std::string mid_Etag = response.substr(pos_Etag+9);
+		size_t pos_Etag_end = mid_Etag.find("\r\n");
+		Etag = mid_Etag.substr(0,pos_Etag_end);
 	}
 }
 
-void response::parseResponse(){
+
+void Response::getLastModified(){
+	size_t pos_LastModified = response.find("Last-Modified: ");
+	if(pos_LastModified!=std::string::npos){
+		std::string mid_LastModified = response.substr(pos_LastModified+9);
+		size_t pos_LastModified_end = mid_LastModified.find("\r\n");
+		LastModified = mid_LastModified.substr(0,pos_LastModified_end);
+	}
+}
+
+
+void Response::parseResponse(){
 	getHeader_body();
 	getStatus();
 	getTransferEncoding();
@@ -91,6 +140,8 @@ void response::parseResponse(){
     getCacheControl();
     getDate_convert();
    	getExpires_convert();
+   	getEtag();
+   	getLastModified();
 
 }
 

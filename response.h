@@ -3,22 +3,26 @@
 #include <stdlib.h>
 #include <string.h>
 
-class response{
+class Response{
   public:
   	std::string response;
     std::string status;
     std::string date;
-    std::string Content-Type;
+    std::string ContentType;
     std::string Expires;
-    std::string Transfer-Encoding;
+    int maxAge;
+    std::string TransferEncoding;
     std::string header;
     std::string body;
-    std::string content_len;
+    int content_len;
     std::string CacheControl;
+    std::string Etag;
+    std::string lastModified;
+    std::string firstLine;
     time_t convertedDate;
     time_t convertedExpires;
 
-    request_info(std::string response):response(response){
+    Response(std::string response):response(response){
     	parseResponse();
     }
 	void getHeader_body();
@@ -29,6 +33,9 @@ class response{
     time_t getExpires_convert();
     void getCacheControl();
     bool timeValid();
+     void getEtag();
+    void getLastModified();
     void parseResponse();
+   
   
-}
+};
