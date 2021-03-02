@@ -1,4 +1,3 @@
-#include "response.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,6 +16,8 @@
 #include <netdb.h>
 #include <unistd.h>
 #include "helper.cpp"
+#include "response.h"
+#include "proxy.h"
 
 class Cache{
 	public:
@@ -30,4 +31,4 @@ class Cache{
 		Response getCache(std::string url, int oriServer_fd, int thread_id, std::string request);
 		void putCache(Response response, std::string url, int thread_id);
 
-}
+};

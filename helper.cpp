@@ -1,12 +1,4 @@
-#include <iostream>
-#include <cstring>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <unistd.h>
-
-#include <arpa/inet.h>
-
-using namespace std;
+#include "helper.h"
 
 int server_start(const char * port){
 
@@ -99,7 +91,7 @@ int client_start(const char * hostname, const char * port){
 }
 
 
-int server_accept(int socket_fd, string * ip){
+int server_accpet(int socket_fd, string * ip){
   struct sockaddr_storage socket_addr;
   socklen_t socket_addr_len = sizeof(socket_addr);
   int client_connection_fd;
@@ -115,3 +107,55 @@ int server_accept(int socket_fd, string * ip){
   
   return client_connection_fd;
 }
+
+//Receve message related Function. 
+bool check_HTTP_tail_Chunk(vector<char> * response){
+    size_t len = (*response).size();
+    if((*response)[len - 5] == '0' && (*response)[len - 4] == '\r' && (*response)[len - 3] == '\n' &&
+       (*response)[len - 2] == '\r' && (*response)[len - 1] == '\n'){
+           return true;
+       }
+    return false;
+}
+
+bool check_HTTP_tail(vector<char> * response){
+    size_t len = (*response).size();
+    if((*response)[len - 4] == '\r' && (*response)[len - 3] == '\n' &&
+       (*response)[len - 2] == '\r' && (*response)[len - 1] == '\n'){
+           return true;
+       }
+    return false;
+}
+
+
+int recv_message(int socket_fd, vector<char> * buffer, bool isChunk){
+    // May be parallel later
+    // If the buffer is not initial, then resize it. 
+    if(buffer->size() != 1 ) {
+        buffer->resize(buffer->size() + 1);
+    }
+    int recv_len = 0;
+    int i = buffer->size() - 1;
+    while((recv_len = recv(socket_fd, &( (*buffer)[i] ), 1, 0) ) > 0){
+        size_t len = (*buffer).size();
+
+        if(len > 5){
+            // If get to the last chunk, then close the socket
+            if(isChunk){
+                if( check_HTTP_tail_Chunk(buffer) ){
+                    return len;
+                }
+            }
+            else{
+                if( check_HTTP_tail(buffer) ){
+                    return len;
+                }
+            }
+        }
+        (*buffer).resize( len + recv_len);
+        i = len;
+    }
+}
+
+
+

@@ -137,7 +137,7 @@ void Response::parseResponse(){
 	getStatus();
 	getTransferEncoding();
     getcontent_len();
-    getCacheControl();
+    getCacheControl_MaxAge();
     getDate_convert();
    	getExpires_convert();
    	getEtag();
