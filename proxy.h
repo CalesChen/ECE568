@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "helper.h"
+#include "request_info.h"
 #include "cache.h"
 //server_start   client_start   server_recv
 class Proxy{
@@ -18,9 +19,11 @@ class Proxy{
 		void request_from_server();
     	//int recv_message(int socket_fd, vector<char> * buffer, bool isChunk);
     	//int recive(int socket_fd, void * buffer, size_t size, bool isChunk);
-    	void Proxy::handleConnect(int socket_fd, int server_fd, int id);
-    	void Proxy::handlePost(int client_fd, int server_fd, int id, int len, vector<char> * request, const char * host);
-    
-    	void Proxy::handleGet(int client_fd, int server_fd, int id, int len, vector<char> * request, const char * host, Cache* cache);
-    	void Proxy::ServerGet(int client_fd, int server_fd, int id, int len, vector<char> * request, const char * host_url);
+    	void handleConnect(int socket_fd, int server_fd, int id);
+    	//void Proxy::handlePost(int client_fd, int server_fd, int id, int len, vector<char> * request, const char * host);
+		void handlePost(int client_fd, int server_fd, int thread_id, request_info * request);
+		void handleGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache* cache);
+		void ServerGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache * cache);
+    	//void Proxy::handleGet(int client_fd, int server_fd, int id, int len, vector<char> * request, const char * host, Cache* cache);
+    	//void Proxy::ServerGet(int client_fd, int server_fd, int id, int len, vector<char> * request, const char * host_url);
 };
