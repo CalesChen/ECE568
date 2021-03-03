@@ -1,20 +1,3 @@
-#include <pthread.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctime>
-#include <fstream>
-#include <map>
-#include <unordered_map>
-#include <vector>
-#include <list>
-#include <utility>
-#include <iostream>
-#include <time.h>
-#include <stdlib.h>
-#include <cstring>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <unistd.h>
 #include "cache.h"
 //logfile and pthread 都没加！！！！！！
 /**
@@ -22,14 +5,15 @@ get cache corresponding to url. "Return null" means cache isn't usable and proxy
 if not null, proxy can respond to client using this response returned.
 **/
 Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, std::string request){
+
 	std::unordered_map<std::string, std::list<std::pair<std::string, Response> >::iterator>::iterator it = cacheMap.find(url);
 	if(it != cacheMap.end()){
-		Response findedResponse = it->second->second;
+		Response * findedResponse = &(it->second->second);
 		//check if need revalidate
-		if(findedResponse.CacheControl.find("must-revalidate")!=std::string::npos ||
-			findedResponse.CacheControl.find("no-cache")!=std::string::npos){
+		if(findedResponse->CacheControl.find("must-revalidate")!=std::string::npos ||
+			findedResponse->CacheControl.find("no-cache")!=std::string::npos){
 			//###############
-			if(!revalidate(&findedResponse,oriServer_fd,request)){
+			if(!revalidate(findedResponse,oriServer_fd,request)){
 				return NULL;
 			}
 			std::ofstream file;
@@ -38,7 +22,7 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, std:
     		file.close();
 		}
 		//check if the time expired or maxAge+date <current time, if expired, erase this response from cache, return null
-		if(!findedResponse.timeValid(thread_id)){
+		if(!findedResponse->timeValid(thread_id)){
 			cacheList.erase(it->second);
 			cacheMap.erase(it);
 			return NULL;
@@ -49,7 +33,7 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, std:
    		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     	file << thread_id << " : "<< "in cache, valid"<< std::endl;
     	file.close();
-		return &findedResponse;
+		return findedResponse;
 	}
 	std::ofstream file;
 	file.open("proxy.log", std::ios_base::app | std::ios_base::out);
@@ -59,7 +43,8 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, std:
 }
 
 //if response finded in cache can be used, return true, if response need to be updated return false
-bool revalidate(Response * response,int oriServer_fd, std::string request){
+bool Cache::revalidate(Response * response,int oriServer_fd, std::string request){
+	Helper h;
 	std::string Etag = response->Etag;
 	std::string lastModified = response->LastModified;
 	if(Etag == "" && lastModified == ""){
@@ -78,7 +63,7 @@ bool revalidate(Response * response,int oriServer_fd, std::string request){
 	std::vector<char> ori_response(1, 0);
 	 //receive original message
 	int index = 0;
-	int size_resp = recv_message(oriServer_fd,&ori_response,false);
+	int size_resp = h.recv_message(oriServer_fd,&ori_response,false);
 	 //convert it  to string and parse it
 	std::string newResponse;
 	newResponse.insert(newResponse.begin(),ori_response.begin(),ori_response.end());

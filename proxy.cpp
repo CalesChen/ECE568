@@ -1,17 +1,4 @@
-#include <iostream>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctime>
-#include <fstream>
-#include <vector>
-#include <cstring>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <unistd.h>
-#include "request_info.h"
 #include "proxy.h"
-#include "response.h"
 
 std::ofstream logFile("/var/log/erss/proxy.log");
 //必须要用portNUM吗 这是谁的portnum？？？？？？？？？
@@ -19,16 +6,17 @@ std::ofstream logFile("/var/log/erss/proxy.log");
 //如果contentlength跟实际不match 在哪check？报什么错？
 void Proxy::handleProxy(Cache* cache){
 	//create a socket to connect with client, return this socket's id
-	int server_fd = server_start(portNum);
+    Helper h;
+	int server_fd = h.server_start(portNum);
 	int thread_id = 0;
 	//get client id that accpeted by proxy successfully
 	while(1){
 		std::string server_ip;
-		int client_fd = server_accept(server_fd,&server_ip);
+		int client_fd = h.server_accept(server_fd,&server_ip);
 		if(client_fd == -1){
 			continue;
 		}
-		handleReq(server_fd,client_fd,thread_id,server_ip);
+		handleReq(server_fd,client_fd,thread_id,server_ip, cache);
 		thread_id++;		
 	}
 }
@@ -37,7 +25,8 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
 	 std::vector<char> ori_request(1, 0);
 	 //receive original message
 	 int index = 0;
-	 int size_req = recv_message(client_fd,&ori_request,false);
+     Helper h;
+	 int size_req = h.recv_message(client_fd,&ori_request,false);
 	 //convert it  to string and parse it
 	 std::string request;
 	 request.insert(request.begin(),ori_request.begin(),ori_request.end());
@@ -46,22 +35,24 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
 	 //logfile可不可以改？？？？？？？？？
 	 std::string method = parsedRequest->method;
 	 logFile << thread_id << ": \"" << parsedRequest->request_line << "\" from "<< ip << " @ " << getCurrTime().append("\0");
-	 if(method == "GET"){
+	int oriServer_fd = connectOriginalServer(parsedRequest);
+     if(method == "GET"){
 	 	//####################
-	 	handleGet(client_fd, thread_id, &parsedRequest, cache);
+	 	handleGet(client_fd, oriServer_fd,thread_id, parsedRequest, cache);
 	 } else if(method == "POST"){
 	 	//##############
-	 	int oriServer_fd = connectOriginalServer(parsedRequest);
-	 	handlePOST(client_fd,oriServer_fd, thread_id, &parsedRequest);
+	 	handlePost(client_fd,oriServer_fd, thread_id, parsedRequest);
 	 } else if(method == "CONNECT"){ 
 	 	//##############
-	 	int oriServer_fd = connectOriginalServer(parsedRequest);
+
 	 	handleConnect(client_fd, oriServer_fd, thread_id);
 	 }
+     delete parsedRequest;
 }
 
 int Proxy::connectOriginalServer(request_info * parsedRequest){
-	int oriServer_fd = client_start((parsedRequest->host).c_str(), (parsedRequest->port).c_str());
+    Helper h;
+	int oriServer_fd = h.client_start((parsedRequest->host).c_str(), (parsedRequest->port).c_str());
 	return oriServer_fd;
 }
 
@@ -75,20 +66,21 @@ std::string Proxy::getCurrTime(){
 
 //**********Ke Chen's Code Start****************//
 
-void Proxy::handleGet(int client_fd, int server_fd, int thread_id, int len, vector<char> * request, const char * host_url, Cache* cache){
-    Response* temp = cache->getCache(host_url, server_fd, thread_id, request);
+void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache* cache){
+    Response* temp = cache->getCache(request->uri, server_fd, thread_id, request->request_line);
     // For no cache
     if(temp == NULL){
         //logFile << thread_id << ": not in cache"<<endl;
-        string request_temp(request->begin(), request->end());
-        request_info request_t(request_temp);
-        logFile << thread_id << ": Requesting \"" << request_t.header << "\" from "<< host_url << endl;
-        send(server_fd, request, request->size(), 0);
+        //string request_temp(request->begin(), request->end());
+        //request_info request_t(request_temp);
+
+        logFile << thread_id << ": Requesting \"" << request->request_line << "\" from "<< request->uri << endl;
+        send(server_fd, request, request->request.size(), 0);
 
         // THis function will receive the message and send it to the client. 
         // I need more information for put the message into Cache
         
-        Proxy::ServerGet(client_fd, server_fd, thread_id, len, request, host_url);
+        Proxy::ServerGet(client_fd, server_fd, thread_id, request, cache);
     }
     // If I can find a match in the temp, I will just send the response?
     else{
@@ -96,10 +88,11 @@ void Proxy::handleGet(int client_fd, int server_fd, int thread_id, int len, vect
     }
 
 }
-void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, int len, vector<char> * request, const char * host_url){
+void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache * cache){
     vector<char> server_msg(1,0);
     // Receive the First part
-    int server_msg_len = recv_message(server_fd, &server_msg, false);
+    Helper h;
+    int server_msg_len = h.recv_message(server_fd, &server_msg, false);
 
     //No response
     if(server_msg_len == 0) return;
@@ -108,7 +101,7 @@ void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, int len, vect
     Response resp(first_part);
     //resp.parseResponse();
 
-    logFile << thread_id << ": Received \"" << resp.header<< " \" from " << host_url<<endl;
+    logFile << thread_id << ": Received \"" << resp.firstLine<< " \" from " << request->uri<<endl;
 
     bool isChunk = false;
     int pos;
@@ -124,7 +117,7 @@ void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, int len, vect
 
     // If it is not Chunk, the first recv_message func will give back the right answer. 
     if(isChunk){
-        server_msg_len = recv_message(server_fd, &server_msg, isChunk);
+        server_msg_len = h.recv_message(server_fd, &server_msg, isChunk);
     }
 
     send(client_fd, &server_msg, server_msg.size(), 0);
@@ -134,19 +127,21 @@ void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, int len, vect
     string all(server_msg.begin(), server_msg.end());
     Response resp_all(all);
 
-    logFile<<thread_id<<": Responding \"" <<resp.header<<"\""<<endl;
+    cache->putCache(resp_all, request->uri, thread_id);
+
+    logFile<<thread_id<<": Responding \"" <<resp.firstLine << "\""<<endl;
 
 
 }
 
-void Proxy::handlePost(int client_fd, int server_fd, int thread_id, int len, vector<char> * request, const char * host){
+void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info * request){
     
     // The last parameter will help to avoid "send func" send exception. 
     // We will handle it by the response of the server. 
-    send(server_fd, request, (*request).size(), MSG_NOSIGNAL);
+    send(server_fd, &request->request, request->request.size(), MSG_NOSIGNAL);
     vector<char> response(1,0);
-    
-    int response_len = recv_message(server_fd, &response, false);
+    Helper h;
+    int response_len = h.recv_message(server_fd, &response, false);
 
     if(response_len != 0){
         // Which parameter trans in.
@@ -158,10 +153,10 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, int len, vec
         res.parseResponse();
 
         // How to get the first line in the response?
-        logFile << thread_id << ": Received \"" << res.header << "\" from " << host << endl;
+        logFile << thread_id << ": Received \"" << res.firstLine << "\" from " << request->uri << endl;
         send(client_fd, &response, response_len, MSG_NOSIGNAL);
 
-        logFile << thread_id << ": Responding \""<<res.header<<endl;
+        logFile << thread_id << ": Responding \""<<res.firstLine<<endl;
 
     }
     else{

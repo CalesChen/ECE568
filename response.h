@@ -22,7 +22,7 @@ class Response{
     time_t convertedDate;
     time_t convertedExpires;
 
-    Response(std::string response):response(response){
+    Response(std::string response):response(response),maxAge(-1){
     	parseResponse();
     }
 	void getHeader_body();

@@ -1,4 +1,10 @@
+#include <stdio.h>
+#include <string.h>
+
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <string>
   
 #include "request_info.h"
@@ -38,7 +44,7 @@ void request_info::getHost_port(){
 	size_t end = mid_host.find("\r\n");
 	std::string host_port = mid_host.substr(0,end);
 	size_t port_pos = host_port.find(":\r");
-	if(port_pos!= std::string::npo){
+	if(port_pos!= std::string::npos){
 		host = host_port.substr(0,port_pos);
 		port = host_port.substr(port_pos+1);
 	} else{

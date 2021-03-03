@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <time.h>
@@ -96,7 +95,7 @@ bool Response::timeValid(int thread_id){
     	file.close();
 		return false;
 	} 
-	if(maxAge!=NULL){
+	if(maxAge>0){
 		if(maxAge + convertedDate <= now){
 			//有别的方法进行转换嘛？？？？？？？
 		    time_t exipTime = maxAge + convertedDate;

@@ -1,6 +1,6 @@
 #include "helper.h"
 
-int server_start(const char * port){
+int Helper::server_start(const char * port){
 
   int status;
   int socket_fd;
@@ -50,7 +50,7 @@ int server_start(const char * port){
   return socket_fd;
 }
 
-int client_start(const char * hostname, const char * port){
+int Helper::client_start(const char * hostname, const char * port){
 
   int status;
   int socket_fd;
@@ -91,7 +91,7 @@ int client_start(const char * hostname, const char * port){
 }
 
 
-int server_accpet(int socket_fd, string * ip){
+int Helper::server_accept(int socket_fd, std::string * ip){
   struct sockaddr_storage socket_addr;
   socklen_t socket_addr_len = sizeof(socket_addr);
   int client_connection_fd;
@@ -109,7 +109,7 @@ int server_accpet(int socket_fd, string * ip){
 }
 
 //Receve message related Function. 
-bool check_HTTP_tail_Chunk(vector<char> * response){
+bool Helper::check_HTTP_tail_Chunk(vector<char> * response){
     size_t len = (*response).size();
     if((*response)[len - 5] == '0' && (*response)[len - 4] == '\r' && (*response)[len - 3] == '\n' &&
        (*response)[len - 2] == '\r' && (*response)[len - 1] == '\n'){
@@ -118,7 +118,7 @@ bool check_HTTP_tail_Chunk(vector<char> * response){
     return false;
 }
 
-bool check_HTTP_tail(vector<char> * response){
+bool Helper::check_HTTP_tail(vector<char> * response){
     size_t len = (*response).size();
     if((*response)[len - 4] == '\r' && (*response)[len - 3] == '\n' &&
        (*response)[len - 2] == '\r' && (*response)[len - 1] == '\n'){
@@ -128,7 +128,7 @@ bool check_HTTP_tail(vector<char> * response){
 }
 
 
-int recv_message(int socket_fd, std::vector<char> * buffer, bool isChunk){
+int Helper::recv_message(int socket_fd, std::vector<char> * buffer, bool isChunk){
     // May be parallel later
     // If the buffer is not initial, then resize it. 
     if(buffer->size() != 1 ) {
