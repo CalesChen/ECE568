@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,7 +54,7 @@ void Response::getCacheControl_MaxAge(){
 	}
 	if(CacheControl.find("max-age")!=std::string::npos){
 		size_t pos_maxAge = CacheControl.find("=");
-		maxAge = atoi(CacheControl.substr(pos_maxAge+2));
+		maxAge = atoi((CacheControl.substr(pos_maxAge+2)).c_str());
 	}
 }
 

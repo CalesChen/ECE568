@@ -10,8 +10,8 @@ class Proxy{
 		char * portNum;
 
 		Proxy(char * port) : portNum(port){}
-		void handleProxy();
-		void handleReq(int server_fd,int client_fd, int thread_id, std::string ip);
+		void handleProxy(Cache* cache);
+		void handleReq(int server_fd,int client_fd, int thread_id, std::string ip,Cache* cache);
 		int connectOriginalServer(request_info * parsedRequest);
 		std::string getCurrTime();
 		//****************************Added New Code**********************//

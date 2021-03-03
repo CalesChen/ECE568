@@ -28,15 +28,15 @@ class Response{
 	void getHeader_body();
 	void getStatus();
 	void getTransferEncoding();
-    void getcontent_len();
-    time_t getDate_convert();
-    time_t getExpires_convert();
-    void getCacheControl_MaxAge();
-    void getFirstLine();
-    bool timeValid(int thread_id);
-     void getEtag();
-    void getLastModified();
-    void parseResponse();
+  void getcontent_len();
+  time_t getDate_convert();
+  time_t getExpires_convert();
+  void getCacheControl_MaxAge();
+  void getFirstLine();
+  bool timeValid(int thread_id);
+  void getEtag();
+  void getLastModified();
+  void parseResponse();
    
   
 };

@@ -21,7 +21,7 @@
 get cache corresponding to url. "Return null" means cache isn't usable and proxy need to connect original server,
 if not null, proxy can respond to client using this response returned.
 **/
-Response Cache::getCache(std::string url, int oriServer_fd, int thread_id, std::string request){
+Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, std::string request){
 	std::unordered_map<std::string, std::list<std::pair<std::string, Response> >::iterator>::iterator it = cacheMap.find(url);
 	if(it != cacheMap.end()){
 		Response findedResponse = it->second->second;
@@ -38,7 +38,7 @@ Response Cache::getCache(std::string url, int oriServer_fd, int thread_id, std::
     		file.close();
 		}
 		//check if the time expired or maxAge+date <current time, if expired, erase this response from cache, return null
-		if(!findedResponse.timeValid()){
+		if(!findedResponse.timeValid(thread_id)){
 			cacheList.erase(it->second);
 			cacheMap.erase(it);
 			return NULL;
@@ -49,7 +49,7 @@ Response Cache::getCache(std::string url, int oriServer_fd, int thread_id, std::
    		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     	file << thread_id << " : "<< "in cache, valid"<< std::endl;
     	file.close();
-		return findedResponse;
+		return &findedResponse;
 	}
 	std::ofstream file;
 	file.open("proxy.log", std::ios_base::app | std::ios_base::out);
@@ -61,7 +61,7 @@ Response Cache::getCache(std::string url, int oriServer_fd, int thread_id, std::
 //if response finded in cache can be used, return true, if response need to be updated return false
 bool revalidate(Response * response,int oriServer_fd, std::string request){
 	std::string Etag = response->Etag;
-	std::string lastModified = response->lastModified;
+	std::string lastModified = response->LastModified;
 	if(Etag == "" && lastModified == ""){
 		return true;
 	} 
@@ -75,11 +75,10 @@ bool revalidate(Response * response,int oriServer_fd, std::string request){
 	}
 	const char * sendMsg = request.c_str();
 	int size_send = send(oriServer_fd,sendMsg,request.length()+1,0);
-	//check if sending sucessfully???????????
 	std::vector<char> ori_response(1, 0);
 	 //receive original message
 	int index = 0;
-	int size_resp = recv_message(oriServer_fd,&ori_response.data()[index],1,0);
+	int size_resp = recv_message(oriServer_fd,&ori_response,false);
 	 //convert it  to string and parse it
 	std::string newResponse;
 	newResponse.insert(newResponse.begin(),ori_response.begin(),ori_response.end());

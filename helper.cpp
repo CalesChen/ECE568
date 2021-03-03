@@ -128,7 +128,7 @@ bool check_HTTP_tail(vector<char> * response){
 }
 
 
-int recv_message(int socket_fd, vector<char> * buffer, bool isChunk){
+int recv_message(int socket_fd, std::vector<char> * buffer, bool isChunk){
     // May be parallel later
     // If the buffer is not initial, then resize it. 
     if(buffer->size() != 1 ) {
@@ -136,7 +136,7 @@ int recv_message(int socket_fd, vector<char> * buffer, bool isChunk){
     }
     int recv_len = 0;
     int i = buffer->size() - 1;
-    while((recv_len = recv(socket_fd, &( (*buffer)[i] ), 1, 0) ) > 0){
+    while((recv_len = recv(socket_fd, &( (*buffer).data()[i] ), 1, 0) ) > 0){
         size_t len = (*buffer).size();
 
         if(len > 5){

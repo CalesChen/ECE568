@@ -17,7 +17,7 @@ std::ofstream logFile("/var/log/erss/proxy.log");
 //必须要用portNUM吗 这是谁的portnum？？？？？？？？？
 //502报错是啥玩意儿 what's bad gateway？？？？？
 //如果contentlength跟实际不match 在哪check？报什么错？
-void Proxy::handleProxy(){
+void Proxy::handleProxy(Cache* cache){
 	//create a socket to connect with client, return this socket's id
 	int server_fd = server_start(portNum);
 	int thread_id = 0;
@@ -33,11 +33,11 @@ void Proxy::handleProxy(){
 	}
 }
 
-void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip){
+void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip,Cache* cache){
 	 std::vector<char> ori_request(1, 0);
 	 //receive original message
 	 int index = 0;
-	 int size_req = recv_message(client_fd,&ori_request.data()[index],false);
+	 int size_req = recv_message(client_fd,&ori_request,false);
 	 //convert it  to string and parse it
 	 std::string request;
 	 request.insert(request.begin(),ori_request.begin(),ori_request.end());
@@ -48,12 +48,12 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
 	 logFile << thread_id << ": \"" << parsedRequest->request_line << "\" from "<< ip << " @ " << getCurrTime().append("\0");
 	 if(method == "GET"){
 	 	//####################
-	 	handleGet(client_fd, thread_id, parsedRequest, Cache* cache);
+	 	handleGet(client_fd, thread_id, &parsedRequest, cache);
 	 } else if(method == "POST"){
 	 	//##############
 	 	int oriServer_fd = connectOriginalServer(parsedRequest);
-	 	handlePOST();
-	 } else if(method == "CONNECT"){
+	 	handlePOST(client_fd,oriServer_fd, thread_id, &parsedRequest);
+	 } else if(method == "CONNECT"){ 
 	 	//##############
 	 	int oriServer_fd = connectOriginalServer(parsedRequest);
 	 	handleConnect(client_fd, oriServer_fd, thread_id);
