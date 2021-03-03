@@ -59,6 +59,7 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
 	 	int oriServer_fd = connectOriginalServer(parsedRequest);
 	 	Proxy::handleConnect(client_fd, oriServer_fd, thread_id);
 	 }
+     delete parsedRequest;
 
 }
 
