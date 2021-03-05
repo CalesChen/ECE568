@@ -14,12 +14,12 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, std:
 			findedResponse->CacheControl.find("no-cache")!=std::string::npos){
 			//###############
 			if(!revalidate(findedResponse,oriServer_fd,request)){
+				std::ofstream file;
+   				file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+    			file << thread_id << " : "<< "in cache, requires validation"<< std::endl;
+    			file.close();
 				return NULL;
 			}
-			std::ofstream file;
-   			file.open("proxy.log", std::ios_base::app | std::ios_base::out);
-    		file << thread_id << " : "<< "in cache, requires validation"<< std::endl;
-    		file.close();
 		}
 		//check if the time expired or maxAge+date <current time, if expired, erase this response from cache, return null
 		if(!findedResponse->timeValid(thread_id)){

@@ -14,7 +14,7 @@ void Proxy::handleProxy(Cache* cache){
 		std::string server_ip;
 		int client_fd = h.server_accept(server_fd,&server_ip);
 		if(client_fd == -1){
-			continue;
+        	continue;
 		}
 		handleReq(server_fd,client_fd,thread_id,server_ip, cache);
 		thread_id++;		
@@ -35,16 +35,18 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
 	 //logfile可不可以改？？？？？？？？？
 	 std::string method = parsedRequest->method;
 	 logFile << thread_id << ": \"" << parsedRequest->request_line << "\" from "<< ip << " @ " << getCurrTime().append("\0");
+     cout<<"The Method is "<<method<<endl;
 	int oriServer_fd = connectOriginalServer(parsedRequest);
      if(method == "GET"){
 	 	//####################
+        cout<<"In GET"<<endl;
 	 	handleGet(client_fd, oriServer_fd,thread_id, parsedRequest, cache);
 	 } else if(method == "POST"){
 	 	//##############
 	 	handlePost(client_fd,oriServer_fd, thread_id, parsedRequest);
 	 } else if(method == "CONNECT"){ 
 	 	//##############
-
+        cout<<method<<endl;
 	 	handleConnect(client_fd, oriServer_fd, thread_id);
 	 }
      delete parsedRequest;
@@ -52,7 +54,10 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
 
 int Proxy::connectOriginalServer(request_info * parsedRequest){
     Helper h;
+    //cout<<parsedRequest->request<<endl;
+    //cout<<parsedRequest->host<<endl<<parsedRequest->port<<endl;
 	int oriServer_fd = h.client_start((parsedRequest->host).c_str(), (parsedRequest->port).c_str());
+    //int oriServer_fd = h.client_start("baidu.com", (parsedRequest->port).c_str());
 	return oriServer_fd;
 }
 
@@ -69,14 +74,15 @@ std::string Proxy::getCurrTime(){
 void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache* cache){
     Response* temp = cache->getCache(request->uri, server_fd, thread_id, request->request_line);
     // For no cache
+    
     if(temp == NULL){
         //logFile << thread_id << ": not in cache"<<endl;
         //string request_temp(request->begin(), request->end());
         //request_info request_t(request_temp);
 
         logFile << thread_id << ": Requesting \"" << request->request_line << "\" from "<< request->uri << endl;
-        send(server_fd, request, request->request.size(), 0);
-
+        send(server_fd, request->request.c_str(), request->request.size(), 0);
+        cout<<request->request<<endl<<request->request.size()<<endl;
         // THis function will receive the message and send it to the client. 
         // I need more information for put the message into Cache
         
@@ -84,7 +90,8 @@ void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info 
     }
     // If I can find a match in the temp, I will just send the response?
     else{
-        send(client_fd, &(temp->response), temp->response.size(), 0);
+        cout << temp->firstLine<<endl;
+        send(client_fd, temp->response.c_str(), temp->response.size(), 0);
     }
 
 }
@@ -93,14 +100,19 @@ void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, request_info 
     // Receive the First part
     Helper h;
     int server_msg_len = h.recv_message(server_fd, &server_msg, false);
-
+    cout<<server_msg_len<<endl;
+    // for(int i = 0 ; i < server_msg_len ; i ++){
+    //     cout<<server_msg[i];
+    // }
+    cout<<endl;
     //No response
     if(server_msg_len == 0) return;
     // Store the message to a string
     string first_part(server_msg.begin(), server_msg.end());
+    cout<<"String"<<first_part;
     Response resp(first_part);
     //resp.parseResponse();
-
+    cout<<"Get_Thread_Id" << thread_id<<endl;
     logFile << thread_id << ": Received \"" << resp.firstLine<< " \" from " << request->uri<<endl;
 
     bool isChunk = false;
@@ -108,23 +120,29 @@ void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, request_info 
     if((pos = first_part.find("chunked"))  != string::npos){
         isChunk = true;
     }
-    
+    cout<<isChunk;
     // Check if we need to add it into Cache
     bool no_store = false;
     if((pos = first_part.find("no-store")) != string::npos){
         no_store = true;
     }
-
+    cout<<no_store;
     // If it is not Chunk, the first recv_message func will give back the right answer. 
     if(isChunk){
         server_msg_len = h.recv_message(server_fd, &server_msg, isChunk);
+    }else{
+        server_msg_len = h.recv_message(server_fd, &server_msg, isChunk);
     }
 
-    send(client_fd, &server_msg, server_msg.size(), 0);
+    cout<<server_msg.size()<<endl;
+    string all(server_msg.begin(), server_msg.end());
+    cout<<all;
+    cout<<send(client_fd, all.c_str(), all.size(), 0)<<endl;
+    
 
     // Placeholder for adding to the cache
 
-    string all(server_msg.begin(), server_msg.end());
+    
     Response resp_all(all);
 
     cache->putCache(resp_all, request->uri, thread_id);
@@ -138,23 +156,25 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
     
     // The last parameter will help to avoid "send func" send exception. 
     // We will handle it by the response of the server. 
-    send(server_fd, &request->request, request->request.size(), MSG_NOSIGNAL);
+    send(server_fd, request->request.c_str(), request->request.size(), MSG_NOSIGNAL);
     vector<char> response(1,0);
     Helper h;
     int response_len = h.recv_message(server_fd, &response, false);
 
+    //string response_str(response.begin(), response.end());
     if(response_len != 0){
         // Which parameter trans in.
         // response res;
         // res.parseResponse();
+        cout<<response_len<<endl;
         std::string temp(response.begin(), response.begin() + response_len);
-        
+        cout<<temp<<endl;
         Response res(temp); 
         res.parseResponse();
 
         // How to get the first line in the response?
         logFile << thread_id << ": Received \"" << res.firstLine << "\" from " << request->uri << endl;
-        send(client_fd, &response, response_len, MSG_NOSIGNAL);
+        send(client_fd, temp.c_str(), response_len, MSG_NOSIGNAL);
 
         logFile << thread_id << ": Responding \""<<res.firstLine<<endl;
 
@@ -166,7 +186,7 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
 
 void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
     string msg = "HTTP/1.1 200OK\r\n\r\n";
-    send(client_fd, &msg , msg.size(), 0);
+    send(client_fd, msg.c_str() , msg.size(), 0);
 
     logFile << thread_id << ": Responding \"HTTP/1.1 200 OK\""<<endl;
 
@@ -183,22 +203,60 @@ void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
 
         int len_recv;
         int len_send;
-        for(int i = 0 ; i < 2 ; i ++){
-            vector<char> msg2(65536,0);
+        int i = 0;
+        //for(int i = 0 ; i < 2 ; i ++){
+        while(i<2){
+            //vector<char> msg2(65536,0);
+            char msg2[65536] = {0};
             if(FD_ISSET(fd_set_cs[i], &fds)){
                 //len_recv = Proxy::recv_message(fd_set_cs[i], &msg2, false);
-                len_recv = recv(fd_set_cs[i], &msg2, sizeof(msg2), 0);
+                len_recv = recv(fd_set_cs[i], msg2, sizeof(msg2), 0);
                 if(len_recv <= 0){
                     return;
                 }
+                //string temp(msg2.begin(), msg2.end());
                 // Check the len_send and len_recv
-                len_send = send(fd_set_cs[1-i], &msg2, len_recv, 0);
+                //len_send = send(fd_set_cs[1-i], temp.c_str(), len_recv, 0);
+                len_send = send(fd_set_cs[1-i], msg2, len_recv, 0);
                 // If all of the message is done.
                 if(len_send <=0){
                     return;
                 }
             }
-
+            i++;
         } 
     }
 }
+
+
+// void Proxy::handleConnect(int client_fd, int server_fd, int id) {
+//   send(client_fd, "HTTP/1.1 200 OK\r\n\r\n", 19, 0);
+//   logFile << id << ": Responding \"HTTP/1.1 200 OK\"" << std::endl;
+
+//   fd_set readfds;
+//   int nfds = server_fd > client_fd ? server_fd + 1 : client_fd + 1;
+
+//   while (1) {
+//     FD_ZERO(&readfds);
+//     FD_SET(server_fd, &readfds);
+//     FD_SET(client_fd, &readfds);
+
+//     select(nfds, &readfds, NULL, NULL, NULL);
+//     int fd[2] = {server_fd, client_fd};
+//     int len;
+//     for (int i = 0; i < 2; i++) {
+//       char message[65536] = {0};
+//       if (FD_ISSET(fd[i], &readfds)) {
+//         len = recv(fd[i], message, sizeof(message), 0);
+//         if (len <= 0) {
+//           return;
+//         }
+//         else {
+//           if (send(fd[1 - i], message, len, 0) <= 0) {
+//             return;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }

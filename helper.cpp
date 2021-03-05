@@ -63,7 +63,7 @@ int Helper::client_start(const char * hostname, const char * port){
 
   status = getaddrinfo(hostname, port, &host_info, &host_info_list);
   if(status != 0){
-    cerr << "Error: cannot get address info for host" <<endl;
+    cerr << "Error: cannot get address info for host_Client" <<endl;
     cerr << " (" << hostname << "," <<port << ")" <<endl;
     exit(EXIT_FAILURE);
   }

@@ -43,7 +43,8 @@ void request_info::getHost_port(){
 	std::string mid_host = request.substr(pos_host+6);
 	size_t end = mid_host.find("\r\n");
 	std::string host_port = mid_host.substr(0,end);
-	size_t port_pos = host_port.find(":\r");
+	size_t port_pos = host_port.find(":");
+	//std::cout << port_pos <<std::endl;
 	if(port_pos!= std::string::npos){
 		host = host_port.substr(0,port_pos);
 		port = host_port.substr(port_pos+1);
