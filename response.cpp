@@ -45,7 +45,7 @@ void Response::getcontent_len(){
 }
 
 void Response::getCacheControl_MaxAge(){
-	size_t pos_CacheControl = response.find("Transfer-Encoding:");
+	size_t pos_CacheControl = response.find("Cache-Control:");
 	if(pos_CacheControl!=std::string::npos){
 		std::string mid_CacheControl = response.substr(pos_CacheControl);
 		size_t pos_CacheControl_end = mid_CacheControl.find("\r\n");

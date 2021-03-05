@@ -72,7 +72,15 @@ std::string Proxy::getCurrTime(){
 //**********Ke Chen's Code Start****************//
 
 void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache* cache){
-    Response* temp = cache->getCache(request->uri, server_fd, thread_id, request->request_line);
+    Response* temp;
+    //Response* temp = cache->getCache(request->uri, server_fd, thread_id, request->request_line);
+    //if request need to get resource from original server
+    if(request->CacheControl.find("no-store")!=std::string::npos){
+        temp = NULL;
+    } else{
+        temp = cache->getCache(request->uri, server_fd, thread_id, request);
+    }
+
     // For no cache
     
     if(temp == NULL){

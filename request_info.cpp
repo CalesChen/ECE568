@@ -55,9 +55,19 @@ void request_info::getHost_port(){
 	//?????
 }
 
+void request_info::getCacheControl(){
+	size_t pos_CacheControl = request.find("Cache-Control:");
+	if(pos_CacheControl!=std::string::npos){
+		std::string mid_CacheControl = request.substr(pos_CacheControl);
+		size_t pos_CacheControl_end = mid_CacheControl.find("\r\n");
+		CacheControl = mid_CacheControl.substr(0,pos_CacheControl_end);
+	}
+}
+
 void request_info::parseRequest(){
 	getHeader_body_contentLen();
 	getRequestLine();
 	getMethod_URI();
 	getHost_port();
+	void getCacheControl();
 }

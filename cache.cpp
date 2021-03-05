@@ -4,16 +4,17 @@
 get cache corresponding to url. "Return null" means cache isn't usable and proxy need to connect original server,
 if not null, proxy can respond to client using this response returned.
 **/
-Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, std::string request){
+Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, request_info * request){
 
 	std::unordered_map<std::string, std::list<std::pair<std::string, Response> >::iterator>::iterator it = cacheMap.find(url);
 	if(it != cacheMap.end()){
 		Response * findedResponse = &(it->second->second);
 		//check if need revalidate
 		if(findedResponse->CacheControl.find("must-revalidate")!=std::string::npos ||
-			findedResponse->CacheControl.find("no-cache")!=std::string::npos){
+			findedResponse->CacheControl.find("no-cache")!=std::string::npos||
+			request->CacheControl.find("no-cache")!=std::string::npos){
 			//###############
-			if(!revalidate(findedResponse,oriServer_fd,request)){
+			if(!revalidate(findedResponse,oriServer_fd,request->request)){
 				std::ofstream file;
    				file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     			file << thread_id << " : "<< "in cache, requires validation"<< std::endl;
@@ -33,6 +34,7 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, std:
    		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     	file << thread_id << " : "<< "in cache, valid"<< std::endl;
     	file.close();
+		std::cout<<"cache USED!!!!!!!!!!"<<std::endl;
 		return findedResponse;
 	}
 	std::ofstream file;
@@ -48,7 +50,7 @@ bool Cache::revalidate(Response * response,int oriServer_fd, std::string request
 	std::string Etag = response->Etag;
 	std::string lastModified = response->LastModified;
 	if(Etag == "" && lastModified == ""){
-		return true;
+		return false;
 	} 
 	if(Etag != ""){
 		std::string modifiledEtag = "If-None-Match: "+Etag+"\r\n";
@@ -68,8 +70,10 @@ bool Cache::revalidate(Response * response,int oriServer_fd, std::string request
 	std::string newResponse;
 	newResponse.insert(newResponse.begin(),ori_response.begin(),ori_response.end());
 	if(newResponse.find("HTTP/1.1 200 OK")!=std::string::npos){
+		//cache need to be updated
 	 	return false;
 	 } else {
+		//cache can be used
 	 	return true;
 	 }
 }

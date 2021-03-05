@@ -11,7 +11,7 @@
 #include <unistd.h>
 
 //#include "helper.h"
-#include "request_info.h"
+//#include "request_info.h"
 #include "cache.h"
 //#include "response.h"
 //server_start   client_start   server_recv
