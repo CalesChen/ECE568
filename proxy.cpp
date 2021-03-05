@@ -204,8 +204,7 @@ void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
         int len_recv;
         int len_send;
         int i = 0;
-        //for(int i = 0 ; i < 2 ; i ++){
-        while(i<2){
+        for(int i = 0 ; i < 2 ; i ++){
             //vector<char> msg2(65536,0);
             char msg2[65536] = {0};
             if(FD_ISSET(fd_set_cs[i], &fds)){
