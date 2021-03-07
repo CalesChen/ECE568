@@ -1,5 +1,8 @@
 #include "proxy.h"
+// Add Parallel Execution
+#include <pthread.h>
 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 std::ofstream logFile("/var/log/erss/proxy.log");
 //必须要用portNUM吗 这是谁的portnum？？？？？？？？？
 //502报错是啥玩意儿 what's bad gateway？？？？？
@@ -8,22 +11,42 @@ void Proxy::handleProxy(Cache* cache){
 	//create a socket to connect with client, return this socket's id
     Helper h;
 	int server_fd = h.server_start(portNum);
+    if(server_fd == -1){
+        pthread_mutex_lock(&mutex);
+        logFile << "ERROR in creating socket for proxy to accept"<<endl;
+        pthread_mutex_unlock(&mutex);
+    }
 	int thread_id = 0;
 	//get client id that accpeted by proxy successfully
 	while(1){
 		std::string server_ip;
 		int client_fd = h.server_accept(server_fd,&server_ip);
 		if(client_fd == -1){
+            pthread_mutex_lock(&mutex);
+            logFile<< "ERROR in connecting client"<<endl;
+            pthread_mutex_unlock(&mutex);
         	continue;
 		}
-		handleReq(server_fd,client_fd,thread_id,server_ip, cache);
-		thread_id++;
+        pthread_t thread;
+        // The Parameter and thread_ID must be unique for every thread. So lock these.
+        pthread_mutex_lock(&mutex);
+        Parameter * parameter = new Parameter(server_fd, client_fd, thread_id, server_ip, cache);
+        thread_id++;
+        pthread_mutex_unlock(&mutex);
+		//handleReq(server_fd,client_fd,thread_id,server_ip, cache);
+        pthread_create(&thread, NULL, handleReq, parameter);
         //Every time After an iteration, I need to close the fd
-        close(client_fd);		
+        //close(client_fd);		
 	}
 }
 
-void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip,Cache* cache){
+void * Proxy::handleReq(void * para){
+    Parameter * p = (Parameter *) para;
+    int server_fd = p->server_fd;
+    int client_fd = p->client_fd;
+    std::string ip = p->ip;
+    Cache * cache = p->cache;
+    int thread_id = p->thread_id;
 	 //std::vector<char> ori_request(1, 0);
 	 //receive original message
 	 int index = 0;
@@ -32,6 +55,9 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
 	 char ori_request[65535] = {0};
      int size_req = recv(client_fd, ori_request, sizeof(ori_request), 0);
      cout<<"The Request is "<<size_req<<endl;
+     if(size_req == 0){
+         return NULL;
+     }
      //convert it  to string and parse it
 	 std::string request(ori_request);
      cout<<request<<endl;
@@ -61,6 +87,7 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
          logFile << thread_id << ": Resquesting \"HTTP/1.1 400 Bad Request\"" << std::endl;
      }
      delete parsedRequest;
+     return NULL;
 }
 
 int Proxy::connectOriginalServer(request_info * parsedRequest){
