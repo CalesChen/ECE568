@@ -48,7 +48,11 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
 	 	//##############
         cout<<method<<endl;
 	 	handleConnect(client_fd, oriServer_fd, thread_id);
-	 }
+	 } else {
+         char * msg = "HTTP/1.1 400 Bad Request";
+         send(client_fd,msg,sizeof(msg),0);
+         logFile << thread_id << ": Resquesting \"HTTP/1.1 400 Bad Request\"" << std::endl;
+     }
      delete parsedRequest;
 }
 
