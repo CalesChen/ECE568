@@ -13,6 +13,7 @@ class request_info{
     std::string body;
     std::string content_len;
     std::string port;
+    std::string CacheControl;
   public:
     request_info(std::string request):request(request){
     	parseRequest();
@@ -21,6 +22,7 @@ class request_info{
 	  void getRequestLine();
     void getMethod_URI();
     void getHost_port();
+    void getCacheControl();
     void parseRequest();
   
 };

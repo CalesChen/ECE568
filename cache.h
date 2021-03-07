@@ -20,6 +20,7 @@
 
 #include "helper.h"
 #include "response.h"
+#include "request_info.h"
 
 class Cache{
 	public:
@@ -28,7 +29,7 @@ class Cache{
 		std::list<std::pair<std::string, Response> > cacheList;
 
 		Cache(int capacity):capacity(capacity){}
-		Response* getCache(std::string url, int oriServer_fd, int thread_id, std::string request);
+		Response* getCache(std::string url, int oriServer_fd, int thread_id, request_info* request);
 		void putCache(Response response, std::string url, int thread_id);
 		bool revalidate(Response * response,int oriServer_fd, std::string request);
 
