@@ -17,19 +17,26 @@ void Proxy::handleProxy(Cache* cache){
         	continue;
 		}
 		handleReq(server_fd,client_fd,thread_id,server_ip, cache);
-		thread_id++;		
+		thread_id++;
+        //Every time After an iteration, I need to close the fd
+        close(client_fd);		
 	}
 }
 
 void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip,Cache* cache){
-	 std::vector<char> ori_request(1, 0);
+	 //std::vector<char> ori_request(1, 0);
 	 //receive original message
 	 int index = 0;
      Helper h;
-	 int size_req = h.recv_message(client_fd,&ori_request,false);
-	 //convert it  to string and parse it
-	 std::string request;
-	 request.insert(request.begin(),ori_request.begin(),ori_request.end());
+	 //int size_req = h.recv_message(client_fd,&ori_request,false);
+	 char ori_request[65535] = {0};
+     int size_req = recv(client_fd, ori_request, sizeof(ori_request), 0);
+     cout<<"The Request is "<<size_req<<endl;
+     //convert it  to string and parse it
+	 std::string request(ori_request);
+     cout<<request<<endl;
+    //  string temp(ori_request.begin(), ori_request.end());
+	//  request.insert(request.begin(),ori_request.begin(),ori_request.end());
 	 //需不需要delete？？？？？？？
 	 request_info * parsedRequest = new request_info(request);
 	 //logfile可不可以改？？？？？？？？？
@@ -49,7 +56,7 @@ void Proxy::handleReq(int server_fd,int client_fd, int thread_id, std::string ip
         cout<<method<<endl;
 	 	handleConnect(client_fd, oriServer_fd, thread_id);
 	 } else {
-         char * msg = "HTTP/1.1 400 Bad Request";
+         const char * msg = "HTTP/1.1 400 Bad Request";
          send(client_fd,msg,sizeof(msg),0);
          logFile << thread_id << ": Resquesting \"HTTP/1.1 400 Bad Request\"" << std::endl;
      }
@@ -168,16 +175,19 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
     
     // The last parameter will help to avoid "send func" send exception. 
     // We will handle it by the response of the server. 
-    send(server_fd, request->request.c_str(), request->request.size(), MSG_NOSIGNAL);
+    cout<<request->request<<endl;
+
+    cout<<send(server_fd, request->request.c_str(), request->request.size(), MSG_NOSIGNAL)<<endl;
     vector<char> response(1,0);
     Helper h;
-    int response_len = h.recv_message(server_fd, &response, false);
-
+    int response_len = h.recv_message(server_fd, &response, true);
+    cout<<"The Length is "<<response_len<<endl;
     //string response_str(response.begin(), response.end());
-    if(response_len != 0){
+    if(response_len > 0){
         // Which parameter trans in.
         // response res;
         // res.parseResponse();
+        //response_len = h.recv_message(server_fd, &response, false);
         cout<<response_len<<endl;
         std::string temp(response.begin(), response.begin() + response_len);
         cout<<temp<<endl;
@@ -197,7 +207,7 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
 }
 
 void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
-    string msg = "HTTP/1.1 200OK\r\n\r\n";
+    string msg = "HTTP/1.1 200 OK\r\n\r\n";
     send(client_fd, msg.c_str() , msg.size(), 0);
 
     logFile << thread_id << ": Responding \"HTTP/1.1 200 OK\""<<endl;
@@ -215,7 +225,7 @@ void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
 
         int len_recv;
         int len_send;
-        int i = 0;
+        //int i = 0;
         for(int i = 0 ; i < 2 ; i ++){
             //vector<char> msg2(65536,0);
             char msg2[65536] = {0};
@@ -234,7 +244,7 @@ void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
                     return;
                 }
             }
-            i++;
+            //i++;
         } 
     }
 }

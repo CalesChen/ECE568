@@ -155,6 +155,7 @@ int Helper::recv_message(int socket_fd, std::vector<char> * buffer, bool isChunk
         (*buffer).resize( len + recv_len);
         i = len;
     }
+    return (*buffer).size();
 }
 
 
