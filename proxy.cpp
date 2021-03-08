@@ -83,7 +83,8 @@ void * Proxy::handleReq(void * para){
 	 	handleConnect(client_fd, oriServer_fd, thread_id);
 	 } else {
          const char * msg = "HTTP/1.1 400 Bad Request";
-         send(client_fd,msg,sizeof(msg),0);
+         //send(client_fd,msg,sizeof(msg),0);
+         send(client_fd,msg,sizeof(msg),MSG_NOSIGNAL);
          logFile << thread_id << ": Resquesting \"HTTP/1.1 400 Bad Request\"" << std::endl;
      }
      delete parsedRequest;
@@ -187,7 +188,8 @@ void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, request_info 
     cout<<server_msg.size()<<endl;
     string all(server_msg.begin(), server_msg.end());
     cout<<all;
-    cout<<send(client_fd, all.c_str(), all.size(), 0)<<endl;
+    //cout<<send(client_fd, all.c_str(), all.size(), 0)<<endl;
+    cout<<send(client_fd, all.c_str(), all.size(), MSG_NOSIGNAL)<<endl;
     
 
     // Placeholder for adding to the cache
@@ -239,7 +241,7 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
 
 void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
     string msg = "HTTP/1.1 200 OK\r\n\r\n";
-    send(client_fd, msg.c_str() , msg.size(), 0);
+    send(client_fd, msg.c_str() , msg.size(), MSG_NOSIGNAL);
 
     logFile << thread_id << ": Responding \"HTTP/1.1 200 OK\""<<endl;
 
@@ -269,7 +271,8 @@ void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
                 //string temp(msg2.begin(), msg2.end());
                 // Check the len_send and len_recv
                 //len_send = send(fd_set_cs[1-i], temp.c_str(), len_recv, 0);
-                len_send = send(fd_set_cs[1-i], msg2, len_recv, 0);
+                //len_send = send(fd_set_cs[1-i], msg2, len_recv, 0);
+                len_send = send(fd_set_cs[1-i], msg2, len_recv, MSG_NOSIGNAL);
                 // If all of the message is done.
                 if(len_send <=0){
                     return;
