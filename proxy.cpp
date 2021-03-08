@@ -87,6 +87,8 @@ void * Proxy::handleReq(void * para){
          logFile << thread_id << ": Resquesting \"HTTP/1.1 400 Bad Request\"" << std::endl;
      }
      delete parsedRequest;
+     close(oriServer_fd);
+     close(client_fd);
      return NULL;
 }
 
@@ -127,7 +129,8 @@ void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info 
         //request_info request_t(request_temp);
 
         logFile << thread_id << ": Requesting \"" << request->request_line << "\" from "<< request->uri << endl;
-        send(server_fd, request->request.c_str(), request->request.size(), 0);
+        //send(server_fd, request->request.c_str(), request->request.size(), 0);
+        send(server_fd, request->request.c_str(), request->request.size(), MSG_NOSIGNAL);
         cout<<request->request<<endl<<request->request.size()<<endl;
         // THis function will receive the message and send it to the client. 
         // I need more information for put the message into Cache
@@ -137,7 +140,8 @@ void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info 
     // If I can find a match in the temp, I will just send the response?
     else{
         cout << temp->firstLine<<endl;
-        send(client_fd, temp->response.c_str(), temp->response.size(), 0);
+        //send(client_fd, temp->response.c_str(), temp->response.size(), 0);
+        send(client_fd, temp->response.c_str(), temp->response.size(), MSG_NOSIGNAL);
     }
 
 }
@@ -210,7 +214,7 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
     int response_len = h.recv_message(server_fd, &response, true);
     cout<<"The Length is "<<response_len<<endl;
     //string response_str(response.begin(), response.end());
-    if(response_len > 0){
+    if(response_len > 1){
         // Which parameter trans in.
         // response res;
         // res.parseResponse();
