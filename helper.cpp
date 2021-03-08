@@ -65,7 +65,8 @@ int Helper::client_start(const char * hostname, const char * port){
   if(status != 0){
     cerr << "Error: cannot get address info for host_Client" <<endl;
     cerr << " (" << hostname << "," <<port << ")" <<endl;
-    exit(EXIT_FAILURE);
+    return -1;
+    //exit(EXIT_FAILURE);
   }
 
   socket_fd = socket(host_info_list->ai_family,
@@ -75,14 +76,16 @@ int Helper::client_start(const char * hostname, const char * port){
   if(socket_fd == -1){
     cerr << "Error: cannot create socket" <<endl;
     cerr<< " (" << hostname<<","<<port<<")"<<endl;
-    exit(EXIT_FAILURE);
+    return -1;
+    //exit(EXIT_FAILURE);
   }
 
   status = connect(socket_fd, host_info_list->ai_addr, host_info_list->ai_addrlen);
   if(status == -1){
     cerr<<"Error:cannot connect to socket"<<endl;
     cerr<<" ("<<hostname<<","<<port<<")"<<endl;
-    exit(EXIT_FAILURE);
+    return -1;
+    //exit(EXIT_FAILURE);
   }
 
   freeaddrinfo(host_info_list);
@@ -100,7 +103,8 @@ int Helper::server_accept(int socket_fd, std::string * ip){
   struct sockaddr_in * addr = (struct sockaddr_in *)&socket_addr;
   if(client_connection_fd == -1){
     cerr<<"Error: cannot accept connection on socket" <<endl;
-    exit(EXIT_FAILURE);
+    return -1;
+    //exit(EXIT_FAILURE);
   }
 
   *ip = inet_ntoa(addr->sin_addr);
@@ -155,6 +159,7 @@ int Helper::recv_message(int socket_fd, std::vector<char> * buffer, bool isChunk
         (*buffer).resize( len + recv_len);
         i = len;
     }
+    return (*buffer).size();
 }
 
 
