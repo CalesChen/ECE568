@@ -20,7 +20,7 @@ class Proxy{
 		char * portNum;
 
 		Proxy(char * port) : portNum(port){}
-		void handleProxy(Cache* cache);
+		void handleProxy(char ** argv);
 		static void * handleReq(void * parameter);
 		//void* handleReq(int server_fd,int client_fd, int thread_id, std::string ip,Cache* cache);
 		static int connectOriginalServer(request_info * parsedRequest);

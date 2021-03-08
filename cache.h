@@ -25,10 +25,12 @@
 class Cache{
 	public:
 		int capacity;
+		std::ofstream& file;
 		std::unordered_map<std::string, std::list<std::pair<std::string, Response> >::iterator> cacheMap;
 		std::list<std::pair<std::string, Response> > cacheList;
 
-		Cache(int capacity):capacity(capacity){}
+		//Cache(int capacity):capacity(capacity), file(NULL){}
+		Cache(int capacity, std::ofstream& logFile):capacity(capacity), file(logFile){}
 		Response* getCache(std::string url, int oriServer_fd, int thread_id, request_info* request);
 		void putCache(Response response, std::string url, int thread_id);
 		bool revalidate(Response * response,int oriServer_fd, std::string request);

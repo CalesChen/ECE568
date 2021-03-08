@@ -15,10 +15,10 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, requ
 			request->CacheControl.find("no-cache")!=std::string::npos){
 			//###############
 			if(!revalidate(findedResponse,oriServer_fd,request->request)){
-				std::ofstream file;
-   				file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+				//std::ofstream file;
+   				//file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     			file << thread_id << " : "<< "in cache, requires validation"<< std::endl;
-    			file.close();
+    			//file.close();
 				return NULL;
 			}
 		}
@@ -30,17 +30,17 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, requ
 		}
 		//put this pair to top
 		cacheList.splice(cacheList.begin(), cacheList, it->second);
-		std::ofstream file;
-   		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+		// std::ofstream file;
+   		// file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     	file << thread_id << " : "<< "in cache, valid"<< std::endl;
-    	file.close();
+    	//file.close();
 		std::cout<<"cache USED!!!!!!!!!!"<<std::endl;
 		return findedResponse;
 	}
-	std::ofstream file;
-	file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+	// std::ofstream file;
+	// file.open("proxy.log", std::ios_base::app | std::ios_base::out);
 	file << thread_id << " : "<< "not in cache"<< std::endl;
-	file.close();
+	//file.close();
 	return NULL;
 }
 
