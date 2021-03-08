@@ -64,3 +64,230 @@
 21 : not in cache
 23 : not in cache
 25 : not in cache
+0 : not in cache
+2 : not in cache
+3 : not in cache
+29 : not in cache
+21 : not in cache
+30 : not in cache
+39 : not in cache
+56 : not in cache
+96 : not in cache
+1 : not in cache
+2 : not in cache
+71 : not in cache
+77 : not in cache
+81 : not in cache
+82 : not in cache
+48 : not in cache
+56 : not in cache
+68 : not in cache
+95 : not in cache
+101 : not in cache
+112 : not in cache
+19 : not in cache
+129 : not in cache
+135 : not in cache
+150 : not in cache
+149 : not in cache
+163 : not in cache
+168 : not in cache
+169 : in cache, requires validation
+178 : in cache, but expired at 
+181 : in cache, but expired at 
+200 : in cache, requires validation
+202 : in cache, requires validation
+203 : in cache, requires validation
+204 : in cache, requires validation
+205 : in cache, requires validation
+208 : in cache, requires validation
+209 : in cache, requires validation
+210 : in cache, requires validation
+211 : in cache, requires validation
+212 : in cache, requires validation
+213 : in cache, requires validation
+226 : in cache, requires validation
+260 : in cache, requires validation
+256 : not in cache
+255 : not in cache
+253 : not in cache
+328 : in cache, requires validation
+351 : in cache, requires validation
+367 : in cache, requires validation
+434 : in cache, requires validation
+471 : in cache, requires validation
+472 : in cache, requires validation
+473 : in cache, requires validation
+474 : in cache, requires validation
+477 : in cache, requires validation
+480 : in cache, requires validation
+539 : in cache, requires validation
+8 : not in cache
+9 : not in cache
+39 : not in cache
+42 : not in cache
+43 : not in cache
+59 : not in cache
+65 : not in cache
+66 : not in cache
+67 : not in cache
+68 : not in cache
+69 : not in cache
+70 : not in cache
+71 : not in cache
+72 : not in cache
+74 : not in cache
+75 : not in cache
+76 : not in cache
+77 : not in cache
+78 : not in cache
+79 : not in cache
+80 : not in cache
+81 : not in cache
+82 : not in cache
+83 : not in cache
+84 : not in cache
+85 : not in cache
+0 : not in cache
+3 : not in cache
+1 : not in cache
+2 : not in cache
+4 : not in cache
+0 : not in cache
+3 : not in cache
+16 : not in cache
+42 : not in cache
+43 : not in cache
+63 : not in cache
+70 : not in cache
+74 : not in cache
+75 : not in cache
+89 : not in cache
+92 : not in cache
+94 : not in cache
+95 : not in cache
+91 : not in cache
+101 : not in cache
+105 : not in cache
+106 : not in cache
+111 : not in cache
+112 : not in cache
+110 : not in cache
+107 : not in cache
+109 : not in cache
+115 : not in cache
+116 : not in cache
+117 : not in cache
+118 : not in cache
+119 : not in cache
+157 : not in cache
+158 : not in cache
+159 : not in cache
+161 : not in cache
+163 : not in cache
+164 : not in cache
+200 : not in cache
+233 : not in cache
+239 : not in cache
+284 : not in cache
+312 : not in cache
+318 : not in cache
+323 : not in cache
+324 : not in cache
+325 : in cache, requires validation
+326 : in cache, requires validation
+327 : in cache, requires validation
+328 : in cache, requires validation
+330 : in cache, requires validation
+331 : in cache, requires validation
+334 : in cache, requires validation
+340 : in cache, requires validation
+353 : in cache, requires validation
+354 : in cache, requires validation
+355 : in cache, requires validation
+356 : not in cache
+357 : in cache, requires validation
+358 : not in cache
+359 : in cache, requires validation
+360 : in cache, requires validation
+361 : in cache, requires validation
+362 : in cache, requires validation
+363 : in cache, requires validation
+370 : in cache, requires validation
+371 : in cache, requires validation
+373 : in cache, requires validation
+374 : in cache, requires validation
+375 : in cache, requires validation
+376 : in cache, requires validation
+377 : in cache, requires validation
+378 : in cache, requires validation
+379 : in cache, requires validation
+380 : in cache, requires validation
+381 : in cache, requires validation
+382 : in cache, requires validation
+42 : not in cache
+43 : not in cache
+44 : not in cache
+45 : not in cache
+46 : not in cache
+47 : not in cache
+48 : not in cache
+49 : not in cache
+50 : not in cache
+51 : not in cache
+52 : not in cache
+53 : not in cache
+58 : not in cache
+60 : in cache, valid
+61 : in cache, requires validation
+62 : in cache, requires validation
+63 : in cache, valid
+64 : in cache, requires validation
+65 : in cache, requires validation
+66 : in cache, requires validation
+67 : in cache, requires validation
+85 : not in cache
+88 : not in cache
+90 : not in cache
+186 : in cache, requires validation
+187 : in cache, requires validation
+188 : in cache, requires validation
+189 : in cache, requires validation
+190 : in cache, requires validation
+191 : in cache, requires validation
+200 : in cache, valid
+201 : in cache, valid
+202 : in cache, requires validation
+203 : in cache, requires validation
+204 : in cache, requires validation
+205 : in cache, requires validation
+206 : in cache, requires validation
+207 : in cache, requires validation
+208 : in cache, requires validation
+209 : in cache, requires validation
+212 : in cache, requires validation
+213 : in cache, requires validation
+214 : in cache, requires validation
+215 : in cache, requires validation
+216 : in cache, requires validation
+217 : in cache, requires validation
+218 : in cache, requires validation
+219 : in cache, requires validation
+220 : in cache, requires validation
+221 : in cache, requires validation
+222 : in cache, valid
+64 : not in cache
+70 : not in cache
+73 : not in cache
+75 : not in cache
+76 : not in cache
+77 : not in cache
+78 : not in cache
+79 : not in cache
+80 : not in cache
+81 : in cache, requires validation
+82 : in cache, requires validation
+83 : in cache, requires validation
+84 : in cache, requires validation
+85 : in cache, requires validation
+86 : in cache, requires validation
