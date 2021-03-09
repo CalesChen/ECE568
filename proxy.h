@@ -17,10 +17,10 @@
 //server_start   client_start   server_recv
 class Proxy{
 	public:
-		char * portNum;
+		const char * portNum;
 
-		Proxy(char * port) : portNum(port){}
-		void handleProxy(char ** argv);
+		Proxy(const char * port) : portNum(port){}
+		void handleProxy(int capacity);
 		static void * handleReq(void * parameter);
 		//void* handleReq(int server_fd,int client_fd, int thread_id, std::string ip,Cache* cache);
 		static int connectOriginalServer(request_info * parsedRequest);
@@ -34,6 +34,7 @@ class Proxy{
 		static void handlePost(int client_fd, int server_fd, int thread_id, request_info * request);
 		static void handleGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache* cache);
 		static void ServerGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache * cache);
+		static bool Check502(string all, int client_fd, int thread_id);
     	//void Proxy::handleGet(int client_fd, int server_fd, int id, int len, vector<char> * request, const char * host, Cache* cache);
     	//void Proxy::ServerGet(int client_fd, int server_fd, int id, int len, vector<char> * request, const char * host_url);
 };

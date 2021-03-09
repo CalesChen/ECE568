@@ -4,8 +4,9 @@ int main(int argc, char ** argv){
 
     //int capacity = atoi(argv[1]);
     //Cache proxyCache(capacity);
-    Proxy myProxy(argv[2]);
+    const char * port = "12345";
+    Proxy myProxy(port);
 
-    myProxy.handleProxy(argv);
+    myProxy.handleProxy(50);
     
 }
