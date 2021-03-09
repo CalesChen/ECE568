@@ -1,0 +1,181 @@
+/*************************GET**********************************/
+
+/********************Get 1************************************/
+2: Requesting "GET http://www.httpwatch.com/favicon.ico HTTP/1.1" from http://www.httpwatch.com/favicon.ico 
+2: Received "HTTP/1.1 200 OK " from http://www.httpwatch.com/favicon.ico 
+2: Responding "HTTP/1.1 200 OK"
+
+GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1
+Host: www.httpwatch.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+HTTP/1.1 200 OK
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Trailer: X-HttpWatch-Sample
+Transfer-Encoding: chunked
+Content-Type: image/jpeg; charset=utf-8
+Expires: -1
+Server: Microsoft-IIS/10.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Arr-Disable-Session-Affinity: True
+Date: Tue, 09 Mar 2021 14:36:26 GMT
+
+And then it is the picture. 
+
+/********************Get 2************************************/
+
+10: "GET http://people.duke.edu/~bmr23/ece568/class.html HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:08:36 2021
+10 : not in cache
+10: Requesting "GET http://people.duke.edu/~bmr23/ece568/class.html HTTP/1.1" from http://people.duke.edu/~bmr23/ece568/class.html 
+10: Received "HTTP/1.1 404 Not Found " from http://people.duke.edu/~bmr23/ece568/class.html 
+10: Responding "HTTP/1.1 404 Not Found"
+GET http://people.duke.edu/favicon.ico HTTP/1.1
+Host: people.duke.edu
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+Accept: image/webp,*/*
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Cookie: _ga=GA1.2.831356587.1593310832
+
+HTTP/1.1 404 Not Found
+Date: Tue, 09 Mar 2021 14:47:24 GMT
+Server: Apache
+Content-Length: 209
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+
+/********************Get 3************************************/
+23: "GET http://www.rabihyounes.com/ HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:13:51 2021
+23 : not in cache
+23: Requesting "GET http://www.rabihyounes.com/ HTTP/1.1" from http://www.rabihyounes.com/ 
+23: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/ 
+23: Responding "HTTP/1.1 200 OK"
+24: "CONNECT fonts.googleapis.com:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:13:57 2021
+25: "CONNECT use.fontawesome.com:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:13:57 2021
+26: "GET http://www.rabihyounes.com/css/cssNewest.css HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:13:57 2021
+27: "GET http://www.rabihyounes.com/scripts/scriptNewest.js HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:13:57 2021
+28: "GET http://www.rabihyounes.com/scripts/analytics.js HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:13:57 2021
+27 : not in cache
+27: Requesting "GET http://www.rabihyounes.com/scripts/scriptNewest.js HTTP/1.1" from http://www.rabihyounes.com/scripts/scriptNewest.js 
+28 : not in cache
+28: Requesting "GET http://www.rabihyounes.com/scripts/analytics.js HTTP/1.1" from http://www.rabihyounes.com/scripts/analytics.js 
+26 : not in cache
+26: Requesting "GET http://www.rabihyounes.com/css/cssNewest.css HTTP/1.1" from http://www.rabihyounes.com/css/cssNewest.css 
+28: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/scripts/analytics.js 
+25: Responding "HTTP/1.1 200 OK"
+27: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/scripts/scriptNewest.js 
+26: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/css/cssNewest.css 
+28: Responding "HTTP/1.1 200 OK"
+27: Responding "HTTP/1.1 200 OK"
+26: Responding "HTTP/1.1 200 OK"
+29: "CONNECT platform.twitter.com:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:14:06 2021
+30: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:14:27 2021
+30 : in cache, requires validation
+30: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from http://detectportal.firefox.com/success.txt?ipv4 
+30: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt?ipv4 
+31: "GET http://www.rabihyounes.com/images/icon.ico HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:14:28 2021
+32: "GET http://www.rabihyounes.com/images/me.jpg HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:14:28 2021
+33: "GET http://www.rabihyounes.com/images/Freya.jpg HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:14:28 2021
+34: "GET http://www.rabihyounes.com/images/Zeus.jpg HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:14:28 2021
+31 : not in cache
+31: Requesting "GET http://www.rabihyounes.com/images/icon.ico HTTP/1.1" from http://www.rabihyounes.com/images/icon.ico 
+34 : not in cache
+34: Requesting "GET http://www.rabihyounes.com/images/Zeus.jpg HTTP/1.1" from http://www.rabihyounes.com/images/Zeus.jpg 
+33 : not in cache
+33: Requesting "GET http://www.rabihyounes.com/images/Freya.jpg HTTP/1.1" from http://www.rabihyounes.com/images/Freya.jpg 
+32 : not in cache
+32: Requesting "GET http://www.rabihyounes.com/images/me.jpg HTTP/1.1" from http://www.rabihyounes.com/images/me.jpg 
+35: "GET http://www.google-analytics.com/ga.js HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:14:29 2021
+34: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/images/Zeus.jpg 
+32: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/images/me.jpg 
+33: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/images/Freya.jpg 
+31: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/images/icon.ico 
+36: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:14:32 2021
+36 : in cache, requires validation
+36: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from http://detectportal.firefox.com/success.txt?ipv4 
+36: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt?ipv4 
+33: Responding "HTTP/1.1 200 OK"
+32: Responding "HTTP/1.1 200 OK"
+31: Responding "HTTP/1.1 200 OK"
+34: Responding "HTTP/1.1 200 OK"
+37: "GET http://www.rabihyounes.com/ HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:15:20 2021
+37 : in cache, valid
+38: "CONNECT fonts.googleapis.com:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:15:20 2021
+39: "GET http://www.rabihyounes.com/scripts/scriptNewest.js HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:15:20 2021
+40: "GET http://www.rabihyounes.com/scripts/analytics.js HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:15:20 2021
+39 : in cache, valid
+40 : in cache, valid
+41: "CONNECT platform.twitter.com:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:15:23 2021
+25: Tunnel closed
+24: Responding "HTTP/1.1 200 OK"
+24: Tunnel closed
+29: Responding "HTTP/1.1 200 OK"
+29: Tunnel closed
+42: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:16:32 2021
+42 : in cache, requires validation
+42: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from http://detectportal.firefox.com/success.txt?ipv4 
+42: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt?ipv4 
+43: "GET http://www.rabihyounes.com/images/me.jpg HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:16:33 2021
+44: "GET http://www.rabihyounes.com/images/Freya.jpg HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:16:33 2021
+45: "GET http://www.rabihyounes.com/images/Zeus.jpg HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:16:33 2021
+46: "GET http://www.google-analytics.com/ga.js HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:16:33 2021
+44 : in cache, valid
+45 : in cache, valid
+43 : in cache, valid
+47: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:16:37 2021
+47 : in cache, requires validation
+47: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from http://detectportal.firefox.com/success.txt?ipv4 
+47: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt?ipv4 
+
+
+GET http://www.rabihyounes.com/ HTTP/1.1
+Host: www.rabihyounes.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+Response a lot
+
+/******************************POST************************************/
+
+/****************************POST 1**********************************/
+0: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:20:24 2021
+0 : not in cache
+0: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from http://httpbin.org/forms/post 
+0: Received "HTTP/1.1 200 OK " from http://httpbin.org/forms/post 
+0: Responding "HTTP/1.1 200 OK"
+1: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:21:06 2021
+1: Responding "HTTP/1.1 200 OK"
+2: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:21:10 2021
+3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:21:13 2021
+3: Responding "HTTP/1.1 200 OK"
+4: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:21:15 2021
+5: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:21:17 2021
+5: Responding "HTTP/1.1 200 OK"
+6: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:21:18 2021
+7: "GET http://httpbin.org/favicon.ico HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:21:26 2021
+7 : not in cache
+7: Requesting "GET http://httpbin.org/favicon.ico HTTP/1.1" from http://httpbin.org/favicon.ico 
+7: Received "HTTP/1.1 404 NOT FOUND " from http://httpbin.org/favicon.ico 
+
+19: "POST http://httpbin.org/post HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:22:33 2021
+19: Received "HTTP/1.1 200 OK" from http://httpbin.org/post 
+19: Responding "HTTP/1.1 200 OK
+
+/*******************************CONNECT***************************/
+/***************************CONNECT 1****************************/
+24: "CONNECT fonts.googleapis.com:443 HTTP/1.1" from 10.200.112.182 @ Tue Mar  9 15:28:22 2021
+24: Responding "HTTP/1.1 200 OK"
+24: Tunnel closed
