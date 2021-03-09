@@ -33,6 +33,7 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, requ
 		std::ofstream file;
    		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     	file << thread_id << " : "<< "in cache, valid"<< std::endl;
+		file << thread_id << findedResponse->header<< std::endl;
     	file.close();
 		std::cout<<"cache USED!!!!!!!!!! "<< url <<std::endl;
 		std::cout << findedResponse->header<<std::endl;

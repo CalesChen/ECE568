@@ -60,20 +60,25 @@ void * Proxy::handleReq(void * para){
      }
      //convert it  to string and parse it
 	 std::string request(ori_request);
-     //cout<<request<<endl;
+     cout<<request<<endl;
     //  string temp(ori_request.begin(), ori_request.end());
 	//  request.insert(request.begin(),ori_request.begin(),ori_request.end());
+	 //需不需要delete？？？？？？？
 	 request_info * parsedRequest = new request_info(request);
+	 //logfile可不可以改？？？？？？？？？
 	 std::string method = parsedRequest->method;
 	 logFile << thread_id << ": \"" << parsedRequest->request_line << "\" from "<< ip << " @ " << getCurrTime().append("\0");
      cout<<"The Method is "<<method<<endl;
 	int oriServer_fd = connectOriginalServer(parsedRequest);
      if(method == "GET"){
+	 	//####################
         cout<<"In GET"<<endl;
 	 	handleGet(client_fd, oriServer_fd,thread_id, parsedRequest, cache);
 	 } else if(method == "POST"){
+	 	//##############
 	 	handlePost(client_fd,oriServer_fd, thread_id, parsedRequest);
 	 } else if(method == "CONNECT"){ 
+	 	//##############
         cout<<method<<endl;
 	 	handleConnect(client_fd, oriServer_fd, thread_id);
 	 } else {
@@ -82,6 +87,8 @@ void * Proxy::handleReq(void * para){
          logFile << thread_id << ": Resquesting \"HTTP/1.1 400 Bad Request\"" << std::endl;
      }
      delete parsedRequest;
+     close(oriServer_fd);
+     close(client_fd);
      return NULL;
 }
 
@@ -122,8 +129,9 @@ void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info 
         //request_info request_t(request_temp);
 
         logFile << thread_id << ": Requesting \"" << request->request_line << "\" from "<< request->uri << endl;
+        //send(server_fd, request->request.c_str(), request->request.size(), 0);
         send(server_fd, request->request.c_str(), request->request.size(), MSG_NOSIGNAL);
-        cout<<request->request<<endl<<request->request.size()<<endl;
+        //cout<<request->request<<endl<<request->request.size()<<endl;
         // THis function will receive the message and send it to the client. 
         // I need more information for put the message into Cache
         
@@ -132,6 +140,7 @@ void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info 
     // If I can find a match in the temp, I will just send the response?
     else{
         cout << temp->firstLine<<endl;
+        //send(client_fd, temp->response.c_str(), temp->response.size(), 0);
         send(client_fd, temp->response.c_str(), temp->response.size(), MSG_NOSIGNAL);
     }
 
@@ -177,7 +186,7 @@ void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, request_info 
 
     cout<<server_msg.size()<<endl;
     string all(server_msg.begin(), server_msg.end());
-    cout<<all;
+    //cout<<all;
     cout<<send(client_fd, all.c_str(), all.size(), MSG_NOSIGNAL)<<endl;
     
 
@@ -198,38 +207,28 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
     // The last parameter will help to avoid "send func" send exception. 
     // We will handle it by the response of the server. 
     cout<<request->request<<endl;
-    //chenge to char test
+
     cout<<send(server_fd, request->request.c_str(), request->request.size(), MSG_NOSIGNAL)<<endl;
-    char ori_response[65535] = {0};
-     int response_len = recv(client_fd, ori_response, sizeof(ori_response), 0);
-     cout<<"The Length is "<<response_len<<endl;
-     if(response_len > 0){
-     
-     //convert it  to string and parse it
-	 std::string temp(ori_response);
-     
-    // vector<char> response(1,0);
-    // Helper h;
-    // int response_len = h.recv_message(server_fd, &response, true);
-    // cout<<"The Length is "<<response_len<<endl;
-    // //string response_str(response.begin(), response.end());
-    // if(response_len > 0){
-    //     // Which parameter trans in.
-    //     // response res;
-    //     // res.parseResponse();
-    //     //response_len = h.recv_message(server_fd, &response, false);
-         cout<<response_len<<endl;
-    //     //std::string temp(response.begin(), response.begin() + response_len);
-    //     std::string temp(response.begin(), response.end()+4);
-         cout<<temp<<endl;
-         Response res(temp); 
+    vector<char> response(1,0);
+    Helper h;
+    int response_len = h.recv_message(server_fd, &response, true);
+    cout<<"The Length is "<<response_len<<endl;
+    //string response_str(response.begin(), response.end());
+    if(response_len > 1){
+        // Which parameter trans in.
+        // response res;
+        // res.parseResponse();
+        //response_len = h.recv_message(server_fd, &response, false);
+        cout<<response_len<<endl;
+        std::string temp(response.begin(), response.begin() + response_len);
+        cout<<temp<<endl;
+        Response res(temp); 
         //res.parseResponse();
 
         // How to get the first line in the response?
         logFile << thread_id << ": Received \"" << res.firstLine << "\" from " << request->uri << endl;
-        //cout << thread_id << ": Received \"" << res.firstLine << "\" from " << request->uri << endl;
         send(client_fd, temp.c_str(), response_len, MSG_NOSIGNAL);
-        //cout << thread_id << ": Responding \""<<res.firstLine<<endl;
+
         logFile << thread_id << ": Responding \""<<res.firstLine<<endl;
 
     }
@@ -240,6 +239,7 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
 
 void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
     string msg = "HTTP/1.1 200 OK\r\n\r\n";
+
     send(client_fd, msg.c_str() , msg.size(), MSG_NOSIGNAL);
 
     logFile << thread_id << ": Responding \"HTTP/1.1 200 OK\""<<endl;
@@ -263,7 +263,7 @@ void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
             char msg2[65536] = {0};
             if(FD_ISSET(fd_set_cs[i], &fds)){
                 //len_recv = Proxy::recv_message(fd_set_cs[i], &msg2, false);
-                len_recv = recv(fd_set_cs[i], msg2, sizeof(msg2), 0);
+                len_recv = recv(fd_set_cs[i], msg2, sizeof(msg2), MSG_NOSIGNAL);
                 if(len_recv <= 0){
                     return;
                 }

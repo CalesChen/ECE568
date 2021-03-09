@@ -88,27 +88,32 @@ time_t Response::getExpires_convert(){
 
 bool Response::timeValid(int thread_id){
 	time_t now =time(0);
-	if(now>convertedExpires){
-		std::ofstream file;
-   		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
-    	file << thread_id << " : "<< "in cache, but expired at "<< Expires <<std::endl;
-    	file.close();
-		return false;
-	} 
 	if(maxAge>0){
 		if(maxAge + convertedDate <= now){
 			//有别的方法进行转换嘛？？？？？？？
 		    time_t exipTime = maxAge + convertedDate;
   			struct tm * tm = gmtime(&exipTime);
+			  struct tm * tm1 = gmtime(&convertedDate);
   			//const char * time = asctime(tm);
-  			//有别的方法写到logfile里嘛
 			std::ofstream file;
    			file.open("proxy.log", std::ios_base::app | std::ios_base::out);
-    		file << thread_id << " : "<< "in cache, but expired at "<< std::string(asctime(tm)) <<std::endl;
-    		file.close();
+    		//file << thread_id << " : "<< "in cache, but expired at "<< std::string(asctime(tm)) <<std::endl;
+    		file << thread_id << " : "<< "in cache, but expired at "<< asctime(tm) <<std::endl;
+			file << thread_id << " : "<< "in cache, but expired at date "<< asctime(tm1) <<std::endl;
+			//std::cout << thread_id << " : "<< "in cache, but expired at "<< asctime(tm) <<std::endl;
+			file.close();
 			return false;
 		} 
 	}
+	if(now>convertedExpires){
+		struct tm * tm = gmtime(&convertedExpires);
+		std::ofstream file;
+   		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+    	file << thread_id << " : "<< "in cache, but expired at EXPIRES "<< asctime(tm) <<std::endl;
+    	file.close();
+		return false;
+	} 
+
 	return true;
 }
 
