@@ -1,7 +1,7 @@
-FROM  ubuntu:18.04
+FROM  ubuntu:18.04
+RUN mkdir var/log/erss
+RUN apt-get update && apt-get -y install g++ make
+RUN mkdir /src
+WORKDIR /src
 
-RUN mkdir /var/log/erss
-add . /var/log/erss/
-WORKDIR /var/log/erss
-
-ENTRYPOINT ["./run.sh"]
+CMD  ["./main 10 12345"]

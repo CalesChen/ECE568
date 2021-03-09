@@ -3,7 +3,10 @@ version: '2'
 services:
   main:
     build: ./src
+    user: root
+    command: bash -c "make clean && make && ./main 10 12345"
     volumes:
-      - ./src:/var/log/erss
+      - ./logs:/var/log/erss
+      - ./src:/src
     ports:
       - "12345:12345"

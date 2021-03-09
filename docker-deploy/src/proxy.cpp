@@ -7,10 +7,10 @@ std::ofstream logFile("/var/log/erss/proxy.log");
 //必须要用portNUM吗 这是谁的portnum？？？？？？？？？
 //502报错是啥玩意儿 what's bad gateway？？？？？
 //如果contentlength跟实际不match 在哪check？报什么错？
-void Proxy::handleProxy(){
+void Proxy::handleProxy(char ** argv){
 	//create a socket to connect with client, return this socket's id
-    //int capacity = atoi(argv[1]);
-    Cache s(logFile);
+    int capacity = atoi(argv[1]);
+    Cache s(capacity, logFile);
     Cache * cache = &s;
     Helper h;
 	int server_fd = h.server_start(portNum);
