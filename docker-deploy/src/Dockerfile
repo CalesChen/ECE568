@@ -4,4 +4,4 @@ RUN apt-get update && apt-get -y install g++ make
 RUN mkdir /src
 WORKDIR /src
 
-CMD  ["./main 10 12345"]
+CMD  ["./main"]

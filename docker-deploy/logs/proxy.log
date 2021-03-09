@@ -1,542 +1,256 @@
-5: "CONNECT push.services.mozilla.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:13 2021
-5: Responding "HTTP/1.1 200 OK"
-6: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:14 2021
-7: "CONNECT cdn.syndication.twimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:16 2021
-7: Responding "HTTP/1.1 200 OK"
-8: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:29 2021
-8: Responding "HTTP/1.1 200 OK"
-9: "CONNECT www.youtube.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:31 2021
-9: Responding "HTTP/1.1 200 OK"
-10: "CONNECT code.jquery.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:31 2021
-11: "CONNECT cdn.datatables.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:31 2021
+0: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:28 2021
+0 : not in cache
+0: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+0: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+1: "GET http://adu.g-fox.cn/adu.gif?channelid=stub.firefox.com.cn&fxversion=86.0&ceversion=2021.2&ver=2_2&pk=%7B50c5e51e-03e9-4f91-893c-221c7f3aeac1%7D&uk=%7Bfaabc385-4d61-4837-88c6-7b523a253b0d%7D&cehome=true&locale=zh-CN&age=4&default=false&defaultHttp=false&flash=&tracking=3&now=1615305148798 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:29 2021
+3: "CONNECT offlintab.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:29 2021
+4: "GET http://addons.g-fox.cn/coba-webext.gif?action=disconnect&random=0.03957181615764027 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:29 2021
+1 : not in cache
+1: Requesting "GET http://adu.g-fox.cn/adu.gif?channelid=stub.firefox.com.cn&fxversion=86.0&ceversion=2021.2&ver=2_2&pk=%7B50c5e51e-03e9-4f91-893c-221c7f3aeac1%7D&uk=%7Bfaabc385-4d61-4837-88c6-7b523a253b0d%7D&cehome=true&locale=zh-CN&age=4&default=false&defaultHttp=false&flash=&tracking=3&now=1615305148798 HTTP/1.1" from http://adu.g-fox.cn/adu.gif?channelid=stub.firefox.com.cn&fxversion=86.0&ceversion=2021.2&ver=2_2&pk=%7B50c5e51e-03e9-4f91-893c-221c7f3aeac1%7D&uk=%7Bfaabc385-4d61-4837-88c6-7b523a253b0d%7D&cehome=true&locale=zh-CN&age=4&default=false&defaultHttp=false&flash=&tracking=3&now=1615305148798 
+1: Received "HTTP/1.1 200 OK " from http://adu.g-fox.cn/adu.gif?channelid=stub.firefox.com.cn&fxversion=86.0&ceversion=2021.2&ver=2_2&pk=%7B50c5e51e-03e9-4f91-893c-221c7f3aeac1%7D&uk=%7Bfaabc385-4d61-4837-88c6-7b523a253b0d%7D&cehome=true&locale=zh-CN&age=4&default=false&defaultHttp=false&flash=&tracking=3&now=1615305148798 
+1: Responding "HTTP/1.1 200 OK"
+5: "CONNECT tracking.firefox.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:30 2021
+6: "CONNECT home.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:30 2021
+3: Responding "HTTP/1.1 200 OK"
+9: "GET http://addons.g-fox.cn/ntab.gif?c=ntab&t=homepage&a=override&d=defaultVal&f=&r=0.07754541862771558&cid=stub.firefox.com.cn HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:30 2021
+10: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:30 2021
 10: Responding "HTTP/1.1 200 OK"
-11: Responding "HTTP/1.1 200 OK"
-13: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:32 2021
-12: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:32 2021
-14: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:32 2021
+5: Responding "HTTP/1.1 200 OK"
+12: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:30 2021
 12: Responding "HTTP/1.1 200 OK"
+13: "CONNECT push.services.mozilla.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:30 2021
+4 : not in cache
+4: Requesting "GET http://addons.g-fox.cn/coba-webext.gif?action=disconnect&random=0.03957181615764027 HTTP/1.1" from http://addons.g-fox.cn/coba-webext.gif?action=disconnect&random=0.03957181615764027 
 13: Responding "HTTP/1.1 200 OK"
-14: Responding "HTTP/1.1 200 OK"
-15: "CONNECT www.googletagmanager.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:32 2021
+15: "CONNECT firefox.settings.services.mozilla.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:30 2021
+9 : not in cache
+9: Requesting "GET http://addons.g-fox.cn/ntab.gif?c=ntab&t=homepage&a=override&d=defaultVal&f=&r=0.07754541862771558&cid=stub.firefox.com.cn HTTP/1.1" from http://addons.g-fox.cn/ntab.gif?c=ntab&t=homepage&a=override&d=defaultVal&f=&r=0.07754541862771558&cid=stub.firefox.com.cn 
+16: "POST http://status.rapidssl.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:30 2021
 15: Responding "HTTP/1.1 200 OK"
-16: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:32 2021
-17: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:32 2021
-16: Responding "HTTP/1.1 200 OK"
-17: Responding "HTTP/1.1 200 OK"
-18: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:33 2021
-18: Responding "HTTP/1.1 200 OK"
-20: "CONNECT static.doubleclick.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:33 2021
-20: Responding "HTTP/1.1 200 OK"
-21: "CONNECT www.google-analytics.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:34 2021
-22: "POST http://ocsp.pki.goog/gts1o1core HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:34 2021
-21: Responding "HTTP/1.1 200 OK"
-23: "POST http://ocsp.pki.goog/gts1o1core HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:34 2021
-24: "CONNECT stats.g.doubleclick.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:37 2021
-24: Responding "HTTP/1.1 200 OK"
-25: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:37 2021
-25: Responding "HTTP/1.1 200 OK"
-26: "POST http://ocsp.pki.goog/gts1o1core HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:38 2021
-27: "CONNECT union-click.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:38 2021
-28: "POST http://status.rapidssl.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:38 2021
-27: Responding "HTTP/1.1 200 OK"
-29: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:41 2021
-30: "CONNECT www.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:45 2021
-31: "GET http://www.jd.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:45 2021
-30: Responding "HTTP/1.1 200 OK"
-32: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:46 2021
-31 : not in cache
-31: Requesting "GET http://www.jd.com/ HTTP/1.1" from http://www.jd.com/ 
-31: Received " " from http://www.jd.com/ 
-33: "CONNECT misc.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:50 2021
-34: "CONNECT misc.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:50 2021
-34: Responding "HTTP/1.1 200 OK"
-33: Responding "HTTP/1.1 200 OK"
-41: "CONNECT misc.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-42: "CONNECT wl.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-44: "CONNECT misc.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-43: "CONNECT misc.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-43: Responding "HTTP/1.1 200 OK"
-41: Responding "HTTP/1.1 200 OK"
+19: "CONNECT bookmarks-ssl.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:31 2021
+6: Responding "HTTP/1.1 200 OK"
+22: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:31 2021
+19: Responding "HTTP/1.1 200 OK"
+25: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:31 2021
+26: "POST http://ocsp.pki.goog/gts1o1core HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:31 2021
+27: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:31 2021
+4: Received "HTTP/1.1 200 OK " from http://addons.g-fox.cn/coba-webext.gif?action=disconnect&random=0.03957181615764027 
+9: Received "HTTP/1.1 200 OK " from http://addons.g-fox.cn/ntab.gif?c=ntab&t=homepage&a=override&d=defaultVal&f=&r=0.07754541862771558&cid=stub.firefox.com.cn 
+2: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+2 : not in cache
+2: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+2: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+28: "CONNECT snippets.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+28: Responding "HTTP/1.1 200 OK"
+29: "CONNECT entry.baidu.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+12: Tunnel closed
+29: Responding "HTTP/1.1 200 OK"
+30: "CONNECT www.duba.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+31: "CONNECT b.zol-img.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+32: "CONNECT b.zol-img.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+33: "CONNECT xiazai-fd.zol-img.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+34: "CONNECT b.zol-img.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+36: "CONNECT b.zol-img.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+37: "CONNECT b.zol-img.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+35: "CONNECT b.zol-img.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+38: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+39: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+40: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+41: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+42: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+43: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
+44: "CONNECT fragment2.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:33 2021
 44: Responding "HTTP/1.1 200 OK"
-45: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-46: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-47: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-48: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-49: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:51 2021
-42: Responding "HTTP/1.1 200 OK"
-50: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:53 2021
-35: "CONNECT m.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:53 2021
-36: "CONNECT m.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:53 2021
-37: "CONNECT m.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:53 2021
-38: "CONNECT m.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:53 2021
-39: "CONNECT m.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:53 2021
-40: "CONNECT m.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:53 2021
-51: "CONNECT misc.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:54 2021
-51: Responding "HTTP/1.1 200 OK"
-52: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:54 2021
-37: Responding "HTTP/1.1 200 OK"
-39: Responding "HTTP/1.1 200 OK"
-35: Responding "HTTP/1.1 200 OK"
+29: Tunnel closed
+44: Tunnel closed
+11: "GET http://www.rabihyounes.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:34 2021
+45: "POST http://ocsp2.globalsign.com/gsorganizationvalsha2g2 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:34 2021
+11 : not in cache
+11: Requesting "GET http://www.rabihyounes.com/ HTTP/1.1" from http://www.rabihyounes.com/ 
+11: Received "HTTP/1.1 200 OK " from http://www.rabihyounes.com/ 
+30: Responding "HTTP/1.1 200 OK"
+30: Tunnel closed
 40: Responding "HTTP/1.1 200 OK"
+40: Tunnel closed
+42: Responding "HTTP/1.1 200 OK"
+42: Tunnel closed
 38: Responding "HTTP/1.1 200 OK"
+38: Tunnel closed
+32: Responding "HTTP/1.1 200 OK"
+32: Tunnel closed
+31: Responding "HTTP/1.1 200 OK"
+31: Tunnel closed
+43: Responding "HTTP/1.1 200 OK"
+43: Tunnel closed
+41: Responding "HTTP/1.1 200 OK"
+41: Tunnel closed
 36: Responding "HTTP/1.1 200 OK"
-53: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:55 2021
-54: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:55 2021
-55: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:55 2021
-56: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-57: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-58: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-59: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-60: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-61: "CONNECT passport.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-62: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-63: "CONNECT lapi.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-64: "CONNECT passport.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-65: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-66: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-67: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-68: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-69: "CONNECT api.m.jd.com:443 HTTP/1.1" from 10.200.72.132 @ 70: "CONNECT api.m.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-Tue Mar  9 13:39:56 2021
-72: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-71: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-57: Responding "HTTP/1.1 200 OK"
-53: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:55 2021
-54: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:55 2021
-55: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:55 2021
-56: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-57: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-58: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-59: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-60: "CONNECT mercury.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-61: "CONNECT passport.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-62: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-63: "CONNECT lapi.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-64: "CONNECT passport.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-65: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-66: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-67: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-68: "CONNECT floor.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-69: "CONNECT api.m.jd.com:443 HTTP/1.1" from 10.200.72.132 @ 70: "CONNECT api.m.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-Tue Mar  9 13:39:56 2021
-72: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-71: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-57: Responding "HTTP/1.1 200 OK"
-  : Responding "HTTP/1.1 200 OK"
+36: Tunnel closed
+39: Responding "HTTP/1.1 200 OK"
+39: Tunnel closed
+47: "CONNECT shavar.services.mozilla.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:35 2021
+47: Responding "HTTP/1.1 200 OK"
+34: Responding "HTTP/1.1 200 OK"
+34: Tunnel closed
+48: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:36 2021
+37: Responding "HTTP/1.1 200 OK"
+37: Tunnel closed
+35: Responding "HTTP/1.1 200 OK"
+35: Tunnel closed
+33: Responding "HTTP/1.1 200 OK"
+33: Tunnel closed
+49: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:38 2021
+49 : not in cache
+49: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+49: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+47: Tunnel closed
+51: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:38 2021
+51: Responding "HTTP/1.1 200 OK"
+11: Responding "HTTP/1.1 200 OK"
+51: Tunnel closed
+54: "CONNECT www.google-analytics.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:40 2021
+54: Responding "HTTP/1.1 200 OK"
+55: "CONNECT platform.twitter.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:40 2021
 55: Responding "HTTP/1.1 200 OK"
-70: Responding "HTTP/1.1 200 OK"
-60: Responding "HTTP/1.1 200 OK"
-73: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:56 2021
-65: Responding "HTTP/1.1 200 OK"
-67: Responding "HTTP/1.1 200 OK"
+58: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:41 2021
+59: "POST http://ocsp.pki.goog/gts1o1core HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:41 2021
+58: Responding "HTTP/1.1 200 OK"
+57: "CONNECT platform.twitter.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:41 2021
+57: Responding "HTTP/1.1 200 OK"
+57: Tunnel closed
+62: "CONNECT syndication.twitter.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:42 2021
+63: "CONNECT cdn.syndication.twimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:42 2021
 62: Responding "HTTP/1.1 200 OK"
 63: Responding "HTTP/1.1 200 OK"
-74: "CONNECT fd.3.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:57 2021
-75: "CONNECT passport.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:57 2021
-76: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:57 2021
-69: Responding "HTTP/1.1 200 OK"
-61: Responding "HTTP/1.1 200 OK"
-61: Responding "HTTP/1.1 200 OK"
-64: Responding "HTTP/1.1 200 OK"
+58: Tunnel closed
+61: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:42 2021
+66: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:43 2021
+50: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:43 2021
 66: Responding "HTTP/1.1 200 OK"
-68: Responding "HTTP/1.1 200 OK"
-77: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:57 2021
-74: Responding "HTTP/1.1 200 OK"
-75: Responding "HTTP/1.1 200 OK"
-78: "CONNECT passport.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-79: "CONNECT passport.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-78: Responding "HTTP/1.1 200 OK"
+50 : not in cache
+50: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+50: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+55: Tunnel closed
+64: "CONNECT syndication.twitter.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:44 2021
+66: Tunnel closed
+64: Responding "HTTP/1.1 200 OK"
+70: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:45 2021
+70: Responding "HTTP/1.1 200 OK"
+70: Tunnel closed
+64: Tunnel closed
+72: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:46 2021
+72: Responding "HTTP/1.1 200 OK"
+75: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:48 2021
+75 : not in cache
+75: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+75: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+72: Tunnel closed
+77: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:49 2021
+77: Responding "HTTP/1.1 200 OK"
+78: "POST http://ocsp2.globalsign.com/gsorganizationvalsha2g2 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:49 2021
+77: Tunnel closed
+79: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:53 2021
 79: Responding "HTTP/1.1 200 OK"
-58: Responding "HTTP/1.1 200 OK"
-59: Responding "HTTP/1.1 200 OK"
-80: "CONNECT img1.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-81: "CONNECT img13.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-82: "CONNECT img11.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-83: "CONNECT img30.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-84: "CONNECT img12.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-85: "CONNECT img30.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-86: "CONNECT img11.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-87: "CONNECT img10.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-88: "CONNECT img11.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-89: "CONNECT img11.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ 90: "CONNECT img30.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-Tue Mar  9 13:39:58 2021
-91: "CONNECT imgcps.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-92: "CONNECT img12.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:39:58 2021
-89: Responding "HTTP/1.1 200 OK"
-93: "CONNECT wq.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:00 2021
+79: Tunnel closed
+80: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:54 2021
 80: Responding "HTTP/1.1 200 OK"
-82: Responding "HTTP/1.1 200 OK"
+80: Tunnel closed
+81: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:56 2021
 81: Responding "HTTP/1.1 200 OK"
-94: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:00 2021
-95: "CONNECT nfa.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:00 2021
-85: Responding "HTTP/1.1 200 OK"
-90: Responding "HTTP/1.1 200 OK"
+81: Tunnel closed
+82: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:57 2021
+82: Responding "HTTP/1.1 200 OK"
+82: Tunnel closed
+83: "CONNECT tracking-protection.cdn.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:52:58 2021
 83: Responding "HTTP/1.1 200 OK"
-86: Responding "HTTP/1.1 200 OK"
-92: Responding "HTTP/1.1 200 OK"
-92: Responding "HTTP/1.1 200 OK"
+83: Tunnel closed
+84: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:17 2021
+85: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:18 2021
+85 : not in cache
+85: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from http://httpbin.org/forms/post 
+85: Received "HTTP/1.1 200 OK " from http://httpbin.org/forms/post 
 84: Responding "HTTP/1.1 200 OK"
-88: Responding "HTTP/1.1 200 OK"
+84: Tunnel closed
+87: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:21 2021
+88: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:21 2021
+89: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:21 2021
+90: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:21 2021
+91: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:21 2021
 87: Responding "HTTP/1.1 200 OK"
+88: Responding "HTTP/1.1 200 OK"
+90: Responding "HTTP/1.1 200 OK"
+89: Responding "HTTP/1.1 200 OK"
 91: Responding "HTTP/1.1 200 OK"
-96: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:00 2021
-97: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:00 2021
-98: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:00 2021
-93: Responding "HTTP/1.1 200 OK"
-99: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:01 2021
-95: Responding "HTTP/1.1 200 OK"
-100: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:02 2021
-101: "CONNECT im-x.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:02 2021
-102: "CONNECT img20.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:02 2021
-103: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:02 2021
-104: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:02 2021
-102: Responding "HTTP/1.1 200 OK"
-105: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:02 2021
-106: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:02 2021
-101: Responding "HTTP/1.1 200 OK"
-107: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:03 2021
-108: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:04 2021
-109: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:04 2021
-110: "CONNECT imgcps.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:05 2021
-110: Responding "HTTP/1.1 200 OK"
-111: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:06 2021
-112: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:06 2021
-113: "CONNECT dc.3.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:07 2021
-114: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:07 2021
-115: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:07 2021
-116: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:07 2021
-113: Responding "HTTP/1.1 200 OK"
-117: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:08 2021
-118: "CONNECT dc.3.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:09 2021
-118: Responding "HTTP/1.1 200 OK"
-119: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:10 2021
-121: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ 120: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-Tue Mar  9 13:40:11 2021
-122: "CONNECT img14.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-123: "CONNECT img14.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-124: "CONNECT img14.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-125: "CONNECT ch.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-127: "CONNECT img12.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-128: "CONNECT img20.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-126: "CONNECT img12.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-126: Responding "HTTP/1.1 200 OK"
-128: Responding "HTTP/1.1 200 OK"
-129: "CONNECT img14.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-130: "CONNECT img13.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-131: "CONNECT img13.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-130: Responding "HTTP/1.1 200 OK"
-133: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-132: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:11 2021
-122: Responding "HTTP/1.1 200 OK"
-129: Responding "HTTP/1.1 200 OK"
-124: Responding "HTTP/1.1 200 OK"
-123: Responding "HTTP/1.1 200 OK"
-134: "CONNECT p.3.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:12 2021
-127: Responding "HTTP/1.1 200 OK"
-131: Responding "HTTP/1.1 200 OK"
-125: Responding "HTTP/1.1 200 OK"
-135: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:12 2021
-136: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:12 2021
-134: Responding "HTTP/1.1 200 OK"
-137: "CONNECT img14.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:12 2021
-138: "CONNECT img10.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:12 2021
-137: Responding "HTTP/1.1 200 OK"
-138: Responding "HTTP/1.1 200 OK"
-139: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:13 2021
-140: "CONNECT p.3.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:14 2021
-6: Received "" from http://ocsp.digicert.com/ 
-6: Responding "
-140: Responding "HTTP/1.1 200 OK"
-141: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:14 2021
-142: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:15 2021
-143: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:16 2021
-144: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:16 2021
-145: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:16 2021
-146: "CONNECT h5.360buyimg.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:16 2021
-147: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:16 2021
-146: Responding "HTTP/1.1 200 OK"
-148: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:17 2021
-149: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:17 2021
-150: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:18 2021
-151: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:18 2021
-152: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:18 2021
-153: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:18 2021
-154: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:19 2021
-155: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:20 2021
-156: "CONNECT blackhole-m.m.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:20 2021
-157: "CONNECT blackhole-m.m.jd.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:20 2021
-156: Responding "HTTP/1.1 200 OK"
-157: Responding "HTTP/1.1 200 OK"
-158: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:22 2021
-159: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:22 2021
-160: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:22 2021
-161: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:22 2021
-162: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:22 2021
-163: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:24 2021
-164: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:25 2021
-165: "CONNECT tracking.firefox.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:36 2021
-166: "CONNECT publish-pic-cpu.baidu.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:36 2021
-167: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:36 2021
-167: Responding "HTTP/1.1 200 OK"
-168: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:37 2021
-28: Received "" from http://status.rapidssl.com/ 
-28: Responding "
-166: Responding "HTTP/1.1 200 OK"
-165: Responding "HTTP/1.1 200 OK"
-169: "POST http://ocsp2.globalsign.com/gsorganizationvalsha2g2 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:39 2021
-170: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:39 2021
-171: "CONNECT www.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:42 2021
-171: Responding "HTTP/1.1 200 OK"
-172: "CONNECT support.mozilla.org:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:43 2021
-172: Responding "HTTP/1.1 200 OK"
-173: "POST http://ocsp.sca1b.amazontrust.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:44 2021
-174: "CONNECT weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:45 2021
-174: Responding "HTTP/1.1 200 OK"
-175: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:46 2021
-31: Responding ""
-176: "CONNECT static-media-prod-cdn.itsre-sumo.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:47 2021
-177: "CONNECT static-media-prod-cdn.itsre-sumo.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:47 2021
-178: "CONNECT static-media-prod-cdn.itsre-sumo.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:47 2021
-179: "CONNECT static-media-prod-cdn.itsre-sumo.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:47 2021
-179: Responding "HTTP/1.1 200 OK"
-177: Responding "HTTP/1.1 200 OK"
-176: Responding "HTTP/1.1 200 OK"
-178: Responding "HTTP/1.1 200 OK"
-180: "CONNECT static-media-prod-cdn.itsre-sumo.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:47 2021
-180: Responding "HTTP/1.1 200 OK"
-182: "CONNECT static-media-prod-cdn.itsre-sumo.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:47 2021
-182: Responding "HTTP/1.1 200 OK"
-181: "CONNECT user-media-prod-cdn.itsre-sumo.mozilla.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:48 2021
-181: Responding "HTTP/1.1 200 OK"
-183: "CONNECT location.services.mozilla.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:49 2021
-183: Responding "HTTP/1.1 200 OK"
-184: "GET http://weibo.com/us HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:49 2021
-185: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:50 2021
-184 : not in cache
-184: Requesting "GET http://weibo.com/us HTTP/1.1" from http://weibo.com/us 
-186: "CONNECT www.google-analytics.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:50 2021
-186: Responding "HTTP/1.1 200 OK"
-184: Received " " from http://weibo.com/us 
-187: "POST http://ocsp.pki.goog/gts1o1core HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:51 2021
-184: Responding ""
-188: "CONNECT img.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:52 2021
-189: "CONNECT img.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:52 2021
-190: "CONNECT img.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:52 2021
-191: "CONNECT js.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:52 2021
-193: "CONNECT js.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:52 2021
-191: Responding "HTTP/1.1 200 OK"
-193: Responding "HTTP/1.1 200 OK"
-188: Responding "HTTP/1.1 200 OK"
-189: Responding "HTTP/1.1 200 OK"
-190: Responding "HTTP/1.1 200 OK"
-194: "CONNECT stats.g.doubleclick.net:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:54 2021
-194: Responding "HTTP/1.1 200 OK"
-195: "POST http://ocsp2.globalsign.com/gsorganizationvalsha2g2 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:54 2021
-196: "POST http://ocsp.pki.goog/gts1o1core HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:54 2021
-197: "CONNECT h5.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-198: "CONNECT js1.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-199: "CONNECT tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-200: "CONNECT tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-201: "CONNECT tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-202: "CONNECT tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-203: "CONNECT tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-205: "CONNECT ww4.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-204: "CONNECT ww4.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-206: "CONNECT ww4.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-207: "CONNECT ww4.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-208: "CONNECT tva1.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-209: "GET http://wx4.sinaimg.cn/thumb180/6cab94d5ly1godpnt8votj20sg0jhadw.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-210: "CONNECT tva1.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-211: "GET http://wx3.sinaimg.cn/thumb180/8226a45cly1godz5z95tgj20ks0k7djv.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-212: "CONNECT tvax2.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:55 2021
-213: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-214: "GET http://wx2.sinaimg.cn/thumb180/001Nakaoly1godz3lt0sfj60iw05s0sy02.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-215: "CONNECT tvax3.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-216: "GET http://wx1.sinaimg.cn/thumb180/001Nakaoly1godyi819e8j60yi0jr0u602.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-217: "GET http://wx3.sinaimg.cn/thumb180/8226a45cly1godyjp1fzzj20ks0jpwiz.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-218: "GET http://wx4.sinaimg.cn/thumb180/6cab94d5ly1godpmvcukej20m80etmyn.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-219: "GET http://wx4.sinaimg.cn/thumb180/001Nakaoly1gody17fqi5j60xz0u0gym02.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-220: "GET http://wx2.sinaimg.cn/thumb180/8226a45cly1godxvrt2wbj20ko0l177w.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-221: "GET http://wx3.sinaimg.cn/thumb180/001n9vYZly1godwvaxp77j61kw16oqv702.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-222: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-223: "GET http://wx1.sinaimg.cn/orj480/002TLsr9ly1godqw9qv5fj60zk0k04qp02.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-224: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-225: "CONNECT js2.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-226: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-227: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-228: "CONNECT upload.cc:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-229: "CONNECT js1.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-230: "CONNECT upload.cc:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-231: "CONNECT upload.cc:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-232: "CONNECT upload.cc:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-228: Responding "HTTP/1.1 200 OK"
-231: Responding "HTTP/1.1 200 OK"
-230: Responding "HTTP/1.1 200 OK"
-233: "CONNECT ipopimgs.sina.tw:443 HTTP/1.1" from 10.200.72.132 @ 232: Responding "HTTP/1.1 200 OK"
-234: "CONNECT h5.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-Tue Mar  9 13:40:56 2021
-235: "GET http://wx1.sinaimg.cn/orj480/005zonqQly1godvpbn6orj30u0140x3k.jpg HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-199: Responding "HTTP/1.1 200 OK"
-203: Responding "HTTP/1.1 200 OK"
-201: Responding "HTTP/1.1 200 OK"
-200: Responding "HTTP/1.1 200 OK"
-197: Responding "HTTP/1.1 200 OK"
-202: Responding "HTTP/1.1 200 OK"
-226: Responding "HTTP/1.1 200 OK"
-213: Responding "HTTP/1.1 200 OK"
-198: Responding "HTTP/1.1 200 OK"
-229: Responding "HTTP/1.1 200 OK"
-227: Responding "HTTP/1.1 200 OK"
-224: Responding "HTTP/1.1 200 OK"
-222: Responding "HTTP/1.1 200 OK"
-225: Responding "HTTP/1.1 200 OK"
-234: Responding "HTTP/1.1 200 OK"
-206: Responding "HTTP/1.1 200 OK"
-207: Responding "HTTP/1.1 200 OK"
-204: Responding "HTTP/1.1 200 OK"
-215: Responding "HTTP/1.1 200 OK"
-212: Responding "HTTP/1.1 200 OK"
-209 : not in cache
-209: Requesting "GET http://wx4.sinaimg.cn/thumb180/6cab94d5ly1godpnt8votj20sg0jhadw.jpg HTTP/1.1" from http://wx4.sinaimg.cn/thumb180/6cab94d5ly1godpnt8votj20sg0jhadw.jpg 
-211 : not in cache
-211: Requesting "GET http://wx3.sinaimg.cn/thumb180/8226a45cly1godz5z95tgj20ks0k7djv.jpg HTTP/1.1" from http://wx3.sinaimg.cn/thumb180/8226a45cly1godz5z95tgj20ks0k7djv.jpg 
-235 : not in cache
-235: Requesting "GET http://wx1.sinaimg.cn/orj480/005zonqQly1godvpbn6orj30u0140x3k.jpg HTTP/1.1" from http://wx1.sinaimg.cn/orj480/005zonqQly1godvpbn6orj30u0140x3k.jpg 
-223 : not in cache
-223: Requesting "GET http://wx1.sinaimg.cn/orj480/002TLsr9ly1godqw9qv5fj60zk0k04qp02.jpg HTTP/1.1" from http://wx1.sinaimg.cn/orj480/002TLsr9ly1godqw9qv5fj60zk0k04qp02.jpg 
-220 : not in cache
-220: Requesting "GET http://wx2.sinaimg.cn/thumb180/8226a45cly1godxvrt2wbj20ko0l177w.jpg HTTP/1.1" from http://wx2.sinaimg.cn/thumb180/8226a45cly1godxvrt2wbj20ko0l177w.jpg 
-216 : not in cache
-216: Requesting "GET http://wx1.sinaimg.cn/thumb180/001Nakaoly1godyi819e8j60yi0jr0u602.jpg HTTP/1.1" from http://wx1.sinaimg.cn/thumb180/001Nakaoly1godyi819e8j60yi0jr0u602.jpg 
-221 : not in cache
-221: Requesting "GET http://wx3.sinaimg.cn/thumb180/001n9vYZly1godwvaxp77j61kw16oqv702.jpg HTTP/1.1" from http://wx3.sinaimg.cn/thumb180/001n9vYZly1godwvaxp77j61kw16oqv702.jpg 
-218 : not in cache
-218: Requesting "GET http://wx4.sinaimg.cn/thumb180/6cab94d5ly1godpmvcukej20m80etmyn.jpg HTTP/1.1" from http://wx4.sinaimg.cn/thumb180/6cab94d5ly1godpmvcukej20m80etmyn.jpg 
-223: Received " " from http://wx1.sinaimg.cn/orj480/002TLsr9ly1godqw9qv5fj60zk0k04qp02.jpg 
-236: "CONNECT jss.t.sinajs.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:56 2021
-221: Received " " from http://wx3.sinaimg.cn/thumb180/001n9vYZly1godwvaxp77j61kw16oqv702.jpg 
-218: Received " " from http://wx4.sinaimg.cn/thumb180/6cab94d5ly1godpmvcukej20m80etmyn.jpg 
-216: Received " " from http://wx1.sinaimg.cn/thumb180/001Nakaoly1godyi819e8j60yi0jr0u602.jpg 
-216: Received " " from http://wx1.sinaimg.cn/thumb180/001Nakaoly1godyi819e8j60yi0jr0u602.jpg 
-220: Received " " from http://wx2.sinaimg.cn/thumb180/8226a45cly1godxvrt2wbj20ko0l177w.jpg 
-233: Responding "HTTP/1.1 200 OK"
-209: Received " " from http://wx4.sinaimg.cn/thumb180/6cab94d5ly1godpnt8votj20sg0jhadw.jpg 
-237: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:57 2021
-238: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:57 2021
-239: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:57 2021
-240: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:57 2021
-241: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:57 2021
-236: Responding "HTTP/1.1 200 OK"
-242: "CONNECT passport.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:57 2021
-211: Received " " from http://wx3.sinaimg.cn/thumb180/8226a45cly1godz5z95tgj20ks0k7djv.jpg 
-235: Received " " from http://wx1.sinaimg.cn/orj480/005zonqQly1godvpbn6orj30u0140x3k.jpg 
-219 : not in cache
-219: Requesting "GET http://wx4.sinaimg.cn/thumb180/001Nakaoly1gody17fqi5j60xz0u0gym02.jpg HTTP/1.1" from http://wx4.sinaimg.cn/thumb180/001Nakaoly1gody17fqi5j60xz0u0gym02.jpg 
-208: Responding "HTTP/1.1 200 OK"
-205: Responding "HTTP/1.1 200 OK"
-214 : not in cache
-214: Requesting "GET http://wx2.sinaim217: Requesting "GET http://wx3.sinaimg.cn/thumb180/8226a45cly1godyjp1fzzj20ks0jpwiz.jpg HTTP/1.1" from http://wx3.sinaimg.cn/thumb180/8226a45cly1godyjp1fzzj20ks0jpwiz.jpg 
-pg 
-217: Requesting "GET http://wx3.sinaimg.cn/thumb180/8226a45cly1godyjp1fzzj20ks0jpwiz.jpg HTTP/1.1" from http://wx3.sinaimg.cn/thumb180/8226a45cly1godyjp1fzzj20ks0jpwiz.jpg 
-210: Responding "HTTP/1.1 200 OK"
-214: Received " " from http://wx2.sinaimg.cn/thumb180/001Nakaoly1godz3lt0sfj60iw05s0sy02.jpg 
-217: Received " " from http://wx3.sinaimg.cn/thumb180/8226a45cly1godyjp1fzzj20ks0jpwiz.jpg 
-244: "CONNECT login.sina.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:57 2021
-244: Responding "HTTP/1.1 200 OK"
-219: Received " " from http://wx4.sinaimg.cn/thumb180/001Nakaoly1gody17fqi5j60xz0u0gym02.jpg 
-245: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-246: "CONNECT weiboimgs.sina.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-247: "CONNECT weiboimgs.sina.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-248: "CONNECT www.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-249: "CONNECT weiboimgs.sina.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-250: "CONNECT weiboimgs.sina.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-246: Responding "HTTP/1.1 200 OK"
-251: "CONNECT www.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-247: Responding "HTTP/1.1 200 OK"
-249: Responding "HTTP/1.1 200 OK"
-250: Responding "HTTP/1.1 200 OK"
-252: "CONNECT weiboimgs.sina.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-252: Responding "HTTP/1.1 200 OK"
-253: "CONNECT www.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-254: "CONNECT www.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-255: "CONNECT www.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:40:59 2021
-256: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:00 2021
-257: "CONNECT sbeacon.sina.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:00 2021
-248: Responding "HTTP/1.1 200 OK"
-255: Responding "HTTP/1.1 200 OK"
-251: Responding "HTTP/1.1 200 OK"
-254: Responding "HTTP/1.1 200 OK"
-253: Responding "HTTP/1.1 200 OK"
-242: Responding "HTTP/1.1 200 OK"
-257: Responding "HTTP/1.1 200 OK"
-258: "POST http://ocsp.sectigo.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:01 2021
-259: "POST http://ocsp.sectigo.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:01 2021
-260: "POST http://ocsp.sectigo.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:01 2021
-261: "POST http://ocsp.sectigo.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:01 2021
-262: "POST http://ocsp.sectigo.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:02 2021
-263: "CONNECT sbeacon.sina.com.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:02 2021
-264: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-265: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-266: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-267: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-268: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-270: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-263: Responding "HTTP/1.1 200 OK"
-271: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-272: "CONNECT wx2.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-273: "CONNECT wx4.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-274: "CONNECT wx1.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-275: "CONNECT wx2.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-276: "CONNECT wx2.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-277: "CONNECT wx4.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-278: "CONNECT wx4.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-279: "CONNECT wx2.sinaimg.cn:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-272: Responding "HTTP/1.1 200 OK"
-273: Responding "HTTP/1.1 200 OK"
-274: Responding "HTTP/1.1 200 OK"
-275: Responding "HTTP/1.1 200 OK"
-279: Responding "HTTP/1.1 200 OK"
-278: Responding "HTTP/1.1 200 OK"
-276: Responding "HTTP/1.1 200 OK"
-277: Responding "HTTP/1.1 200 OK"
-280: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-281: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-271: Responding "HTTP/1.1 200 OK"
-282: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-283: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-284: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:04 2021
-264: Responding "HTTP/1.1 200 OK"
-265: Responding "HTTP/1.1 200 OK"
-270: Responding "HTTP/1.1 200 OK"
-266: Responding "HTTP/1.1 200 OK"
-268: Responding "HTTP/1.1 200 OK"
-267: Responding "HTTP/1.1 200 OK"
-281: Responding "HTTP/1.1 200 OK"
-280: Responding "HTTP/1.1 200 OK"
-282: Responding "HTTP/1.1 200 OK"
-283: Responding "HTTP/1.1 200 OK"
-284: Responding "HTTP/1.1 200 OK"
-285: "CONNECT s.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:06 2021
-286: "CONNECT rm.api.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:06 2021
-269: "CONNECT newsimgs.sina.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:06 2021
-269: Responding "HTTP/1.1 200 OK"
-286: Responding "HTTP/1.1 200 OK"
-287: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:07 2021
-288: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:07 2021
-289: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:07 2021
-290: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:07 2021
-295: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:07 2021
-294: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:07 2021
-293: "CONNECT api.tw.weibo.com:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:07 2021
-290: Responding "HTTP/1.1 200 OK"
-289: Responding "HTTP/1.1 200 OK"
-287: Responding "HTTP/1.1 200 OK"
-288: Responding "HTTP/1.1 200 OK"
-294: Responding "HTTP/1.1 200 OK"
-293: Responding "HTTP/1.1 200 OK"
-295: Responding "HTTP/1.1 200 OK"
-285: Responding "HTTP/1.1 200 OK"
-292: "CONNECT sf.sina.com.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:08 2021
-291: "CONNECT newsimgs.sina.tw:443 HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 13:41:08 2021
-291: Responding "HTTP/1.1 200 OK"
-292: Responding "HTTP/1.1 200 OK"
+92: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:23 2021
+92 : not in cache
+92: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+92: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+93: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:28 2021
+93 : not in cache
+93: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+93: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+16: Received "HTTP/1.1 502 Bad Gateway" from http://status.rapidssl.com/ 
+16: Responding "HTTP/1.1 502 Bad Gateway
+22: Received "HTTP/1.1 502 Bad Gateway" from http://ocsp.digicert.com/ 
+22: Responding "HTTP/1.1 502 Bad Gateway
+95: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:31 2021
+96: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:32 2021
+94: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:33 2021
+94 : not in cache
+94: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+94: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+97: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:36 2021
+98: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:38 2021
+98 : not in cache
+98: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+98: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+99: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:43 2021
+99 : not in cache
+99: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+99: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+100: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:43 2021
+101: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:53:48 2021
+101 : not in cache
+101: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+101: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+85: Responding "HTTP/1.1 200 OK"
+102: "GET http://httpbin.org/favicon.ico HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:54:19 2021
+102 : not in cache
+102: Requesting "GET http://httpbin.org/favicon.ico HTTP/1.1" from http://httpbin.org/favicon.ico 
+102: Received "HTTP/1.1 404 NOT FOUND " from http://httpbin.org/favicon.ico 
+91: Tunnel closed
+89: Tunnel closed
+103: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:54:23 2021
+103 : not in cache
+103: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+103: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+88: Tunnel closed
+87: Tunnel closed
+10: Tunnel closed
+104: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:54:28 2021
+104 : not in cache
+104: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+104: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+28: Tunnel closed
+15: Tunnel closed
+4: Responding "HTTP/1.1 200 OK"
+9: Responding "HTTP/1.1 200 OK"
+96: Received "HTTP/1.1 502 Bad Gateway" from http://ocsp.digicert.com/ 
+96: Responding "HTTP/1.1 502 Bad Gateway
+105: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:54:33 2021
+105 : not in cache
+105: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+105: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+106: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:54:38 2021
+106 : not in cache
+106: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+106: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+107: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:54:43 2021
+107 : not in cache
+107: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+107: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+108: "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from 10.200.72.132 @ Tue Mar  9 15:54:48 2021
+108 : not in cache
+108: Requesting "GET http://detectportal.firefox.com/success.txt HTTP/1.1" from http://detectportal.firefox.com/success.txt 
+108: Received "HTTP/1.1 200 OK " from http://detectportal.firefox.com/success.txt 
+102: Responding "HTTP/1.1 404 NOT FOUND"

@@ -4,7 +4,7 @@ services:
   main:
     build: ./src
     user: root
-    command: bash -c "make clean && make && ./main 10 12345"
+    command: bash -c "make && ./main"
     volumes:
       - ./logs:/var/log/erss
       - ./src:/src
