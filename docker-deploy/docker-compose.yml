@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  main:
+    build: ./src
+    volumes:
+      - ./src:/var/log/erss
+    ports:
+      - "12345:12345"
