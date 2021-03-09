@@ -16,7 +16,8 @@ int main(int argc, char ** argv){
   //req.getMethod_URI();
   // std::cout<<req.method<<std::endl;
   // std::cout<<req.host<<std::endl;
-  // std::cout<<req.request_line<<std::endl;
+  std::cout<<resp.date<<std::endl;
+  std::cout<<resp.Expires<<std::endl;
    resp.timeValid(1);
 }
 

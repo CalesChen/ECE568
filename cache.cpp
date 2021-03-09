@@ -15,34 +15,31 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, requ
 			request->CacheControl.find("no-cache")!=std::string::npos){
 			//###############
 			if(!revalidate(findedResponse,oriServer_fd,request->request)){
-				std::ofstream file;
-   				file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     			file << thread_id << " : "<< "in cache, requires validation"<< std::endl;
-    			file.close();
+    			//file.close();
 				return NULL;
 			}
 		}
 		//check if the time expired or maxAge+date <current time, if expired, erase this response from cache, return null
-		if(!findedResponse->timeValid(thread_id)){
+		 if(!timeValid(findedResponse,thread_id)){
+			//if(findedResponse->timeValid(thread_id)){
 			cacheList.erase(it->second);
 			cacheMap.erase(it);
 			return NULL;
 		}
 		//put this pair to top
 		cacheList.splice(cacheList.begin(), cacheList, it->second);
-		std::ofstream file;
-   		file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+		// std::ofstream file;
+   		// file.open("proxy.log", std::ios_base::app | std::ios_base::out);
     	file << thread_id << " : "<< "in cache, valid"<< std::endl;
-		file << thread_id << findedResponse->header<< std::endl;
-    	file.close();
-		std::cout<<"cache USED!!!!!!!!!! "<< url <<std::endl;
-		std::cout << findedResponse->header<<std::endl;
+    	//file.close();
+		std::cout<<"cache USED!!!!!!!!!!"<<std::endl;
 		return findedResponse;
 	}
-	std::ofstream file;
-	file.open("proxy.log", std::ios_base::app | std::ios_base::out);
+	// std::ofstream file;
+	// file.open("proxy.log", std::ios_base::app | std::ios_base::out);
 	file << thread_id << " : "<< "not in cache"<< std::endl;
-	file.close();
+	//file.close();
 	return NULL;
 }
 
@@ -71,14 +68,39 @@ bool Cache::revalidate(Response * response,int oriServer_fd, std::string request
 	 //convert it  to string and parse it
 	std::string newResponse;
 	newResponse.insert(newResponse.begin(),ori_response.begin(),ori_response.end());
-	if(newResponse.find("HTTP/1.1 200 OK")!=std::string::npos){
+	if(newResponse.find("304")!=std::string::npos){
 		//cache need to be updated
-	 	return false;
+	 	return true;
 	 } else {
 		//cache can be used
-	 	return true;
+	 	return false;
 	 }
 }
+
+
+bool Cache::timeValid(Response * response,int thread_id){
+	time_t now =time(0);
+	if(response->maxAge>0){
+		if(response->maxAge + response->convertedDate <= now){
+			//有别的方法进行转换嘛？？？？？？？
+		    time_t exipTime = response->maxAge + response->convertedDate;
+  			struct tm * tm = gmtime(&exipTime);
+			//  struct tm * tm1 = gmtime(&response->convertedDate);
+  			//const char * time = asctime(tm);
+    		file << thread_id << " : "<< "in cache, but expired at "<< asctime(tm) <<std::endl;
+			return false;
+		} 
+	}
+	if(now>response->convertedExpires){
+		struct tm * tm = gmtime(&response->convertedExpires);
+    	file << thread_id << " : "<< "in cache, but expired at EXPIRES "<< asctime(tm) <<std::endl;
+		return false;
+	} 
+
+	return true;
+}
+
+
 
 void Cache::putCache(Response response, std::string url, int thread_id){
 	if(response.CacheControl.find("no-store")!=std::string::npos){

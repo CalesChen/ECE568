@@ -7,8 +7,11 @@ std::ofstream logFile("/var/log/erss/proxy.log");
 //必须要用portNUM吗 这是谁的portnum？？？？？？？？？
 //502报错是啥玩意儿 what's bad gateway？？？？？
 //如果contentlength跟实际不match 在哪check？报什么错？
-void Proxy::handleProxy(Cache* cache){
+void Proxy::handleProxy(char ** argv){
 	//create a socket to connect with client, return this socket's id
+    int capacity = atoi(argv[1]);
+    Cache s(capacity, logFile);
+    Cache * cache = &s;
     Helper h;
 	int server_fd = h.server_start(portNum);
     if(server_fd == -1){
@@ -102,7 +105,7 @@ int Proxy::connectOriginalServer(request_info * parsedRequest){
 }
 
 std::string Proxy::getCurrTime(){
-	time_t  now =time(0);
+	time_t now =time(0);
 	const char * data = ctime(&now);
 	struct tm * gm =gmtime(&now);
 	data = asctime(gm);
@@ -239,7 +242,6 @@ void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info
 
 void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
     string msg = "HTTP/1.1 200 OK\r\n\r\n";
-
     send(client_fd, msg.c_str() , msg.size(), MSG_NOSIGNAL);
 
     logFile << thread_id << ": Responding \"HTTP/1.1 200 OK\""<<endl;

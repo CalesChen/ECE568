@@ -17,8 +17,9 @@ int Helper::server_start(const char * port){
   if(status != 0){
     cerr << "Error: cannot get address info for host" <<endl;
     cerr << " (" << hostname<<","<<port<<")"<<endl;
-    // Original Example shows return -1, while this is a function, so exit(FAILURE)
-    exit(EXIT_FAILURE);
+    // Original Example shows exit(FAILURE), while this is a function, so return -1
+    return -1;
+    //exit(EXIT_FAILURE);
   }
 
   socket_fd = socket(host_info_list->ai_family,
@@ -27,7 +28,8 @@ int Helper::server_start(const char * port){
   if(socket_fd == -1){
     cerr << "Error: cannot create socket"<<endl;
     cerr << " (" << hostname << ","<<port<<")"<<endl;
-    exit(EXIT_FAILURE);
+    return -1;
+    //exit(EXIT_FAILURE);
   }
 
   int yes = 1;
@@ -37,14 +39,16 @@ int Helper::server_start(const char * port){
   if(status == -1){
     cerr << "Error: cannot bind socket"<<endl;
     cerr << " (" <<hostname<<"," <<port <<")"<<endl;
-    exit(EXIT_FAILURE);
+    return -1;
+    //exit(EXIT_FAILURE);
   }
 
   status = listen(socket_fd, 100);
   if(status == -1){
     cerr<<"Error: cannot listen on socket" <<endl;
     cerr<<" ("<<hostname<<","<<port<<")"<<endl;
-    exit(EXIT_FAILURE);
+    return -1;
+    //exit(EXIT_FAILURE);
   }
   freeaddrinfo(host_info_list);
   return socket_fd;
