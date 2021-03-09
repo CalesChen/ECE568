@@ -147,6 +147,7 @@ void Response::getLastModified(){
 
 void Response::parseResponse(){
 	getHeader_body();
+	getFirstLine();
 	getStatus();
 	getTransferEncoding();
     getcontent_len();

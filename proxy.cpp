@@ -176,14 +176,14 @@ void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, request_info 
     // }
     cout<<endl;
     //No response
-    if(server_msg_len == 0) return;
+    if(server_msg_len <= 1) return;
     // Store the message to a string
     string first_part(server_msg.begin(), server_msg.end());
     cout<<"String"<<first_part;
     Response resp(first_part);
     //resp.parseResponse();
     cout<<"Get_Thread_Id" << thread_id<<endl;
-
+    cout<<"FirstLine"<<resp.firstLine<<endl;
     pthread_mutex_lock(&mutex);
     logFile << thread_id << ": Received \"" << resp.firstLine<< " \" from " << request->uri<<endl;
     pthread_mutex_unlock(&mutex);

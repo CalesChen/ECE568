@@ -15,8 +15,10 @@ Response* Cache::getCache(std::string url, int oriServer_fd, int thread_id, requ
 			request->CacheControl.find("no-cache")!=std::string::npos){
 			//###############
 			if(!revalidate(findedResponse,oriServer_fd,request->request)){
+
     			file << thread_id << " : "<< "in cache, requires validation"<< std::endl;
-    			//file.close();
+    			
+				//file.close();
 				return NULL;
 			}
 		}
