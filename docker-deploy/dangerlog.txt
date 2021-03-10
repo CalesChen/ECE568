@@ -42,3 +42,9 @@ correctness. And fixed several bugs.
 
 3.9
 We finished docker configuration and ran it in docker. We also finished deamon modification and then submitted it.
+
+
+Exception :
+1. We have close the socket_fd after finishing the corresponding work. 
+2. We have delete all of the space allocated by new. 
+3. All of our class use std class to construct and there is no pointer in them.

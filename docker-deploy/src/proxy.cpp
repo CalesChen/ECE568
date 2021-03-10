@@ -101,6 +101,7 @@ void * Proxy::handleReq(void * para){
          
      }
      delete parsedRequest;
+     delete p;
      close(oriServer_fd);
      close(client_fd);
      return NULL;
