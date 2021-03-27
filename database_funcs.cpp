@@ -46,19 +46,19 @@ void dropTable(const char *fileName, connection *C){
 }
 
 void createTable(const char *fileName, connection *C){
-  string sqlStatement, line;
-  ifstream file(fileName);
+    string sqlStatement, line;
+    ifstream file(fileName);
 
-  if(file.is_open()){
-    while(getline(file,line)){
-      sqlStatement+=line;
+    if(file.is_open()){
+        while(getline(file,line)){
+        sqlStatement+=line;
+        }
+        file.close();
+        executeQuery(sqlStatement,C);
+        cout<<"Successfully initiate tables for the database"<<endl;
+        return;
+    }else{
+        cerr<<"Unable to open the file for creating tables!"<<endl;
+        return;
     }
-    file.close();
-    executeQuery(sqlStatement,C);
-    cout<<"Successfully initiate tables for the database"<<endl;
-    return;
-  }else{
-    cerr<<"Unable to open the file for creating tables!"<<endl;
-    return;
-  }
 }

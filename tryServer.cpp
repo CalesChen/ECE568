@@ -19,9 +19,6 @@ int main(){
         cout<<"Successfully connected to "<<ip_addr<<endl;
 
         disconnectDB(C);
-    }catch(MyException e){
-        cerr<<e.what()<<endl;
-        return 1;
     }catch(const exception &e){
         cerr<<e.what()<<endl;
         return 1;
