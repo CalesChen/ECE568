@@ -16,8 +16,9 @@ void connectDB(string info, connection **C){
 
 void disconnectDB(connection *C){
     if(C->is_open()){
-        cout << "Opened database successfully: " << C->dbname() << endl;
+        string dbname = C->dbname();
         C->disconnect();
+        cout << "Closed database successfully: " << dbname << endl;
     }
 }
 
@@ -28,16 +29,16 @@ void executeQuery(string query, connection *C){
 }
 
 void dropTable(const char *fileName, connection *C){
-    string tableName;
-    ifstream file(fileName);
-
+    string query,tableName;
+    ifstream file(fileName);  
     if(file.is_open()){
-      while(getline(file,tableName)){
-        string query = "DROP TABLE IF EXISTS "+tableName+" CASCADE;";
+        while(getline(file,tableName)){
+            query.append("DROP TABLE IF EXISTS "+tableName+" CASCADE;");
+        }
         executeQuery(query,C);
-      }
-      file.close();
-      return;
+        cout<<"Successfully dropped possible tables from last running"<<endl;
+        file.close();
+        return;
     }else{
         cerr<<"Unable to open the file for droping tables!"<<endl;
         return;
@@ -54,7 +55,7 @@ void createTable(const char *fileName, connection *C){
     }
     file.close();
     executeQuery(sqlStatement,C);
-
+    cout<<"Successfully initiate tables for the database"<<endl;
     return;
   }else{
     cerr<<"Unable to open the file for creating tables!"<<endl;

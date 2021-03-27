@@ -7,17 +7,22 @@
 
 int main(){
     try{
+        connection *C;
+        connectDB(DB_INFO, &C);
+        dropTable(DROP_TABLE,C);
+        createTable(CREATE_TABLE,C);
+        
         Server server(PORT);
         std::string ip_addr;
         cout<<"Waiting for connection"<<endl;
         int browser_fd = server.accept_connection(&ip_addr);
         cout<<"Successfully connected to "<<ip_addr<<endl;
 
-        connection *C;
-        connectDB(DB_INFO, &C);
         disconnectDB(C);
-        
-    }catch(std::exception e){
+    }catch(MyException e){
+        cerr<<e.what()<<endl;
+        return 1;
+    }catch(const exception &e){
         cerr<<e.what()<<endl;
         return 1;
     }

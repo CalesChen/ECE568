@@ -2,6 +2,7 @@
 #define __DATABASE_FUNCS__
 
 #include <iostream>
+#include <string>
 #include <fstream>
 #include <pqxx/pqxx>
 
