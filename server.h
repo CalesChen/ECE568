@@ -11,6 +11,7 @@
 #include <cstdlib>
 
 #include "MyException.h"
+#include "socket_funcs.h"
 
 #define PORT "12345"
 
@@ -37,8 +38,6 @@ public:
     }
     void init_serverSocket();
     int accept_connection(string *ip_addr);
-    void sendString(int client_fd, string msg);
-    string recvString(int client_fd);
     string getHostPortInfo();
 };
 

@@ -1,5 +1,5 @@
-#ifndef __DATABASE_FUNCS__
-#define __DATABASE_FUNCS__
+#ifndef __DATABASE_FUNCS_H__
+#define __DATABASE_FUNCS_H__
 
 #include <iostream>
 #include <string>

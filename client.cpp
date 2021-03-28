@@ -37,20 +37,3 @@ string Client::getHostPortInfo(){
     }
     return ans;
 }
-
-void Client::sendString(string msg){
-    int status = send(this->socket_fd,msg.data(),msg.size()+1,0);
-    if(status==-1){
-        throw MyException("Error while sending ",msg);
-    }
-}
-
-string Client::recvString(){
-    char content[65536] = {0};
-    int recv_len = recv(this->socket_fd,content,65536,0);
-    if(recv_len<=0){
-        throw MyException("Error while receiving","");
-    }
-    string ans(content,recv_len);
-    return ans;
-}
