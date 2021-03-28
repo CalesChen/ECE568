@@ -1,0 +1,114 @@
+
+#include "create.h"
+#define CREATE_TAG "create"
+
+class SymbolCreate{
+    public:
+        string symbol;
+        vector<int> account_id;
+        vector<int> num;
+};
+// class AccountCreate{
+//     public:
+//         int account_id;
+//         int balance;
+// };
+class create{
+    public:
+        vector<long> account_id;
+        vector<int> account_balance;
+        vector<SymbolCreate> symbol;
+
+    create(string xml){
+        try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException& toCatch)
+    {
+        std::cerr << XMLString::transcode(toCatch.getMessage());
+        throw new exception();
+    }
+
+    XercesDOMParser * parser = new XercesDOMParser();
+    ErrorHandler * errHandler = new HandlerBase();
+    parser->setErrorHandler(errHandler);
+
+    try
+    {
+        parser->parse("test.xml");
+    }
+    catch (const XMLException& toCatch)
+    {
+        std::cerr << XMLString::transcode(toCatch.getMessage());
+        throw new exception();
+    }
+    catch (const DOMException& toCatch)
+    {
+        std::cerr << XMLString::transcode(toCatch.getMessage());
+        throw new exception();
+    }
+    catch (const SAXException& toCatch)
+    {
+        std::cerr << XMLString::transcode(toCatch.getMessage());
+        throw new exception();
+    }
+
+    DOMDocument * doc = parser->getDocument();
+    DOMElement * root = doc->getDocumentElement();
+    cout<<XMLString::transcode(root->getNodeName())<<endl;
+
+    DOMNodeList * account = root->getElementsByTagName(XMLString::transcode("account"));
+    for(int i = 0 ; i < account->getLength() ; i++){
+        DOMNode * temp = account->item(i);
+        if(temp->getParentNode() != root){
+            continue;
+        }
+        //temp->getNamedItem(XMLString::transcode("id"))->
+        cout<<XMLString::transcode(temp->getNodeName())<<endl;
+        string id = XMLString::transcode(temp->getAttributes()->getNamedItem(XMLString::transcode("id"))->getNodeValue());
+        string balance = XMLString::transcode(temp->getAttributes()->getNamedItem(XMLString::transcode("balance"))->getNodeValue());
+        int id_int = atoi(id.c_str());
+        int balance_int = atoi(balance.c_str());
+        cout<<id_int + 3<<endl;
+        cout<<balance_int + id_int<<endl;
+        this->account_balance.push_back(balance_int);
+        this->account_id.push_back(id_int);
+        //cout<<XMLString::transcode(account->item(i)->get (XMLString::transcode("id")))<<endl;
+    }
+
+    DOMNodeList * symbol = root->getElementsByTagName(XMLString::transcode("symbol"));
+    cout<<XMLString::transcode(root->getNodeName())<<endl;
+
+    for(int i = 0 ;  i< symbol->getLength();i++){
+        SymbolCreate tempToAdd;
+        DOMNode * temp = symbol->item(i);
+        cout<<XMLString::transcode(temp->getNodeName())<<endl;
+
+        string sym = XMLString::transcode(temp->getAttributes()->getNamedItem(XMLString::transcode("sym"))->getNodeValue());
+        cout<<sym<<endl;
+        tempToAdd.symbol = sym;
+
+        DOMElement * temp1 = static_cast<DOMElement *>(temp);
+        DOMNodeList * sym_acc = temp1->getElementsByTagName(XMLString::transcode("account"));
+        cout<<sym_acc->getLength()<<endl;
+        for(int j = 0 ; j < sym_acc->getLength();j++){
+            DOMNode * temp_child = sym_acc->item(j);
+            cout<<XMLString::transcode(temp_child->getNodeName())<<endl;
+            string id = XMLString::transcode(temp_child->getAttributes()->getNamedItem(XMLString::transcode("id"))->getNodeValue());
+            //string balance = XMLString::transcode(temp_child->getAttributes()->getNamedItem(XMLString::transcode("balance"))->getNodeValue());
+            string num = XMLString::transcode(temp_child->getTextContent());
+            //int id_int = atoi(id.c_str());
+            //int balance_int = atoi(balance.c_str());
+            //int num_int = atoi(num.c_str());
+            cout<<id<<endl<<endl<<num<<endl;
+            
+            tempToAdd.account_id.push_back(atoi(id.c_str()));
+            tempToAdd.num.push_back(atoi(num.c_str()));
+        }
+        this->symbol.push_back(tempToAdd);
+    }
+    delete parser;
+    delete errHandler;
+    XMLPlatformUtils::Terminate();
+    }
+};
