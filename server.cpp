@@ -57,3 +57,20 @@ string Server::getHostPortInfo(){
     }
     return ans;
 }
+
+void Server::sendString(int client_fd, string msg){
+    int status = send(client_fd,msg.data(),msg.size()+1,0);
+    if(status==-1){
+        throw MyException("Error while sending ",msg);
+    }
+}
+
+string Server::recvString(int client_fd){
+    char content[65536] = {0};
+    int recv_len = recv(client_fd,content,65536,0);
+    if(recv_len<=0){
+        throw MyException("Error while receiving","");
+    }
+    string ans(content,recv_len);
+    return ans;
+}

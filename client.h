@@ -37,6 +37,8 @@ public:
     }
     void init_client();
     string getHostPortInfo();
+    void sendString(string msg);
+    string recvString();
 };
 
 #endif

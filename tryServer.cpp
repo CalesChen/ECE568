@@ -7,18 +7,21 @@
 
 int main(){
     try{
-        connection *C;
-        connectDB(DB_INFO, &C);
-        dropTable(DROP_TABLE,C);
-        createTable(CREATE_TABLE,C);
-        
+        // connection *C;
+        // connectDB(DB_INFO, &C);
+        // dropTable(DROP_TABLE,C);
+        // createTable(CREATE_TABLE,C);
+        // disconnectDB(C);
+        // delete C;
+
         Server server(PORT);
         std::string ip_addr;
         cout<<"Waiting for connection"<<endl;
-        int browser_fd = server.accept_connection(&ip_addr);
-        cout<<"Successfully connected to "<<ip_addr<<endl;
-
-        disconnectDB(C);
+        int client_fd = server.accept_connection(&ip_addr);
+        cout<<"Successfully connected with the client from "<<ip_addr<<endl;
+        server.sendString(client_fd,"jfkljl");
+        string ans = server.recvString(client_fd);
+        cout<<ans<<endl;
     }catch(const exception &e){
         cerr<<e.what()<<endl;
         return 1;

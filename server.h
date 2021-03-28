@@ -37,6 +37,8 @@ public:
     }
     void init_serverSocket();
     int accept_connection(string *ip_addr);
+    void sendString(int client_fd, string msg);
+    string recvString(int client_fd);
     string getHostPortInfo();
 };
 
