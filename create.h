@@ -18,11 +18,11 @@ class SymbolCreate{
         vector<int> account_id;
         vector<int> num;
 };
-class create{
+class Create{
     public:
         vector<long> account_id;
         vector<int> account_balance;
         vector<SymbolCreate> symbol;
 
-    create(string myxml);
+    Create(string myxml);
 };

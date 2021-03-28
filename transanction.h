@@ -22,11 +22,11 @@ class Order{
     Order(string sym, int amount, double limit):sym(sym), amount(amount),limit(limit){}
 };
 
-class transaction{
+class Transaction{
     public:
     vector<Order> orders;
     vector<int> querys;
     vector<int> cancels;
 
-    transaction(string myxml);
+    Transaction(string myxml);
 };
