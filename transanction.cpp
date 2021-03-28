@@ -7,7 +7,7 @@ class Transaction{
     vector<int> queries;
     vector<int> cancels;
 
-    Transaction(){
+    Transaction(string myxml){
         try{
             XMLPlatformUtils::Initialize();
         }catch(const XMLException& toCatch){
@@ -15,12 +15,16 @@ class Transaction{
             throw new exception();
         }
 
+
         XercesDOMParser * parser = new XercesDOMParser();
         ErrorHandler * errHandler = new HandlerBase();
         parser->setErrorHandler(errHandler);
         cout<<"Parse Success"<<endl;
+
+        xercesc::MemBufInputSource * myxml_buf = new xercesc::MemBufInputSource((XMLByte *)(myxml.c_str()) , myxml.size(), "myxml(in memory)");
+
         try{
-            parser->parse("test1.xml");
+            parser->parse(*myxml_buf);
         }catch (const XMLException& toCatch){
             std::cerr << XMLString::transcode(toCatch.getMessage());
             throw new exception();
@@ -50,7 +54,7 @@ class Transaction{
         }
 
         DOMNodeList * query = root->getElementsByTagName(XMLString::transcode("query"));
-        //cout<<query->getLength();
+        cout<<query->getLength()<<endl;
         for(int i = 0 ; i < query->getLength();i++){
             DOMNode * temp = query->item(i);
             string id = XMLString::transcode(temp->getAttributes()->getNamedItem(XMLString::transcode("id"))->getNodeValue());
@@ -58,7 +62,7 @@ class Transaction{
         }
         
         DOMNodeList * cancel = root->getElementsByTagName(XMLString::transcode("cancel"));
-        for(int i = 0 ; i < query->getLength();i++){
+        for(int i = 0 ; i < cancel->getLength();i++){
             DOMNode * temp = cancel->item(i);
             string id = XMLString::transcode(temp->getAttributes()->getNamedItem(XMLString::transcode("id"))->getNodeValue());
             cancels.push_back(atoi(id.c_str()));
@@ -66,6 +70,7 @@ class Transaction{
         
         delete parser;
         delete errHandler;
+        delete myxml_buf;
         XMLPlatformUtils::Terminate();
     }
 };

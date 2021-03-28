@@ -5,6 +5,7 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 #include <string>
 #include <vector>
 
@@ -27,5 +28,5 @@ class transaction{
     vector<int> querys;
     vector<int> cancels;
 
-    transaction();
+    transaction(string myxml);
 };

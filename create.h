@@ -5,6 +5,7 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 #include <string>
 #include <vector>
 
@@ -23,5 +24,5 @@ class create{
         vector<int> account_balance;
         vector<SymbolCreate> symbol;
 
-    create(string xml);
+    create(string myxml);
 };

@@ -19,7 +19,7 @@ class create{
         vector<int> account_balance;
         vector<SymbolCreate> symbol;
 
-    create(string xml){
+    create(string myxml){
         try {
         XMLPlatformUtils::Initialize();
     }
@@ -32,24 +32,27 @@ class create{
     XercesDOMParser * parser = new XercesDOMParser();
     ErrorHandler * errHandler = new HandlerBase();
     parser->setErrorHandler(errHandler);
+    cout<<"parse success"<<endl;
+
+    xercesc::MemBufInputSource * myxml_buf = new xercesc::MemBufInputSource((XMLByte *)(myxml.c_str()) , myxml.size(), "myxml(in memory)");
 
     try
     {
-        parser->parse("test.xml");
+        parser->parse(*myxml_buf);
     }
     catch (const XMLException& toCatch)
     {
-        std::cerr << XMLString::transcode(toCatch.getMessage());
+        std::cerr << XMLString::transcode(toCatch.getMessage())<<"0";
         throw new exception();
     }
     catch (const DOMException& toCatch)
     {
-        std::cerr << XMLString::transcode(toCatch.getMessage());
+        std::cerr << XMLString::transcode(toCatch.getMessage())<<"1";
         throw new exception();
     }
     catch (const SAXException& toCatch)
     {
-        std::cerr << XMLString::transcode(toCatch.getMessage());
+        std::cerr << XMLString::transcode(toCatch.getMessage())<<"2";
         throw new exception();
     }
 
