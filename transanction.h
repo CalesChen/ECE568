@@ -14,9 +14,9 @@ using namespace xercesc;
 
 class Order{
     public:
-        int account_id;
+        long account_id;
         string sym;
-        int amount;
+        double amount;
         double limit;
 
     Order(string sym, int amount, double limit):sym(sym), amount(amount),limit(limit){}
@@ -24,9 +24,10 @@ class Order{
 
 class Transaction{
     public:
+    long account_id;
     vector<Order> orders;
-    vector<int> querys;
-    vector<int> cancels;
+    vector<long> querys;
+    vector<long> cancels;
 
     Transaction(string myxml);
 };

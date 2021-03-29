@@ -70,10 +70,10 @@ class create{
         cout<<XMLString::transcode(temp->getNodeName())<<endl;
         string id = XMLString::transcode(temp->getAttributes()->getNamedItem(XMLString::transcode("id"))->getNodeValue());
         string balance = XMLString::transcode(temp->getAttributes()->getNamedItem(XMLString::transcode("balance"))->getNodeValue());
-        int id_int = atoi(id.c_str());
-        int balance_int = atoi(balance.c_str());
-        cout<<id_int + 3<<endl;
-        cout<<balance_int + id_int<<endl;
+        long id_int = atol(id.c_str());
+        double balance_int = atof(balance.c_str());
+        //cout<<id_int + 3<<endl;
+        //cout<<balance_int + id_int<<endl;
         this->account_balance.push_back(balance_int);
         this->account_id.push_back(id_int);
         //cout<<XMLString::transcode(account->item(i)->get (XMLString::transcode("id")))<<endl;
@@ -105,8 +105,8 @@ class create{
             //int num_int = atoi(num.c_str());
             cout<<id<<endl<<endl<<num<<endl;
             
-            tempToAdd.account_id.push_back(atoi(id.c_str()));
-            tempToAdd.num.push_back(atoi(num.c_str()));
+            tempToAdd.account_id.push_back(atol(id.c_str()));
+            tempToAdd.num.push_back(atof(num.c_str()));
         }
         this->symbol.push_back(tempToAdd);
     }

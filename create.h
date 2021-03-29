@@ -15,13 +15,13 @@ using namespace xercesc;
 class SymbolCreate{
     public:
         string symbol;
-        vector<int> account_id;
-        vector<int> num;
+        vector<long> account_id;
+        vector<double> num;
 };
 class Create{
     public:
         vector<long> account_id;
-        vector<int> account_balance;
+        vector<double> account_balance;
         vector<SymbolCreate> symbol;
 
     Create(string myxml);
