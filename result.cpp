@@ -18,7 +18,7 @@ string Result::openResult(string & sym, double amount, double limit, long tran_i
 string Result::queryResult(long tran_id, double openShares, vector<double> & shares, vector<double> & price, vector<long> & time){
     stringstream ss;
     ss<<"<status id=\""<<tran_id<<"\">";
-    ss<<"<open shares=\""<<openShares<<"\"/";
+    ss<<"<open shares=\""<<openShares<<"\"/>";
     for(int i = 0 ; i < price.size() ; i++){
         ss<<"<executed shares=\""<<shares[i]<<"\" price=\""<<price[i]<<"\" time=\""<<time[i]<<"\"/>";
     }
