@@ -12,6 +12,8 @@ int main(){
     try{
         connection *C;
         connectDB(DB_INFO, &C);
+        //remove dropTable() when deploy, 
+        //exist while developing to ensure the database empty when started
         dropTable(DROP_TABLE,C);
         createTable(CREATE_TABLE,C);
         disconnectDB(C);
