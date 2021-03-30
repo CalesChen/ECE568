@@ -27,6 +27,7 @@ void *xmlHandler(void *client_fd_ptr){
                 ss<<err.createAccountErrorMSG(create.origin_id[i], temp);
             }else if(createAccount(C,create.account_id[i], create.account_balance[i])){
                 // Add Success
+                cout<<"Create Success"<<endl;
                 ss<<res.createAccountResult(create.account_id[i]);
             }else{
                 // Add Failure
@@ -34,25 +35,34 @@ void *xmlHandler(void *client_fd_ptr){
                 ss<<err.createAccountErrorMSG(create.account_id[i], temp);
             }
         }
+        cout<<"Account Create Finish"<<endl;
         for(int i = 0 ; i < create.symbol.size() ; i ++){
+            cout<<i<<endl;
             if(create.symbol[i].account_id.size() < 1){
                 string temp = "The symbol node is empty.";
+                cout<<temp<<endl;
                 // If there is no child node, then there will be no account Id. So I use 0.
                 ss<<err.createSymbolErrorMSG(0, create.symbol[i].symbol, temp);
             }else if(!checkName(create.symbol[i].symbol)){
                 string temp = "The symbold name is invalid.";
+                cout<<temp<<endl;
                 ss<<err.createSymbolErrorMSG(0, create.symbol[i].symbol, temp);
             }else{
                 for(int j = 0; j < create.symbol[i].account_id.size(); i++){
                     if(create.symbol[i].account_id[j] == 0){
                         string temp = "The Account is invalid";
+                        cout<<temp<<endl;
                         ss<<err.createSymbolErrorMSG(create.symbol[i].orgin_id[j],create.symbol[i].symbol, temp);
                     }
-                    else if(accountExist(C,create.symbol[i].account_id[j])){
+                    else if(!accountExist(C,create.symbol[i].account_id[j])){
                         string temp = "The Account does not exist";
+                        cout<<temp<<endl;
                         ss<<err.createSymbolErrorMSG(create.symbol[i].symbol, create.symbol[i].symbol, temp);
                     }else{
-                        ss<<res.createSymbolResult(create.symbol[i].symbol, create.symbol[i].account_id[j]);
+                        cout<<"Hi, Man"<<endl;
+                        //addPosition(C, create.symbol[i].symbol, create.symbol[i].account_id[j], create.symbol[i].num[j]);
+                        addPosition(C, "BTC", 15, 12345.6);
+                        //ss<<res.createSymbolResult(create.symbol[i].symbol, create.symbol[i].account_id[j]);
                     }
                 }
             }
@@ -70,7 +80,7 @@ void *xmlHandler(void *client_fd_ptr){
             for(int i = 0 ; i < amount ; i++){
                 ss<<err.createAccountErrorMSG(transaction.origin, temp);
             }            
-        } else if(accountExist(C,transaction.account_id)){     // Account_id not exists waiting for function!
+        } else if(!accountExist(C,transaction.account_id)){     // Account_id not exists waiting for function!
             int amount = transaction.cancels.size() + transaction.orders.size() + transaction.querys.size();
             string temp = "Sorry, the account doesn't exist";
             for(int i = 0 ; i < amount ; i++){
@@ -92,7 +102,7 @@ void *xmlHandler(void *client_fd_ptr){
             }
             // Handle Query
             for(int i = 0 ; i < transaction.querys.size() ; i++){
-                if(transactionExist(C,transaction.querys[i])){  // transaction ID does not exist
+                if(!transactionExist(C,transaction.querys[i])){  // transaction ID does not exist
                     string temp = "Sorry, the transaction ID does not exist";
                     ss<<err.queryErrorMSG(transaction.querys[i], temp);
                 }else{
@@ -107,7 +117,7 @@ void *xmlHandler(void *client_fd_ptr){
                 //     string temp = "Sorry, the transaction ID is not valid";
                 //     ss<<"<error>"<<temp<<"</error>";
                 // }else 
-                if(transactionExist(C,transaction.cancels[i])){  // transaction ID does not exist
+                if(!transactionExist(C,transaction.cancels[i])){  // transaction ID does not exist
                     string temp = "Sorry, the transaction ID does not exist";
                     ss<<err.cancelErrorMSG(transaction.querys[i], temp);
                 }else{
@@ -122,10 +132,13 @@ void *xmlHandler(void *client_fd_ptr){
         ss<<"<error>Unable to handle this request<error/>";
     }
     //manipulate database
+    cout<<"Ready to Send"<<endl;
     disconnectDB(C);
+    delete C;
+    
     //send feedback to client, send ret.
     string ret = ss.str();
-    sendString(client_fd,"received your message: "+request);
+    sendString(client_fd,"received your message: "+ret);
     close(client_fd);
 }
 

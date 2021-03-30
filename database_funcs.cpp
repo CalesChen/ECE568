@@ -112,7 +112,7 @@ void setAccountBalance(connection *C, long account_id, double remain){
 void createSymbol(connection *C, string symbol_name){
     work W(*C);
     stringstream sqlStatement;
-    sqlStatement<<"INSERT INTO SYMBOL (NAME) "
+    sqlStatement<<"INSERT INTO SYMBOL (SYMBOL_NAME) "
     <<"VALUES ("<<W.quote(symbol_name)<<");";
     try{
         W.exec(sqlStatement.str());
@@ -138,9 +138,15 @@ bool addPosition(connection *C,string symbol_name, long account_id, double share
     <<"ON CONFLICT ON CONSTRAINT POSITION_PK "
     <<"DO UPDATE SET AMOUNT = POSITION.AMOUNT + "
     <<W.quote(share)<<";";
-
-    W.exec(sqlStatement.str());
-    W.commit();
+    try{
+        W.exec(sqlStatement.str());
+        W.commit();
+    }catch(exception & e){
+        W.abort();
+        cout<<e.what();
+        return false;
+    }
+    
 
     return true;
 }
