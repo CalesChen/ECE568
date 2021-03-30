@@ -36,7 +36,7 @@ void createSymbol(connection *C, string symbol_name);
 //create or add <share> shares of <symbol_name> into account <account_id>
 bool addPosition(connection *C,string symbol_name, long account_id, double share);
 bool transactionExist(connection *C, long trans_id);
-string queryTrans(connection *C,long trans_id, long account_id);
+string queryTrans(connection *C,long trans_id);
 long getCurrTime();
 
 // Match Order Related Function
@@ -48,5 +48,5 @@ void updateAccountShareAndMoney(work & W, long buyer_id, long seller_id, string 
 //order tag related function
 long insertTrans(work &W, long account_id, string sym, long amount, double limit_price);
 string processOrder(connection *C, long account_id,string sym, long amount, double limit_price);
-void cancelTrans();
+string cancelResult(connection * C, long trans_id);
 #endif

@@ -87,6 +87,7 @@ void *xmlHandler(void *client_fd_ptr){
                     ss<<err.createSymbolErrorMSG(0, transaction.orders[i].sym,temp);
                 }else{
                     // General Process
+                    ss<<processOrder(C, transaction.account_id, transaction.orders[i].sym, transaction.orders[i].amount, transaction.orders[i].limit);
                 }
             }
             // Handle Query
@@ -96,6 +97,7 @@ void *xmlHandler(void *client_fd_ptr){
                     ss<<err.queryErrorMSG(transaction.querys[i], temp);
                 }else{
                     // Query Result.
+                    ss<<queryTrans(C, transaction.querys[i]);
                 }
             }
             // Handle Cancel
@@ -110,6 +112,7 @@ void *xmlHandler(void *client_fd_ptr){
                     ss<<err.cancelErrorMSG(transaction.querys[i], temp);
                 }else{
                     // cancel Result.
+                    cancelResult(C, transaction.cancels[i]);
                 }
             }
         }
