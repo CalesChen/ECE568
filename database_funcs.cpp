@@ -203,13 +203,13 @@ bool matchOrderBuyer(connection *C, long buyer_tran_id, string & sym, double amo
         //seller sell part of shares
         double sellerAmountRemain = buyerAmountRemain;
         double totalPrice = amount*price;
-        updateTransactionStatus(C,seller_tran_id,buyer_tran_id,sellerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
+        updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,buyer_id,seller_id,sym,amount,totalPrice);
         //return false to continue trying to match more trans
         return false;
     }else if(buyerAmountRemain > 0){
         // Seller sells all of his shares.
-        double totalPrice = -c[4].as<double>()*price;
-        updateTransactionStatus(C,buyer_tran_id,seller_tran_id,buyerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
+        double totalPrice = shares*price;
+        updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
         return true;
         // Return true is the buyer has done his transaction
     }
@@ -243,21 +243,20 @@ bool matchOrderSeller(connection *C, long seller_tran_id, string & sym, double a
         //seller sell part of shares
         //buyerremain = 0 sellerremain<0,
         double totalPrice = shares*dealPrice;
-        updateTransactionStatus(C,seller_tran_id,buyer_tran_id,sellerAmountRemain,seller_id,seller_id,sym,shares,totalPrice);
+        updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,seller_id,seller_id,sym,shares,totalPrice);
         //return false to continue trying to match more trans
         return true;
     }else if(sellerAmountRemain >= 0){
         // seller sells all shares.
         double buyerAmountRemain = sellerAmountRemain;
         double totalPrice = amount*dealPrice;
-        updateTransactionStatus(C,buyer_tran_id,seller_tran_id,buyerAmountRemain,seller_id,seller_id,sym,amount,totalPrice);
+        updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,seller_id,seller_id,sym,amount,totalPrice);
         return false;
         // Return true is the seller has done his transaction
     }
 }
 
-void updateTransactionStatus(connection *C, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance){
-    work W(*C);
+void updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance){
     while(true){
         try{
             updateTransactionStatus(W, open_trans_id, amountRemain, "OPEN");
