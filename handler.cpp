@@ -91,11 +91,7 @@ void *xmlHandler(void *client_fd_ptr){
             }
             // Handle Query
             for(int i = 0 ; i < transaction.querys.size() ; i++){
-                
-                if(transaction.querys[i] == 0){
-                    string temp = "Sorry, the transaction ID is not valid";
-                    ss<<"<error>"<<temp<<"</error>";
-                }else if(transactionExist(C,transaction.querys[i])){  // transaction ID does not exist
+                if(transactionExist(C,transaction.querys[i])){  // transaction ID does not exist
                     string temp = "Sorry, the transaction ID does not exist";
                     ss<<err.queryErrorMSG(transaction.querys[i], temp);
                 }else{
@@ -105,10 +101,11 @@ void *xmlHandler(void *client_fd_ptr){
             // Handle Cancel
 
             for(int i = 0 ; i < transaction.cancels.size() ; i++){
-                if(transaction.cancels[i] == 0){
-                    string temp = "Sorry, the transaction ID is not valid";
-                    ss<<"<error>"<<temp<<"</error>";
-                }else if(transactionExist(C,transaction.cancels[i])){  // transaction ID does not exist
+                // if(transaction.cancels[i] == 0){
+                //     string temp = "Sorry, the transaction ID is not valid";
+                //     ss<<"<error>"<<temp<<"</error>";
+                // }else 
+                if(transactionExist(C,transaction.cancels[i])){  // transaction ID does not exist
                     string temp = "Sorry, the transaction ID does not exist";
                     ss<<err.cancelErrorMSG(transaction.querys[i], temp);
                 }else{

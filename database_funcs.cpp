@@ -394,10 +394,7 @@ string cancelResult(connection * C, long trans_id){
         }catch(exception & e){
             cerr<<"Need to Execuate again ID:"<<trans_id<<endl; 
         }
-        
     }
-    
-    
 
 
 }

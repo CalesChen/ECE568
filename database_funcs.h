@@ -11,6 +11,7 @@
 #include "assert.h"
 #include "result.h"
 #include "create.h"
+#include "errorMSG.h"
 
 #define CREATE_TABLE "createTables.txt"
 #define DROP_TABLE "dropTables.txt"
@@ -28,6 +29,8 @@ void createTable(const char *fileName, connection *C);
 bool accountExist(connection *C, long account_id);
 //create an account
 bool createAccount(connection *C,long account_id, double balance);
+double getAccountBalance(connection *C, long account_id);
+void setAccountBalance(connection *C, long account_id, double remain);
 //record symbol_name in table SYMBOL
 void createSymbol(connection *C, string symbol_name);
 //create or add <share> shares of <symbol_name> into account <account_id>
@@ -42,4 +45,8 @@ bool matchOrderSeller(connection *C, long seller_tran_id);
 void updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance);
 void updateTransactionStatus(work & W, long trans_id, double amount, string status);
 void updateAccountShareAndMoney(work & W, long buyer_id, long seller_id, string & sym, double shares, double balance);
+//order tag related function
+long insertTrans(work &W, long account_id, string sym, long amount, double limit_price);
+string processOrder(connection *C, long account_id,string sym, long amount, double limit_price);
+void cancelTrans();
 #endif
