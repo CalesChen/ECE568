@@ -325,12 +325,13 @@ bool matchOrderBuyer(connection *C, long buyer_tran_id){  //, string & sym, doub
     }
     long seller_id=c[2].as<long>(), seller_tran_id = c[0].as<long>();
     double buyerAmountRemain=amount+c[4].as<double>(), shares=-c[4].as<double>();
+    double dealPrice = buyerInfo[5].as<long>() <= c[5].as<long>() ? price : c[3].as<double>();
     long time = getCurrTime();
     if(buyerAmountRemain <= 0){
         //seller sell part of shares
         double sellerAmountRemain = buyerAmountRemain;
-        double totalPrice = amount*price;
-        addPairDeal(W,buyer_tran_id,seller_tran_id,amount,price,time);
+        double totalPrice = amount*dealPrice;
+        addPairDeal(W,buyer_tran_id,seller_tran_id,amount,dealPrice,time);
         bool success = updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,buyer_id,seller_id,sym,amount,totalPrice);
         if(!success){
             return matchOrderBuyer(C,buyer_tran_id);
@@ -339,8 +340,8 @@ bool matchOrderBuyer(connection *C, long buyer_tran_id){  //, string & sym, doub
         return false;
     }else if(buyerAmountRemain > 0){
         // Seller sells all of his shares.
-        double totalPrice = shares*price;
-        addPairDeal(W,buyer_tran_id,seller_tran_id,shares,price,time);
+        double totalPrice = shares*dealPrice;
+        addPairDeal(W,buyer_tran_id,seller_tran_id,shares,dealPrice,time);
         bool success = updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
         if(!success){
             return matchOrderBuyer(C,buyer_tran_id);
@@ -384,7 +385,8 @@ bool matchOrderSeller(connection *C, long seller_tran_id){//, string & sym, doub
         return false;
     }
     long buyer_id=c[2].as<long>(), buyer_tran_id = c[0].as<long>();
-    double sellerAmountRemain=amount+c[4].as<double>(), shares=c[4].as<double>(), dealPrice = c[3].as<double>();
+    double sellerAmountRemain=amount+c[4].as<double>(), shares=c[4].as<double>();
+    double dealPrice = sellerInfo[5].as<long>() <= c[5].as<long>() ? price : c[3].as<double>();
     long time = getCurrTime();
     if(sellerAmountRemain < 0){
         //seller sell part of shares
