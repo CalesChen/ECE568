@@ -14,7 +14,7 @@ void *xmlHandler(void *client_fd_ptr){
     Result res;
     ss<<"<results>";
     //parse xml
-    if(request.find("create")){
+    if(request.find("create")!=string::npos){
         Create create(request);
         
         //handleCreate
@@ -73,7 +73,7 @@ void *xmlHandler(void *client_fd_ptr){
         }
         
     }
-    else if(request.find("transactions")){
+    else if(request.find("transactions")!=string::npos){
         Transaction transaction(request);
         //handleTransaction
         // Check if the account_id is valid
@@ -139,7 +139,7 @@ void *xmlHandler(void *client_fd_ptr){
     cout<<"Ready to Send"<<endl;
     disconnectDB(C);
     delete C;
-    
+    ss<<"</result>";
     //send feedback to client, send ret.
     string ret = ss.str();
     sendString(client_fd,"received your message: "+ret);
