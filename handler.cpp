@@ -14,7 +14,7 @@ void *xmlHandler(void *client_fd_ptr){
     Result res;
     ss<<"<results>";
     //parse xml
-    if(request.find("create")){
+    if(request.find("create")!=string::npos){
         Create create(request);
         
         //handleCreate
@@ -61,7 +61,7 @@ void *xmlHandler(void *client_fd_ptr){
                     }else{
                         cout<<"Hi, Man"<<endl;
                         //addPosition(C, create.symbol[i].symbol, create.symbol[i].account_id[j], create.symbol[i].num[j]);
-                        if(addPosition(C, "BTC", 15, 12345.6)){
+                        if(addPosition(C, create.symbol[i].symbol, create.symbol[i].account_id[j], create.symbol[i].num[j])){
                             ss<<res.createSymbolResult(create.symbol[i].symbol, create.symbol[i].account_id[j]);
                         }else{
                             cerr<<"unknown bug during addPosition"<<endl;
@@ -73,7 +73,7 @@ void *xmlHandler(void *client_fd_ptr){
         }
         
     }
-    else if(request.find("transactions")){
+    else if(request.find("transactions")!=string::npos){
         Transaction transaction(request);
         //handleTransaction
         // Check if the account_id is valid
@@ -123,23 +123,23 @@ void *xmlHandler(void *client_fd_ptr){
                 // }else 
                 if(!transactionExist(C,transaction.cancels[i])){  // transaction ID does not exist
                     string temp = "Sorry, the transaction ID does not exist";
-                    ss<<err.cancelErrorMSG(transaction.querys[i], temp);
+                    ss<<err.cancelErrorMSG(transaction.cancels[i], temp);
                 }else{
                     // cancel Result.
-                    cancelResult(C, transaction.cancels[i]);
+                    ss<<cancelResult(C, transaction.cancels[i]);
                 }
             }
         }
         
     }else{
         //errorMessage.
-        ss<<"<error>Unable to handle this request<error/>";
+        ss<<"<error>Unable to handle this request</error>";
     }
     //manipulate database
     cout<<"Ready to Send"<<endl;
     disconnectDB(C);
     delete C;
-    
+    ss<<"</result>";
     //send feedback to client, send ret.
     string ret = ss.str();
     sendString(client_fd,"received your message: "+ret);

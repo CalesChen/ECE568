@@ -89,23 +89,20 @@ bool createAccount(connection *C,long account_id, double balance){
     return true;
 }
 
-double getAccountBalance(connection *C, long account_id){
-    nontransaction N(*C);
+double getAccountBalance(work &W, long account_id){
     stringstream sqlStatement;
-    sqlStatement << "SELECT BALANCE FROM ACCOUNT WHERE"
-    <<"ACCOUNT_ID = "<<N.quote(account_id)<<";";
-    result r(N.exec(sqlStatement.str()));
+    sqlStatement << "SELECT BALANCE FROM ACCOUNT WHERE "
+    <<"ACCOUNT_ID = "<<W.quote(account_id)<<";";
+    result r(W.exec(sqlStatement.str()));
     return r.begin()[0].as<double>();
 }
 
-void setAccountBalance(connection *C, long account_id, double remain){
-    work W(*C);
+void setAccountBalance(work &W, long account_id, double remain){
     stringstream sqlStatement;
     sqlStatement << "UPDATE ACCOUNT "
     <<"SET BALANCE = "<<W.quote(remain)
     <<"WHERE ACCOUNT_ID = "<<W.quote(account_id)<<";";
     W.exec(sqlStatement.str());
-    W.commit();
 }
 
 bool symbolExist(connection *C, string symbol_name){
@@ -156,25 +153,22 @@ bool addPosition(connection *C,string symbol_name, long account_id, double share
     return true;
 }
 
-double getPositionShares(connection *C, string &sym, long account_id){
-    nontransaction N(*C);
+double getPositionShares(work &W, string &sym, long account_id){
     stringstream sqlStatement;
     sqlStatement << "SELECT AMOUNT FROM POSITION WHERE"
-    <<"ACCOUNT_ID = "<<N.quote(account_id)
-    <<" AND SYMBOL_NAME = "<<N.quote(sym)<<";";
-    result r(N.exec(sqlStatement.str()));
+    <<"ACCOUNT_ID = "<<W.quote(account_id)
+    <<" AND SYMBOL_NAME = "<<W.quote(sym)<<";";
+    result r(W.exec(sqlStatement.str()));
     return r.begin()[0].as<double>();
 }
 
-void setPositionShares(connection *C, string &sym, long account_id, double amount){
-    work W(*C);
+void setPositionShares(work &W, string &sym, long account_id, double amount){
     stringstream sqlStatement;
     sqlStatement << "UPDATE POSITION "
     <<"SET AMOUNT = "<<W.quote(amount)
     <<"WHERE ACCOUNT_ID = "<<W.quote(account_id)
     <<" AND SYMBOL_NAME = "<<W.quote(sym)<<";";
     W.exec(sqlStatement.str());
-    W.commit();
 }
 
 bool transactionExist(connection *C, long trans_id){
@@ -305,22 +299,22 @@ bool matchOrderBuyer(connection *C, long buyer_tran_id){  //, string & sym, doub
     // Order By price ASC
     work W(*C);
     stringstream ss;
+    cout<<ss.str()<<endl;
     // Get the Buyer Transaction Information. 
-    ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACOOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
-    ss<<" From TRANSACTIONS";
-    ss<<" Where TRANSACTIONS.TRANS_ID="<<buyer_tran_id<<";";
+    ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
+    ss<<" FROM TRANSACTIONS";
+    ss<<" WHERE TRANSACTIONS.TRANS_ID="<<buyer_tran_id<<";";
     result buyer(W.exec(ss.str()));
     auto buyerInfo = buyer.begin();
     string sym = buyerInfo[1].as<string>();
     long buyer_id = buyerInfo[2].as<long>();
     double price = buyerInfo[3].as<double>(), amount = buyerInfo[4].as<double>();
     ss.str("");
-
     ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
-    ss<<"From TRANSACTIONS ";
-    ss<<"Where TRANSACTIONS.status="<<W.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<W.quote(sym);
-    ss<<" and TRANSACTIONS.AMOUNT < 0 and TRANSACTIONS.LIMIT_PRICE <= "<<(price);
-    ss<<" Order By LIMIT_PRICE ASC, TIME ASC;";
+    ss<<" FROM TRANSACTIONS ";
+    ss<<"WHERE TRANSACTIONS.STATUS="<<W.quote("OPEN")<< " AND TRANSACTIONS.SYMBOL_NAME="<<W.quote(sym);
+    ss<<" AND TRANSACTIONS.AMOUNT < 0 AND TRANSACTIONS.LIMIT_PRICE <= "<<(price);
+    ss<<" ORDER BY LIMIT_PRICE ASC, TIME ASC;";
     result r(W.exec(ss.str()));
     auto c = r.begin();
     if(c == r.end()){
@@ -359,7 +353,7 @@ bool matchOrderSeller(connection *C, long seller_tran_id){//, string & sym, doub
     work W(*C);
     stringstream ss;
 
-    ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACOOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
+    ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
     ss<<" From TRANSACTIONS";
     ss<<" Where TRANSACTIONS.TRANS_ID="<<seller_tran_id<<";";
     result seller(W.exec(ss.str()));
@@ -370,8 +364,8 @@ bool matchOrderSeller(connection *C, long seller_tran_id){//, string & sym, doub
     ss.str("");
 
     ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
-    ss<<"From TRANSACTIONS";
-    ss<<"Where TRANSACTIONS.status="<<W.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<W.quote(sym);
+    ss<<" From TRANSACTIONS";
+    ss<<" Where TRANSACTIONS.status="<<W.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<W.quote(sym);
     ss<<" and TRANSACTIONS.AMOUNT > 0 and TRANSACTIONS.LIMIT_PRICE >= "<<(price);
     ss<<" Order By LIMIT_PRICE DESC, TIME ASC;";
     result r(W.exec(ss.str()));
@@ -452,8 +446,7 @@ string cancelResult(connection * C, long trans_id){
 }
 
 
-long insertTrans(connection *C, long account_id, string sym, long amount, double limit_price){
-    work W(*C);
+long insertTrans(work &W, long account_id, string sym, long amount, double limit_price){
     stringstream sqlStatement;
     sqlStatement<<"INSERT INTO TRANSACTIONS "
     <<"(STATUS, SYMBOL_NAME, ACCOUNT_ID, AMOUNT, LIMIT_PRICE, TIME)"
@@ -463,33 +456,39 @@ long insertTrans(connection *C, long account_id, string sym, long amount, double
     <<"RETURNING TRANS_ID;";
 
     result r(W.exec(sqlStatement.str()));
-    W.commit();
     long trans_id = r.begin()[0].as<long>();
     return trans_id;
 }
 
 string processOrder(connection *C, long account_id,string sym, long amount, double limit_price){
     ErrorMSG err;
+    work W(*C);
     if(amount>0){
-        double balance = getAccountBalance(C,account_id);
+        double balance = getAccountBalance(W,account_id);
         if(balance<amount*limit_price){
             string msg = "Insufficient balance";
             return err.orderErrorMSG(sym,amount,limit_price,msg);
         }else{
             double afterBalance = balance-amount*limit_price;
-            setAccountBalance(C,account_id,afterBalance);
+            setAccountBalance(W,account_id,afterBalance);
         }
     }else{
-        double shares = getPositionShares(C,sym,account_id);
+        double shares = getPositionShares(W,sym,account_id);
         if(shares<amount){
             string msg = "Insufficient shares";
             return err.orderErrorMSG(sym,amount,limit_price,msg);
         }else{
             double afterShares = shares-amount;
-            setPositionShares(C,sym,account_id,afterShares);
+            setPositionShares(W,sym,account_id,afterShares);
         }
     }
-    long trans_id = insertTrans(C,account_id,sym,amount,limit_price);
+    long trans_id = insertTrans(W,account_id,sym,amount,limit_price);
+    try{
+        W.commit();
+    }catch(const exception &e){
+        cerr<<e.what()<<endl;
+        return processOrder(C,account_id,sym,amount,limit_price);
+    }
     bool keepMatching = true;
     if(amount>0){
         while(keepMatching){
