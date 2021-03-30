@@ -2,24 +2,14 @@
 #include "create.h"
 #define CREATE_TAG "create"
 
-class SymbolCreate{
-    public:
-        string symbol;
-        vector<int> account_id;
-        vector<int> num;
-};
+
 // class AccountCreate{
 //     public:
 //         int account_id;
 //         int balance;
 // };
-class create{
-    public:
-        vector<long> account_id;
-        vector<int> account_balance;
-        vector<SymbolCreate> symbol;
 
-    create(string myxml){
+    Create::Create(string myxml){
         try {
         XMLPlatformUtils::Initialize();
     }
@@ -114,4 +104,3 @@ class create{
     delete errHandler;
     XMLPlatformUtils::Terminate();
     }
-};
