@@ -15,7 +15,7 @@
 
 #define CREATE_TABLE "createTables.txt"
 #define DROP_TABLE "dropTables.txt"
-#define DB_INFO "dbname=MATCH_ENGINE user=postgres password=passw0rd"
+#define DB_INFO "dbname=MATCH_ENGINE user=postgres password=passw0rd host=db port=5432"
 
 using namespace std;
 using namespace pqxx;
