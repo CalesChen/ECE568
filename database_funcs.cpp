@@ -246,15 +246,26 @@ void updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, 
     The function will return true if we need further match. 
     will return false if we do not need to match.
 */
-bool matchOrderBuyer(connection *C, long buyer_tran_id, string & sym, double amount, double price, long buyer_id){
+bool matchOrderBuyer(connection *C, long buyer_tran_id){  //, string & sym, double amount, double price, long buyer_id
     // This is for buyer
     // Select eligible Transaction ID, price, amount, from TRANSACTIONS 
     // Where TRANSACTIONS.status = "OPEN" and TRANSACTIONS.SYMBOL_NAME="sym" and TRANSACTIONS.LIMIT_PRICE < 0 and TRANSACTIONS.LIMIT_PRICE > (-price) 
     // Order By price ASC
     work W(*C);
     stringstream ss;
+    // Get the Buyer Transaction Information. 
+    ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACOOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
+    ss<<" From TRANSACTIONS";
+    ss<<" Where TRANSACTIONS.TRANS_ID="<<buyer_tran_id<<";";
+    result buyer(W.exec(ss.str()));
+    auto buyerInfo = buyer.begin();
+    string sym = buyerInfo[1].as<string>();
+    long buyer_id = buyerInfo[2].as<long>();
+    double price = buyerInfo[3].as<double>(), amount = buyerInfo[4].as<double>();
+    ss.str("");
+
     ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
-    ss<<"From TRANSACTIONS";
+    ss<<"From TRANSACTIONS ";
     ss<<"Where TRANSACTIONS.status="<<W.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<W.quote(sym);
     ss<<" and TRANSACTIONS.AMOUNT < 0 and TRANSACTIONS.LIMIT_PRICE <= "<<(price);
     ss<<" Order By LIMIT_PRICE ASC, TIME ASC;";
@@ -288,13 +299,24 @@ bool matchOrderBuyer(connection *C, long buyer_tran_id, string & sym, double amo
     The function will return true if we need further match. 
     will return false if we do not need to match.
 */
-bool matchOrderSeller(connection *C, long seller_tran_id, string & sym, double amount, double price, long seller_id){
+bool matchOrderSeller(connection *C, long seller_tran_id){//, string & sym, double amount, double price, long seller_id
     // This is for seller
     // Select eligible Transaction ID, price, amount, from TRANSACTIONS 
     // Where TRANSACTIONS.status = "OPEN" and TRANSACTIONS.SYMBOL_NAME="sym" and TRANSACTIONS.LIMIT_PRICE < 0 and TRANSACTIONS.LIMIT_PRICE > (-price) 
     // Order By price ASC
     work W(*C);
     stringstream ss;
+
+    ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACOOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
+    ss<<" From TRANSACTIONS";
+    ss<<" Where TRANSACTIONS.TRANS_ID="<<seller_tran_id<<";";
+    result seller(W.exec(ss.str()));
+    auto sellerInfo = seller.begin();
+    string sym = sellerInfo[1].as<string>();
+    long seller_id = sellerInfo[2].as<long>();
+    double price = sellerInfo[3].as<double>(), amount = sellerInfo[4].as<double>();
+    ss.str("");
+
     ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
     ss<<"From TRANSACTIONS";
     ss<<"Where TRANSACTIONS.status="<<W.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<W.quote(sym);
