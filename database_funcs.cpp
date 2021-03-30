@@ -174,3 +174,81 @@ string queryTrans(connection *C, long trans_id){
     }
 
 }
+
+/*
+    The function will return true is we need further match. 
+    will return false if we do not need to match.
+*/
+bool matchOrderBuyer(connection *C, long tran_id, string & sym, double amount, double price, long buyer_id){
+    // This is for buyer
+    // Select eligible Transaction ID, price, amount, from TRANSACTIONS 
+    // Where TRANSACTIONS.status = "OPEN" and TRANSACTIONS.SYMBOL_NAME="sym" and TRANSACTIONS.LIMIT_PRICE < 0 and TRANSACTIONS.LIMIT_PRICE > (-price) 
+    // Order By price ASC
+    nontransaction N(*C);
+    stringstream ss;
+    ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
+    ss<<"From TRANSACTIONS";
+    ss<<"Where TRANSACTIONS.status="<<N.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<N.quote(sym);
+    ss<<" and TRANSACTIONS.AMOUNT < 0 and TRANSACTIONS.LIMIT_PRICE <= "<<(price);
+    ss<<" Order By LIMIT_PRICE ASC, TIME ASC;";
+    result r(N.exec(ss.str()));
+    auto c = r.begin();
+    if(c == r.end()){
+        return false;
+    }
+    if(c[2].as<double>() + amount < 0){
+        updateTransactionStatus(C, c[0].as<long>(), tran_id, amount+c[4].as<double>(), buyer_id, c[2].as<long>(), c[1].as<string>(),-c[4].as<double>(), price*(-c[4].as<double>()));
+        // updateTransactionStatus(C, c[0].as<long>(), amount+c[2].as<double>(), "OPEN");
+        // updateTransactionStatus(C, tran_id, 0, "CLOSE");
+        // Return true is the buyer has done his transaction
+        return false;
+    }else{
+        // Seller sells all of his shares.
+        double balance = price*(-c[4].as<double>());
+        updateTransactionStatus(C, tran_id, c[0].as<long>(), amount+c[4].as<double>(), buyer_id, c[2].as<long>(), c[1].as<string>(), -c[4].as<double>(), balance);
+        // updateTransactionStatus(C, c[0].as<long>(), 0, "CLOSE");
+        // updateTransactionStatus(C, tran_id, amount+c[2].as<double>(), "OPEN");
+        return true;
+    }
+
+}
+
+void updateTransactionStatus(connection *C, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance){
+    work W(*C);
+    while(true){
+        try{
+            updateTransactionStatus(W, open_trans_id, amountRemain, "OPEN");
+            updateTransactionStatus(W, close_trans_id, 0, "CLOSE");
+            updateAccountShareAndMoney(W, buyer_id, seller_id, sym, shares, balance);
+            W.commit();
+            break;
+        }catch(exception & e){
+            cerr<<e.what()<<endl;
+            W.abort();
+        }
+    }
+    
+}
+void updateTransactionStatus(work & W, long trans_id, double amount, string status){
+    stringstream ss;
+    ss<<"UPDATE TRANSACTIONS ";
+    ss<<"SET STATUS="<<W.quote(status)<<" AMOUNT="<<amount;
+    ss<<" Where TRANSACTIONS.TRANS_ID="<<trans_id<<";";
+    W.exec(ss.str());
+}
+// Buyer got Shares and Seller got balance.
+void updateAccountShareAndMoney(work & W, long buyer_id, long seller_id, string & sym, double shares, double balance){
+    stringstream ss;
+    // Update Position
+    ss<<"UPDATE POSITION ";
+    ss<<"SET AMOUNT=POSITION.AMOUNT+"<<shares;
+    ss<<" Where POSITION.SYMBOL_NAME="<<sym<<" And POSTION.ACCOUNT_ID="<<buyer_id<<";";
+    
+    // Update Balance
+
+    ss<<"UPDATE ACCOUNT ";
+    ss<<"SET BALANCE=ACCOUNT.BALANCE+"<<balance;
+    ss<<" Where ACCOUNT.ACCOUNT_ID="<<seller_id<<";";
+
+    W.exec(ss.str());
+}

@@ -69,6 +69,7 @@ void *xmlHandler(void *client_fd_ptr){
             }
             // Handle Query
             for(int i = 0 ; i < transaction.querys.size() ; i++){
+                
                 if(transaction.querys[i] == 0){
                     string temp = "Sorry, the transaction ID is not valid";
                     ss<<"<error>"<<temp<<"</error>";
