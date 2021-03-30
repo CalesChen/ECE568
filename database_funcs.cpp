@@ -175,6 +175,73 @@ string queryTrans(connection *C, long trans_id){
 
 }
 
+long getCurrTime(){
+    //return the seconds from 1970 00:00:00
+    time_t now = time(nullptr);
+    stringstream ss;
+    ss << now;
+    long time;
+    ss >> time;
+    return time;
+}
+
+void addSingleDeal(work &W, long trans_id, double amount, double dealPrice, long time){
+    stringstream sqlStatement;
+    sqlStatement << "INSERT INTO DEAL "
+    <<"(TRANS_ID, AMOUNT, PRICE, TIME) "
+    <<"VALUES ("<<W.quote(trans_id)<<", "
+    <<W.quote(amount)<<", "<<W.quote(dealPrice)<<", "
+    <<W.quote(time)<<");";
+
+    W.exec(sqlStatement.str());
+}
+
+void addPairDeal(work &W, long buyer_tran_id, long seller_tran_id, double amount, double dealPrice, long time){
+    addSingleDeal(W, buyer_tran_id,amount,dealPrice,time);
+    addSingleDeal(W, seller_tran_id,-amount,dealPrice,time);
+}
+
+void updateTransactionStatus(work & W, long trans_id, double amount, string status){
+    stringstream ss;
+    ss<<"UPDATE TRANSACTIONS ";
+    ss<<"SET STATUS="<<W.quote(status)<<" AMOUNT="<<amount;
+    ss<<" Where TRANSACTIONS.TRANS_ID="<<trans_id<<";";
+    W.exec(ss.str());
+}
+// Buyer got Shares and Seller got balance.
+void updateAccountShareAndMoney(work & W, long buyer_id, long seller_id, string & sym, double shares, double balance){
+
+    stringstream ss;
+    // Update Position
+    ss<<"UPDATE POSITION ";
+    ss<<"SET AMOUNT=POSITION.AMOUNT+"<<shares;
+    ss<<" Where POSITION.SYMBOL_NAME="<<sym<<" And POSTION.ACCOUNT_ID="<<buyer_id<<";";
+    
+    // Update Balance
+
+    ss<<"UPDATE ACCOUNT ";
+    ss<<"SET BALANCE=ACCOUNT.BALANCE+"<<balance;
+    ss<<" Where ACCOUNT.ACCOUNT_ID="<<seller_id<<";";
+
+    W.exec(ss.str());
+}
+
+void updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance){
+    while(true){
+        try{
+            updateTransactionStatus(W, open_trans_id, amountRemain, "OPEN");
+            updateTransactionStatus(W, close_trans_id, 0, "OPEN");
+            updateAccountShareAndMoney(W, buyer_id, seller_id, sym, shares, balance);
+            W.commit();
+            break;
+        }catch(exception & e){
+            cerr<<e.what()<<endl;
+            W.abort();
+        }
+    }
+    
+}
+
 /*
     The function will return true if we need further match. 
     will return false if we do not need to match.
@@ -198,17 +265,19 @@ bool matchOrderBuyer(connection *C, long buyer_tran_id, string & sym, double amo
     }
     long seller_id=c[2].as<long>(), seller_tran_id = c[0].as<long>();
     double buyerAmountRemain=amount+c[4].as<double>(), shares=-c[4].as<double>();
-    string sym = c[1].as<string>();
+    long time = getCurrTime();
     if(buyerAmountRemain <= 0){
         //seller sell part of shares
         double sellerAmountRemain = buyerAmountRemain;
         double totalPrice = amount*price;
+        addPairDeal(W,buyer_tran_id,seller_tran_id,amount,price,time);
         updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,buyer_id,seller_id,sym,amount,totalPrice);
         //return false to continue trying to match more trans
         return false;
     }else if(buyerAmountRemain > 0){
         // Seller sells all of his shares.
         double totalPrice = shares*price;
+        addPairDeal(W,buyer_tran_id,seller_tran_id,shares,price,time);
         updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
         return true;
         // Return true is the buyer has done his transaction
@@ -238,11 +307,12 @@ bool matchOrderSeller(connection *C, long seller_tran_id, string & sym, double a
     }
     long buyer_id=c[2].as<long>(), buyer_tran_id = c[0].as<long>();
     double sellerAmountRemain=amount+c[4].as<double>(), shares=c[4].as<double>(), dealPrice = c[3].as<double>();
-    string sym = c[1].as<string>();
+    long time = getCurrTime();
     if(sellerAmountRemain < 0){
         //seller sell part of shares
         //buyerremain = 0 sellerremain<0,
         double totalPrice = shares*dealPrice;
+        addPairDeal(W,buyer_tran_id,seller_tran_id,shares,dealPrice,time);
         updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,seller_id,seller_id,sym,shares,totalPrice);
         //return false to continue trying to match more trans
         return true;
@@ -250,48 +320,9 @@ bool matchOrderSeller(connection *C, long seller_tran_id, string & sym, double a
         // seller sells all shares.
         double buyerAmountRemain = sellerAmountRemain;
         double totalPrice = amount*dealPrice;
+        addPairDeal(W,buyer_tran_id,seller_tran_id,amount,dealPrice,time);
         updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,seller_id,seller_id,sym,amount,totalPrice);
         return false;
         // Return true is the seller has done his transaction
     }
-}
-
-void updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance){
-    while(true){
-        try{
-            updateTransactionStatus(W, open_trans_id, amountRemain, "OPEN");
-            updateTransactionStatus(W, close_trans_id, 0, "OPEN");
-            updateAccountShareAndMoney(W, buyer_id, seller_id, sym, shares, balance);
-            //TODO :insert a record for this deal
-            W.commit();
-            break;
-        }catch(exception & e){
-            cerr<<e.what()<<endl;
-            W.abort();
-        }
-    }
-    
-}
-void updateTransactionStatus(work & W, long trans_id, double amount, string status){
-    stringstream ss;
-    ss<<"UPDATE TRANSACTIONS ";
-    ss<<"SET STATUS="<<W.quote(status)<<" AMOUNT="<<amount;
-    ss<<" Where TRANSACTIONS.TRANS_ID="<<trans_id<<";";
-    W.exec(ss.str());
-}
-// Buyer got Shares and Seller got balance.
-void updateAccountShareAndMoney(work & W, long buyer_id, long seller_id, string & sym, double shares, double balance){
-    stringstream ss;
-    // Update Position
-    ss<<"UPDATE POSITION ";
-    ss<<"SET AMOUNT=POSITION.AMOUNT+"<<shares;
-    ss<<" Where POSITION.SYMBOL_NAME="<<sym<<" And POSTION.ACCOUNT_ID="<<buyer_id<<";";
-    
-    // Update Balance
-
-    ss<<"UPDATE ACCOUNT ";
-    ss<<"SET BALANCE=ACCOUNT.BALANCE+"<<balance;
-    ss<<" Where ACCOUNT.ACCOUNT_ID="<<seller_id<<";";
-
-    W.exec(ss.str());
 }

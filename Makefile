@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-O3
-EXTRAFLAGS=-lpqxx -lpq -lpthread
+EXTRAFLAGS=-lpqxx -lpq -lpthread -lxerces-c
 
 all: server client
 

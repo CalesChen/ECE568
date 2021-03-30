@@ -5,10 +5,16 @@
 #include <string>
 #include <fstream>
 #include <pqxx/pqxx>
+#include <ctime>
 
 #include "MyException.h"
 #include "assert.h"
 #include "result.h"
+#include "create.h"
+
+#define CREATE_TABLE "createTables.txt"
+#define DROP_TABLE "dropTables.txt"
+#define DB_INFO "dbname=MATCH_ENGINE user=postgres password=passw0rd"
 
 using namespace std;
 using namespace pqxx;
@@ -28,4 +34,5 @@ void createSymbol(connection *C, string symbol_name);
 bool addPosition(connection *C,string symbol_name, long account_id, double share);
 bool transactionExist(connection *C, long trans_id);
 string queryTrans(connection *C,long trans_id, long account_id);
+long getCurrTime();
 #endif

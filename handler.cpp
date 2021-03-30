@@ -4,6 +4,9 @@ void *xmlHandler(void *client_fd_ptr){
     int client_fd = *((int *)client_fd_ptr);
     // cout<<client_fd<<endl;
     //recv xml from client
+    connection *C;
+    connectDB(DB_INFO,&C);
+
     string request = recvString(client_fd);
 
     stringstream ss;
@@ -42,13 +45,14 @@ void *xmlHandler(void *client_fd_ptr){
         Transaction transaction(request);
         //handleTransaction
         // Check if the account_id is valid
+        
         if(transaction.account_id == 0){
             int amount = transaction.cancels.size() + transaction.orders.size() + transaction.querys.size();
             string temp = "Sorry, the account ID is invalid.";
             for(int i = 0 ; i < amount ; i++){
                 ss<<"<error>"<<temp<<"</error>";
             }            
-        } else if(){     // Account_id not exists waiting for function!
+        } else if(accountExist(C,transaction.account_id)){     // Account_id not exists waiting for function!
             int amount = transaction.cancels.size() + transaction.orders.size() + transaction.querys.size();
             string temp = "Sorry, the account doesn't exist";
             for(int i = 0 ; i < amount ; i++){
@@ -73,7 +77,7 @@ void *xmlHandler(void *client_fd_ptr){
                 if(transaction.querys[i] == 0){
                     string temp = "Sorry, the transaction ID is not valid";
                     ss<<"<error>"<<temp<<"</error>";
-                }else if(){  // transaction ID does not exist
+                }else if(transactionExist(C,transaction.querys[i])){  // transaction ID does not exist
                     string temp = "Sorry, the transaction ID does not exist";
                     ss<<err.queryErrorMSG(transaction.querys[i], temp);
                 }else{
@@ -86,7 +90,7 @@ void *xmlHandler(void *client_fd_ptr){
                 if(transaction.cancels[i] == 0){
                     string temp = "Sorry, the transaction ID is not valid";
                     ss<<"<error>"<<temp<<"</error>";
-                }else if(){  // transaction ID does not exist
+                }else if(transactionExist(C,transaction.cancels[i])){  // transaction ID does not exist
                     string temp = "Sorry, the transaction ID does not exist";
                     ss<<err.cancelErrorMSG(transaction.querys[i], temp);
                 }else{
@@ -100,7 +104,7 @@ void *xmlHandler(void *client_fd_ptr){
         ss<<"<error>Unable to handle this request<error/>";
     }
     //manipulate database
-
+    disconnectDB(C);
     //send feedback to client, send ret.
     string ret = ss.str();
     sendString(client_fd,"received your message: "+request);

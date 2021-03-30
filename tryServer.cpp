@@ -4,10 +4,6 @@
 
 #include <pthread.h>
 
-#define CREATE_TABLE "createTables.txt"
-#define DROP_TABLE "dropTables.txt"
-#define DB_INFO "dbname=MATCH_ENGINE user=postgres password=passw0rd"
-
 int main(){
     try{
         connection *C;
@@ -18,6 +14,10 @@ int main(){
         createTable(CREATE_TABLE,C);
         disconnectDB(C);
         delete C;
+        for(int i =0;i<10;i++){
+            cout<<getCurrTime()<<endl;
+            sleep(2);
+        }
 
         Server server(PORT);
         while(true){
