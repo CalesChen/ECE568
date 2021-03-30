@@ -108,26 +108,33 @@ void setAccountBalance(connection *C, long account_id, double remain){
     W.commit();
 }
 
+bool symbolExist(connection *C, string symbol_name){
+    nontransaction N(*C);
+    stringstream sqlStatement;
+    sqlStatement<<"SELECT * FROM SYMBOL WHERE SYMBOL_NAME="
+    <<N.quote(symbol_name)<<";";
+    result r(N.exec(sqlStatement.str()));
+    return r.size()!=0;
+}
 
 void createSymbol(connection *C, string symbol_name){
-    work W(*C);
-    stringstream sqlStatement;
-    sqlStatement<<"INSERT INTO SYMBOL (SYMBOL_NAME) "
-    <<"VALUES ("<<W.quote(symbol_name)<<");";
-    try{
-        W.exec(sqlStatement.str());
-        W.commit();
-    }catch(const exception &e){
-        cerr<<e.what()<<endl;
-        W.abort();
-        return;
+    if(!symbolExist(C,symbol_name)){
+        work W(*C);
+        stringstream sqlStatement;
+        sqlStatement<<"INSERT INTO SYMBOL (SYMBOL_NAME) "
+        <<"VALUES ("<<W.quote(symbol_name)<<");";
+        try{
+            W.exec(sqlStatement.str());
+            W.commit();
+        }catch(const exception &e){
+            cerr<<e.what()<<endl;
+            W.abort();
+        }
     }
-    return;
 }
 
 bool addPosition(connection *C,string symbol_name, long account_id, double share){
     createSymbol(C,symbol_name);
-
     work W(*C);
 
     stringstream sqlStatement;
@@ -143,11 +150,9 @@ bool addPosition(connection *C,string symbol_name, long account_id, double share
         W.commit();
     }catch(exception & e){
         W.abort();
-        cout<<e.what();
+        cerr<<e.what()<<endl;
         return false;
     }
-    
-
     return true;
 }
 

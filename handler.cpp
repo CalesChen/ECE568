@@ -48,7 +48,7 @@ void *xmlHandler(void *client_fd_ptr){
                 cout<<temp<<endl;
                 ss<<err.createSymbolErrorMSG(0, create.symbol[i].symbol, temp);
             }else{
-                for(int j = 0; j < create.symbol[i].account_id.size(); i++){
+                for(int j = 0; j < create.symbol[i].account_id.size(); j++){
                     if(create.symbol[i].account_id[j] == 0){
                         string temp = "The Account is invalid";
                         cout<<temp<<endl;
@@ -61,8 +61,12 @@ void *xmlHandler(void *client_fd_ptr){
                     }else{
                         cout<<"Hi, Man"<<endl;
                         //addPosition(C, create.symbol[i].symbol, create.symbol[i].account_id[j], create.symbol[i].num[j]);
-                        addPosition(C, "BTC", 15, 12345.6);
-                        //ss<<res.createSymbolResult(create.symbol[i].symbol, create.symbol[i].account_id[j]);
+                        if(addPosition(C, "BTC", 15, 12345.6)){
+                            ss<<res.createSymbolResult(create.symbol[i].symbol, create.symbol[i].account_id[j]);
+                        }else{
+                            cerr<<"unknown bug during addPosition"<<endl;
+                        }
+                        
                     }
                 }
             }
