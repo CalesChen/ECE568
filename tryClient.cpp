@@ -29,7 +29,7 @@ int main(){
         try{
             Client client("127.0.0.1",PORT);
             cout<<"Successfully connected"<<endl;
-            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"123\"><order sym=\"BTC\" amount=\"100\" limit=\"125\"/></transactions>";
+            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"123\"><order sym=\"BTC\" amount=\"300\" limit=\"125\"/></transactions>";
             sendString(client.socket_fd,myxml);
             string ans = recvString(client.socket_fd);
             cout<<ans<<endl;
@@ -40,7 +40,7 @@ int main(){
         try{
             Client client("127.0.0.1",PORT);
             cout<<"Successfully connected"<<endl;
-            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"124\"><order sym=\"BTC\" amount=\"-100\" limit=\"130\"/></transactions>";
+            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"124\"><order sym=\"BTC\" amount=\"-100\" limit=\"130\"/></transactions>";
             sendString(client.socket_fd,myxml);
             string ans = recvString(client.socket_fd);
             cout<<ans<<endl;
@@ -51,7 +51,7 @@ int main(){
         try{
             Client client("127.0.0.1",PORT);
             cout<<"Successfully connected"<<endl;
-            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"123\"><order sym=\"BTC\" amount=\"200\" limit=\"127\"/></transactions>";
+            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"123\"><order sym=\"BTC\" amount=\"200\" limit=\"127\"/></transactions>";
             sendString(client.socket_fd,myxml);
             string ans = recvString(client.socket_fd);
             cout<<ans<<endl;
@@ -63,7 +63,7 @@ int main(){
         try{
             Client client("127.0.0.1",PORT);
             cout<<"Successfully connected"<<endl;
-            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"124\"><order sym=\"BTC\" amount=\"-500\" limit=\"128\"/></transactions>";
+            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"124\"><order sym=\"BTC\" amount=\"-500\" limit=\"128\"/></transactions>";
             sendString(client.socket_fd,myxml);
             string ans = recvString(client.socket_fd);
             cout<<ans<<endl;
@@ -75,7 +75,7 @@ int main(){
         try{
             Client client("127.0.0.1",PORT);
             cout<<"Successfully connected"<<endl;
-            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"124\"><order sym=\"BTC\" amount=\"-200\" limit=\"140\"/></transactions>";
+            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"124\"><order sym=\"BTC\" amount=\"-200\" limit=\"140\"/></transactions>";
             sendString(client.socket_fd,myxml);
             string ans = recvString(client.socket_fd);
             cout<<ans<<endl;
@@ -87,7 +87,7 @@ int main(){
         try{
             Client client("127.0.0.1",PORT);
             cout<<"Successfully connected"<<endl;
-            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"123\"><order sym=\"BTC\" amount=\"400\" limit=\"125\"/></transactions>";
+            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"123\"><order sym=\"BTC\" amount=\"400\" limit=\"125\"/></transactions>";
             sendString(client.socket_fd,myxml);
             string ans = recvString(client.socket_fd);
             cout<<ans<<endl;
@@ -100,7 +100,7 @@ int main(){
             Client client("127.0.0.1",PORT);
             cout<<"Successfully connected"<<endl;
             stringstream ss;
-            ss<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?><symbol sym=\"BTC\"><account id=\""<<124<<"\">500</account></symbol></create>";
+            ss<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?><create><symbol sym=\"BTC\"><account id=\""<<124<<"\">500</account></symbol></create>";
             sendString(client.socket_fd,ss.str());
             string ans = recvString(client.socket_fd);
             cout<<ans<<endl;
@@ -111,7 +111,7 @@ int main(){
         try{
             Client client("127.0.0.1",PORT);
             cout<<"Successfully connected"<<endl;
-            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"124\"><order sym=\"BTC\" amount=\"-400\" limit=\"127\"/></transactions>";
+            string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"124\"><order sym=\"BTC\" amount=\"-400\" limit=\"124\"/></transactions>";
             sendString(client.socket_fd,myxml);
             string ans = recvString(client.socket_fd);
             cout<<ans<<endl;
@@ -177,16 +177,7 @@ int main(){
         }catch(const exception & e){
             cerr<<e.what()<<endl;
         }
-    // try{
-    //     Client client("127.0.0.1",PORT);
-    //     cout<<"Successfully connected"<<endl;
-    //     string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"15\"><order sym=\"SYM\" amount=\"50\" limit=\"1\"/></transactions>";
-    //     sendString(client.socket_fd,myxml);
-    //     string ans = recvString(client.socket_fd);
-    //     cout<<ans<<endl;
-    // }catch(const exception e){
-    //     cerr<<e.what()<<endl;
-    // }
+ 
     // try{
     //     Client client("127.0.0.1",PORT);
     //     cout<<"Successfully connected"<<endl;

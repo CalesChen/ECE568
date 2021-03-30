@@ -1,10 +1,17 @@
 #include "database_funcs.h"
 
+void executeQuery(string query, connection *C){
+    work W(*C);
+    W.exec(query);
+    W.commit();
+}
 
 void connectDB(string info, connection **C){
     try{
         *C = new connection(info);
         if ((*C)->is_open()) {
+            string command = "set transaction isolation level serializable;";
+            executeQuery(command,*C);
             cout << "Opened database successfully: " << (*C)->dbname() << endl;
         } else {
             throw MyException("Error when opening database","");
@@ -23,11 +30,7 @@ void disconnectDB(connection *C){
     }
 }
 
-void executeQuery(string query, connection *C){
-    work W(*C);
-    W.exec(query);
-    W.commit();
-}
+
 
 void dropTable(const char *fileName, connection *C){
     string query,tableName;
@@ -156,7 +159,7 @@ bool addPosition(connection *C,string symbol_name, long account_id, double share
 double getPositionShares(work &W, string &sym, long account_id){
     stringstream sqlStatement;
     sqlStatement << "SELECT AMOUNT FROM POSITION WHERE"
-    <<"ACCOUNT_ID = "<<W.quote(account_id)
+    <<" ACCOUNT_ID = "<<W.quote(account_id)
     <<" AND SYMBOL_NAME = "<<W.quote(sym)<<";";
     result r(W.exec(sqlStatement.str()));
     return r.begin()[0].as<double>();
@@ -250,7 +253,7 @@ void addPairDeal(work &W, long buyer_tran_id, long seller_tran_id, double amount
 void updateTransactionStatus(work & W, long trans_id, double amount, string status){
     stringstream ss;
     ss<<"UPDATE TRANSACTIONS ";
-    ss<<"SET STATUS="<<W.quote(status)<<" AMOUNT="<<amount;
+    ss<<"SET STATUS="<<W.quote(status)<<", AMOUNT="<<amount;
     ss<<" Where TRANSACTIONS.TRANS_ID="<<trans_id<<";";
     W.exec(ss.str());
 }
@@ -261,7 +264,7 @@ void updateAccountShareAndMoney(work & W, long buyer_id, long seller_id, string 
     // Update Position
     ss<<"UPDATE POSITION ";
     ss<<"SET AMOUNT=POSITION.AMOUNT+"<<shares;
-    ss<<" Where POSITION.SYMBOL_NAME="<<sym<<" And POSTION.ACCOUNT_ID="<<buyer_id<<";";
+    ss<<" Where POSITION.SYMBOL_NAME="<<W.quote(sym)<<" And POSITION.ACCOUNT_ID="<<buyer_id<<";";
     
     // Update Balance
 
@@ -272,18 +275,17 @@ void updateAccountShareAndMoney(work & W, long buyer_id, long seller_id, string 
     W.exec(ss.str());
 }
 
-void updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance){
-    while(true){
-        try{
-            updateTransactionStatus(W, open_trans_id, amountRemain, "OPEN");
-            updateTransactionStatus(W, close_trans_id, 0, "OPEN");
-            updateAccountShareAndMoney(W, buyer_id, seller_id, sym, shares, balance);
-            W.commit();
-            break;
-        }catch(exception & e){
-            cerr<<e.what()<<endl;
-            W.abort();
-        }
+bool updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance){
+    try{
+        updateTransactionStatus(W, open_trans_id, amountRemain, "OPEN");
+        updateTransactionStatus(W, close_trans_id, 0, "OPEN");
+        updateAccountShareAndMoney(W, buyer_id, seller_id, sym, shares, balance);
+        W.commit();
+        return true;
+    }catch(exception & e){
+        cerr<<e.what()<<endl;
+        W.abort();
+        return false;
     }
     
 }
@@ -318,6 +320,7 @@ bool matchOrderBuyer(connection *C, long buyer_tran_id){  //, string & sym, doub
     result r(W.exec(ss.str()));
     auto c = r.begin();
     if(c == r.end()){
+        W.commit();
         return false;
     }
     long seller_id=c[2].as<long>(), seller_tran_id = c[0].as<long>();
@@ -328,14 +331,20 @@ bool matchOrderBuyer(connection *C, long buyer_tran_id){  //, string & sym, doub
         double sellerAmountRemain = buyerAmountRemain;
         double totalPrice = amount*price;
         addPairDeal(W,buyer_tran_id,seller_tran_id,amount,price,time);
-        updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,buyer_id,seller_id,sym,amount,totalPrice);
+        bool success = updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,buyer_id,seller_id,sym,amount,totalPrice);
+        if(!success){
+            return matchOrderBuyer(C,buyer_tran_id);
+        }
         //return false to continue trying to match more trans
         return false;
     }else if(buyerAmountRemain > 0){
         // Seller sells all of his shares.
         double totalPrice = shares*price;
         addPairDeal(W,buyer_tran_id,seller_tran_id,shares,price,time);
-        updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
+        bool success = updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
+        if(!success){
+            return matchOrderBuyer(C,buyer_tran_id);
+        }
         return true;
         // Return true is the buyer has done his transaction
     }
@@ -371,6 +380,7 @@ bool matchOrderSeller(connection *C, long seller_tran_id){//, string & sym, doub
     result r(W.exec(ss.str()));
     auto c = r.begin();
     if(c == r.end()){
+        W.commit();
         return false;
     }
     long buyer_id=c[2].as<long>(), buyer_tran_id = c[0].as<long>();
@@ -381,15 +391,21 @@ bool matchOrderSeller(connection *C, long seller_tran_id){//, string & sym, doub
         //buyerremain = 0 sellerremain<0,
         double totalPrice = shares*dealPrice;
         addPairDeal(W,buyer_tran_id,seller_tran_id,shares,dealPrice,time);
-        updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,seller_id,seller_id,sym,shares,totalPrice);
+        bool success = updateTransactionStatus(W,seller_tran_id,buyer_tran_id,sellerAmountRemain,seller_id,seller_id,sym,shares,totalPrice);
+        if(!success){
+            return matchOrderSeller(C,seller_tran_id);
+        }
         //return false to continue trying to match more trans
         return true;
     }else if(sellerAmountRemain >= 0){
         // seller sells all shares.
         double buyerAmountRemain = sellerAmountRemain;
-        double totalPrice = amount*dealPrice;
-        addPairDeal(W,buyer_tran_id,seller_tran_id,amount,dealPrice,time);
-        updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,seller_id,seller_id,sym,amount,totalPrice);
+        double totalPrice = -amount*dealPrice;
+        addPairDeal(W,buyer_tran_id,seller_tran_id,-amount,dealPrice,time);
+        bool success = updateTransactionStatus(W,buyer_tran_id,seller_tran_id,buyerAmountRemain,seller_id,seller_id,sym,amount,totalPrice);
+        if(!success){
+            return matchOrderSeller(C,seller_tran_id);
+        }
         return false;
         // Return true is the seller has done his transaction
     }
@@ -397,20 +413,20 @@ bool matchOrderSeller(connection *C, long seller_tran_id){//, string & sym, doub
 
 string cancelResult(connection * C, long trans_id){
 
-    nontransaction N(*C);
+    work W(*C);
 
     stringstream sqlStatement_tran;
     sqlStatement_tran << "SELECT STATUS, AMOUNT FROM TRANSACTIONS WHERE TRANS_ID="
-    << N.quote(trans_id) <<";";
-    result rT(N.exec(sqlStatement_tran.str()));
+    << W.quote(trans_id) <<";";
+    result rT(W.exec(sqlStatement_tran.str()));
 
     auto rti = rT.begin();
     double canceledShare = rti[1].as<double>(); 
     
     stringstream sqlStatement_deal;
     sqlStatement_deal << "SELECT PRICE, AMOUNT, TIME FROM DEAL WHERE TRANS_ID="
-    << N.quote(trans_id) << ";";
-    result rD(N.exec(sqlStatement_deal.str()));
+    << W.quote(trans_id) << ";";
+    result rD(W.exec(sqlStatement_deal.str()));
     vector<double> deal_shares, deal_price;
     vector<long> deal_time;
     for(result::iterator iD = rD.begin();iD!=rD.end();iD++){
@@ -419,7 +435,6 @@ string cancelResult(connection * C, long trans_id){
         deal_time.push_back(iD[2].as<long>());
     }
 
-    work W(*C);
     stringstream sqlUpdate;
     sqlUpdate<<"UPDATE TRANSACTIONS SET STATUS="<<W.quote("CANCELED");
     sqlUpdate<<" Where TRANS_ID="<<trans_id<<";";
@@ -438,6 +453,7 @@ string cancelResult(connection * C, long trans_id){
             W.commit();
             return res.cancelResult(trans_id,canceledShare, currentTime,deal_shares, deal_price, deal_time); 
         }catch(exception & e){
+            //JKLDFJF
             cerr<<"Need to Execuate again ID:"<<trans_id<<endl; 
         }
     }
@@ -454,7 +470,7 @@ long insertTrans(work &W, long account_id, string sym, long amount, double limit
     <<W.quote(account_id)<<", "<<W.quote(amount)<<", "
     <<W.quote(limit_price)<<", "<<W.quote(getCurrTime())<<") "
     <<"RETURNING TRANS_ID;";
-
+    cout<<"insert amount:"<<amount<<endl;
     result r(W.exec(sqlStatement.str()));
     long trans_id = r.begin()[0].as<long>();
     return trans_id;
@@ -486,17 +502,24 @@ string processOrder(connection *C, long account_id,string sym, long amount, doub
     try{
         W.commit();
     }catch(const exception &e){
+        W.abort();
         cerr<<e.what()<<endl;
+        // cerr<<1<<endl;
         return processOrder(C,account_id,sym,amount,limit_price);
     }
     bool keepMatching = true;
+    //int i = 2;
     if(amount>0){
         while(keepMatching){
             keepMatching = matchOrderBuyer(C,trans_id);
+            //cout<<"!"<<endl;
+            //i--;
         }
     }else{
         while(keepMatching){
             keepMatching = matchOrderSeller(C,trans_id);
+            //cout<<"?"<<endl;
+            //i--;
         }
     }
     Result res;

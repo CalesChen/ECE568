@@ -42,7 +42,7 @@ long getCurrTime();
 // Match Order Related Function
 bool matchOrderBuyer(connection *C, long buyer_tran_id);
 bool matchOrderSeller(connection *C, long seller_tran_id);
-void updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance);
+bool updateTransactionStatus(work & W, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance);
 void updateTransactionStatus(work & W, long trans_id, double amount, string status);
 void updateAccountShareAndMoney(work & W, long buyer_id, long seller_id, string & sym, double shares, double balance);
 //order tag related function

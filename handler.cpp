@@ -101,6 +101,7 @@ void *xmlHandler(void *client_fd_ptr){
                     ss<<err.createSymbolErrorMSG(0, transaction.orders[i].sym,temp);
                 }else{
                     // General Process
+                    cout<<"handler amount:"<<transaction.orders[i].amount<<endl;
                     ss<<processOrder(C, transaction.account_id, transaction.orders[i].sym, transaction.orders[i].amount, transaction.orders[i].limit);
                 }
             }
