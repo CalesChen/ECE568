@@ -348,3 +348,56 @@ bool matchOrderSeller(connection *C, long seller_tran_id){//, string & sym, doub
         // Return true is the seller has done his transaction
     }
 }
+
+string cancelResult(connection * C, long trans_id){
+
+    nontransaction N(*C);
+
+    stringstream sqlStatement_tran;
+    sqlStatement_tran << "SELECT STATUS, AMOUNT FROM TRANSACTIONS WHERE TRANS_ID="
+    << N.quote(trans_id) <<";";
+    result rT(N.exec(sqlStatement_tran.str()));
+
+    auto rti = rT.begin();
+    double canceledShare = rti[1].as<double>(); 
+    
+    stringstream sqlStatement_deal;
+    sqlStatement_deal << "SELECT PRICE, AMOUNT, TIME FROM DEAL WHERE TRANS_ID="
+    << N.quote(trans_id) << ";";
+    result rD(N.exec(sqlStatement_deal.str()));
+    vector<double> deal_shares, deal_price;
+    vector<long> deal_time;
+    for(result::iterator iD = rD.begin();iD!=rD.end();iD++){
+        deal_price.push_back(iD[0].as<double>());
+        deal_shares.push_back(iD[1].as<double>());
+        deal_time.push_back(iD[2].as<long>());
+    }
+
+    work W(*C);
+    stringstream sqlUpdate;
+    sqlUpdate<<"UPDATE TRANSACTIONS SET STATUS="<<W.quote("CANCELED");
+    sqlUpdate<<" Where TRANS_ID="<<trans_id<<";";
+    string sqlUpdateStr = sqlUpdate.str();
+    
+    stringstream sqlInsert;
+    long currentTime = getCurrTime();
+    sqlInsert<<"INSERT INTO CANCELTIME VALUES("<<trans_id<<", "<<currentTime<<");";
+    string sqlInsertStr = sqlInsert.str();
+
+    Result res;
+    while(true){
+        try{
+            W.exec(sqlUpdateStr);
+            W.exec(sqlInsertStr);
+            W.commit();
+            return res.cancelResult(trans_id,canceledShare, currentTime,deal_shares, deal_price, deal_time); 
+        }catch(exception & e){
+            cerr<<"Need to Execuate again ID:"<<trans_id<<endl; 
+        }
+        
+    }
+    
+    
+
+
+}

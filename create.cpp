@@ -1,13 +1,8 @@
-
 #include "create.h"
 #define CREATE_TAG "create"
 
 
-// class AccountCreate{
-//     public:
-//         int account_id;
-//         int balance;
-// };
+
 
     Create::Create(string myxml){
         try {
@@ -66,6 +61,7 @@
         //cout<<balance_int + id_int<<endl;
         this->account_balance.push_back(balance_int);
         this->account_id.push_back(id_int);
+        this->origin_id.push_back(id);
         //cout<<XMLString::transcode(account->item(i)->get (XMLString::transcode("id")))<<endl;
     }
 
@@ -96,6 +92,7 @@
             cout<<id<<endl<<endl<<num<<endl;
             
             tempToAdd.account_id.push_back(atol(id.c_str()));
+            tempToAdd.orgin_id.push_back(id);
             tempToAdd.num.push_back(atof(num.c_str()));
         }
         this->symbol.push_back(tempToAdd);

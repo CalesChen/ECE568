@@ -36,6 +36,7 @@
         string ac_id = XMLString::transcode(root->getAttribute(XMLString::transcode("id")));
         cout<<"ac_id"<<ac_id<<endl;
         this->account_id = atoi(ac_id.c_str());
+        this->origin = ac_id;
         DOMNodeList * order = root->getElementsByTagName(XMLString::transcode("order"));
         for(int i = 0 ; i < order->getLength();i++){
             DOMNode * temp = order->item(i);

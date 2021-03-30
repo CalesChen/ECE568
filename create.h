@@ -18,11 +18,13 @@ class SymbolCreate{
     public:
         string symbol;
         vector<long> account_id;
+        vector<string> orgin_id;
         vector<double> num;
 };
 class Create{
     public:
         vector<long> account_id;
+        vector<string> origin_id;
         vector<double> account_balance;
         vector<SymbolCreate> symbol;
 

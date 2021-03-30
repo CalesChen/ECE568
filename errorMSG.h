@@ -12,7 +12,11 @@ class ErrorMSG{
     public:
         string createAccountErrorMSG(long id, string & msg);
 
+        string createAccountErrorMSG(string id, string & msg);
+
         string createSymbolErrorMSG(long id, string sym, string & msg);
+
+        string createSymbolErrorMSG(string id, string sym, string & msg);
 
         string transactionEmptyErrorMSG(long Acc_id, string & msg);
 

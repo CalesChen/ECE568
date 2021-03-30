@@ -17,7 +17,8 @@ using namespace xercesc;
 
 class Order{
     public:
-        long account_id;
+        // long account_id;
+        // string origin_id;
         string sym;
         double amount;
         double limit;
@@ -28,6 +29,7 @@ class Order{
 class Transaction{
     public:
     long account_id;
+    string origin;
     vector<Order> orders;
     vector<long> querys;
     vector<long> cancels;

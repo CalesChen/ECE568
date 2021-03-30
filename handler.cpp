@@ -11,19 +11,28 @@ void *xmlHandler(void *client_fd_ptr){
 
     stringstream ss;
     ErrorMSG err;
+    Result res;
+    ss<<"<results>";
     //parse xml
     if(request.find("create")){
         Create create(request);
+        
         //handleCreate
         //create.account_balance.size() == create.account_id.size 
         // Create Acount
         for(int i = 0 ; i < create.account_id.size();i++){
             // Create Account
-            // if(createAccount(create.account_id[i], create.account_balance[i])){
-            //     // Add Success
-            // }else{
-            //     // Add Failure
-            // }
+            if(create.account_id[i] == 0){
+                string temp = "Sorry, the account ID is invalid.";
+                ss<<err.createAccountErrorMSG(create.origin_id[i], temp);
+            }else if(createAccount(C,create.account_id[i], create.account_balance[i])){
+                // Add Success
+                ss<<res.createAccountResult(create.account_id[i]);
+            }else{
+                // Add Failure
+                string temp = "Account already exists";
+                ss<<err.createAccountErrorMSG(create.account_id[i], temp);
+            }
         }
         for(int i = 0 ; i < create.symbol.size() ; i ++){
             if(create.symbol[i].account_id.size() < 1){
@@ -35,7 +44,16 @@ void *xmlHandler(void *client_fd_ptr){
                 ss<<err.createSymbolErrorMSG(0, create.symbol[i].symbol, temp);
             }else{
                 for(int j = 0; j < create.symbol[i].account_id.size(); i++){
-
+                    if(create.symbol[i].account_id[j] == 0){
+                        string temp = "The Account is invalid";
+                        ss<<err.createSymbolErrorMSG(create.symbol[i].orgin_id[j],create.symbol[i].symbol, temp);
+                    }
+                    else if(accountExist(C,create.symbol[i].account_id[j])){
+                        string temp = "The Account does not exist";
+                        ss<<err.createSymbolErrorMSG(create.symbol[i].symbol, create.symbol[i].symbol, temp);
+                    }else{
+                        ss<<res.createSymbolResult(create.symbol[i].symbol, create.symbol[i].account_id[j]);
+                    }
                 }
             }
         }
@@ -50,7 +68,7 @@ void *xmlHandler(void *client_fd_ptr){
             int amount = transaction.cancels.size() + transaction.orders.size() + transaction.querys.size();
             string temp = "Sorry, the account ID is invalid.";
             for(int i = 0 ; i < amount ; i++){
-                ss<<"<error>"<<temp<<"</error>";
+                ss<<err.createAccountErrorMSG(transaction.origin, temp);
             }            
         } else if(accountExist(C,transaction.account_id)){     // Account_id not exists waiting for function!
             int amount = transaction.cancels.size() + transaction.orders.size() + transaction.querys.size();
