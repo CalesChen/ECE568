@@ -176,41 +176,84 @@ string queryTrans(connection *C, long trans_id){
 }
 
 /*
-    The function will return true is we need further match. 
+    The function will return true if we need further match. 
     will return false if we do not need to match.
 */
-bool matchOrderBuyer(connection *C, long tran_id, string & sym, double amount, double price, long buyer_id){
+bool matchOrderBuyer(connection *C, long buyer_tran_id, string & sym, double amount, double price, long buyer_id){
     // This is for buyer
     // Select eligible Transaction ID, price, amount, from TRANSACTIONS 
     // Where TRANSACTIONS.status = "OPEN" and TRANSACTIONS.SYMBOL_NAME="sym" and TRANSACTIONS.LIMIT_PRICE < 0 and TRANSACTIONS.LIMIT_PRICE > (-price) 
     // Order By price ASC
-    nontransaction N(*C);
+    work W(*C);
     stringstream ss;
     ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
     ss<<"From TRANSACTIONS";
-    ss<<"Where TRANSACTIONS.status="<<N.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<N.quote(sym);
+    ss<<"Where TRANSACTIONS.status="<<W.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<W.quote(sym);
     ss<<" and TRANSACTIONS.AMOUNT < 0 and TRANSACTIONS.LIMIT_PRICE <= "<<(price);
     ss<<" Order By LIMIT_PRICE ASC, TIME ASC;";
-    result r(N.exec(ss.str()));
+    result r(W.exec(ss.str()));
     auto c = r.begin();
     if(c == r.end()){
         return false;
     }
-    if(c[2].as<double>() + amount < 0){
-        updateTransactionStatus(C, c[0].as<long>(), tran_id, amount+c[4].as<double>(), buyer_id, c[2].as<long>(), c[1].as<string>(),-c[4].as<double>(), price*(-c[4].as<double>()));
-        // updateTransactionStatus(C, c[0].as<long>(), amount+c[2].as<double>(), "OPEN");
-        // updateTransactionStatus(C, tran_id, 0, "CLOSE");
-        // Return true is the buyer has done his transaction
+    long seller_id=c[2].as<long>(), seller_tran_id = c[0].as<long>();
+    double buyerAmountRemain=amount+c[4].as<double>(), shares=-c[4].as<double>();
+    string sym = c[1].as<string>();
+    if(buyerAmountRemain <= 0){
+        //seller sell part of shares
+        double sellerAmountRemain = buyerAmountRemain;
+        double totalPrice = amount*price;
+        updateTransactionStatus(C,seller_tran_id,buyer_tran_id,sellerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
+        //return false to continue trying to match more trans
         return false;
-    }else{
+    }else if(buyerAmountRemain > 0){
         // Seller sells all of his shares.
-        double balance = price*(-c[4].as<double>());
-        updateTransactionStatus(C, tran_id, c[0].as<long>(), amount+c[4].as<double>(), buyer_id, c[2].as<long>(), c[1].as<string>(), -c[4].as<double>(), balance);
-        // updateTransactionStatus(C, c[0].as<long>(), 0, "CLOSE");
-        // updateTransactionStatus(C, tran_id, amount+c[2].as<double>(), "OPEN");
+        double totalPrice = -c[4].as<double>()*price;
+        updateTransactionStatus(C,buyer_tran_id,seller_tran_id,buyerAmountRemain,buyer_id,seller_id,sym,shares,totalPrice);
         return true;
+        // Return true is the buyer has done his transaction
     }
+}
 
+/*
+    The function will return true if we need further match. 
+    will return false if we do not need to match.
+*/
+bool matchOrderSeller(connection *C, long seller_tran_id, string & sym, double amount, double price, long seller_id){
+    // This is for seller
+    // Select eligible Transaction ID, price, amount, from TRANSACTIONS 
+    // Where TRANSACTIONS.status = "OPEN" and TRANSACTIONS.SYMBOL_NAME="sym" and TRANSACTIONS.LIMIT_PRICE < 0 and TRANSACTIONS.LIMIT_PRICE > (-price) 
+    // Order By price ASC
+    work W(*C);
+    stringstream ss;
+    ss<<"SELECT TRANS_ID, SYMBOL_NAME, ACCOUNT_ID, LIMIT_PRICE, AMOUNT, TIME";
+    ss<<"From TRANSACTIONS";
+    ss<<"Where TRANSACTIONS.status="<<W.quote("OPEN")<< " and TRANSACTIONS.SYMBOL_NAME="<<W.quote(sym);
+    ss<<" and TRANSACTIONS.AMOUNT > 0 and TRANSACTIONS.LIMIT_PRICE >= "<<(price);
+    ss<<" Order By LIMIT_PRICE DESC, TIME ASC;";
+    result r(W.exec(ss.str()));
+    auto c = r.begin();
+    if(c == r.end()){
+        return false;
+    }
+    long buyer_id=c[2].as<long>(), buyer_tran_id = c[0].as<long>();
+    double sellerAmountRemain=amount+c[4].as<double>(), shares=c[4].as<double>(), dealPrice = c[3].as<double>();
+    string sym = c[1].as<string>();
+    if(sellerAmountRemain < 0){
+        //seller sell part of shares
+        //buyerremain = 0 sellerremain<0,
+        double totalPrice = shares*dealPrice;
+        updateTransactionStatus(C,seller_tran_id,buyer_tran_id,sellerAmountRemain,seller_id,seller_id,sym,shares,totalPrice);
+        //return false to continue trying to match more trans
+        return true;
+    }else if(sellerAmountRemain >= 0){
+        // seller sells all shares.
+        double buyerAmountRemain = sellerAmountRemain;
+        double totalPrice = amount*dealPrice;
+        updateTransactionStatus(C,buyer_tran_id,seller_tran_id,buyerAmountRemain,seller_id,seller_id,sym,amount,totalPrice);
+        return false;
+        // Return true is the seller has done his transaction
+    }
 }
 
 void updateTransactionStatus(connection *C, long open_trans_id, long close_trans_id, double amountRemain, long buyer_id, long seller_id, string & sym, double shares, double balance){
@@ -218,8 +261,9 @@ void updateTransactionStatus(connection *C, long open_trans_id, long close_trans
     while(true){
         try{
             updateTransactionStatus(W, open_trans_id, amountRemain, "OPEN");
-            updateTransactionStatus(W, close_trans_id, 0, "CLOSE");
+            updateTransactionStatus(W, close_trans_id, 0, "OPEN");
             updateAccountShareAndMoney(W, buyer_id, seller_id, sym, shares, balance);
+            //TODO :insert a record for this deal
             W.commit();
             break;
         }catch(exception & e){
