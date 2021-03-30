@@ -1,3 +1,5 @@
+#ifndef __CREATE_H__
+#define __CREATE_H__
 #include <iostream>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -26,3 +28,5 @@ class Create{
 
     Create(string myxml);
 };
+
+#endif

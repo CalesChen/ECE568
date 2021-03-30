@@ -1,3 +1,6 @@
+#ifndef __ERRORMSG_H__
+#define __ERRORMSG_H__
+
 #include <iostream>
 #include <string>
 #include <stdio.h>
@@ -19,3 +22,5 @@ class ErrorMSG{
 
         string cancelErrorMSG(long tran_id, string & msg);
 };
+
+#endif

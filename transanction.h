@@ -1,3 +1,6 @@
+#ifndef __TRANSACTION_H__
+#define __TRANSACTION_H__
+
 #include <iostream>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -31,3 +34,5 @@ class Transaction{
 
     Transaction(string myxml);
 };
+
+#endif

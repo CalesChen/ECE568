@@ -1,3 +1,6 @@
+#ifndef __RESULT_H__
+#define __RESULT_H__
+
 #include <string>
 #include <iostream>
 #include <vector>
@@ -15,3 +18,5 @@ class Result{
     string cancelResult(long tran_id, double canceledShare, long canceldTime, vector<double> & shares, vector<double> & price, vector<long> & time);
     //string cancelResult(long tran_id, double canceled);
 };
+
+#endif
