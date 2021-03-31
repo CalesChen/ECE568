@@ -7,7 +7,13 @@ void *xmlHandler(void *client_fd_ptr){
     connection *C;
     connectDB(DB_INFO,&C);
 
-    string request = recvString(client_fd);
+    string request;
+    try{
+        request = recvString(client_fd);
+    }catch(const exception &e){
+        cerr<<"Not receiving anything from client fd: "<<client_fd<<endl;
+        return NULL;
+    }
 
     stringstream ss;
     ErrorMSG err;
@@ -145,6 +151,7 @@ void *xmlHandler(void *client_fd_ptr){
     string ret = ss.str();
     sendString(client_fd,"received your message: "+ret);
     close(client_fd);
+    return NULL;
 }
 
 bool checkName(string & sym){
