@@ -5,14 +5,7 @@
 
 
     Create::Create(string myxml){
-        try {
-            XMLPlatformUtils::Initialize();
-        }
-        catch (const XMLException& toCatch)
-        {
-            std::cerr << XMLString::transcode(toCatch.getMessage());
-            throw new exception();
-        }
+        
 
         XercesDOMParser * parser = new XercesDOMParser();
         ErrorHandler * errHandler = new HandlerBase();
