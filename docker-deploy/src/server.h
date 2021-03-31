@@ -41,4 +41,9 @@ public:
     string getHostPortInfo();
 };
 
+class Parameter{
+    public:
+    int client_fd;
+    Parameter(int fd):client_fd(fd){}
+};
 #endif

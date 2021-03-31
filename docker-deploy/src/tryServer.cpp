@@ -20,16 +20,28 @@ int main(){
         delete C;
 
         
-
+        pthread_mutex_t mutex;
         Server server(PORT);
         while(true){
+            try {
+                XMLPlatformUtils::Initialize();
+            }
+            catch (const XMLException& toCatch)
+            {
+                std::cerr << XMLString::transcode(toCatch.getMessage());
+                throw new exception();
+            }
             std::string ip_addr;
             cout<<"Waiting for connection"<<endl;
+            pthread_mutex_lock(&mutex);
             int client_fd = server.accept_connection(&ip_addr);
+            Parameter * p = new Parameter(client_fd);
             cout<<"Successfully connected with the client from "<<ip_addr<<endl;
             cout<<client_fd<<endl;
+            pthread_mutex_unlock(&mutex);
+
             pthread_t thread;
-            pthread_create(&thread,NULL,xmlHandler,&client_fd);
+            pthread_create(&thread,NULL,xmlHandler,p);
         }
         
     }catch(const exception &e){

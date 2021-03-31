@@ -1,7 +1,7 @@
 #include "handler.h"
-
-void *xmlHandler(void *client_fd_ptr){
-    int client_fd = *((int *)client_fd_ptr);
+#include "server.h"
+void *xmlHandler(void * p){
+    int client_fd = ((Parameter *)(p))->client_fd;
     // cout<<client_fd<<endl;
     //recv xml from client
     connection *C;
@@ -151,6 +151,7 @@ void *xmlHandler(void *client_fd_ptr){
     string ret = ss.str();
     sendString(client_fd,"received your message: "+ret);
     close(client_fd);
+    delete ((Parameter *)(p));
     return NULL;
 }
 
