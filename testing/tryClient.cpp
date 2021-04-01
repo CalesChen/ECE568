@@ -233,18 +233,41 @@ int main(int argc, char ** argv){
     long accountLowerLimit = atol(argv[1]); 
     long accountHigerLimit = atol(argv[2]);
     
+    try{
+        Client client("127.0.0.1",PORT);
+        cout<<"Successfully connected"<<endl;
+        stringstream ss;
+        ss<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?><create><account id=\""<<1<<"\" balance=\""<<100<<"\"/><symbol sym=\"SYM\"><account id=\""<<1<<"\">100</account></symbol></create>";
+        sendString(client.socket_fd,ss.str());
+        string ans = recvString(client.socket_fd);
+        cout<<ans<<endl;
+    }catch(const exception e){
+        cerr<<e.what()<<endl;
+    }
+
+    try{
+        Client client("127.0.0.1",PORT);
+        cout<<"Successfully connected"<<endl;
+        string myxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"1\"><order sym=\"SYM\" amount=\"-1\" limit=\"1\"/></transactions>";
+        sendString(client.socket_fd,myxml);
+        string ans = recvString(client.socket_fd);
+        cout<<ans<<endl;
+    }catch(const exception e){
+        cerr<<e.what()<<endl;
+    }
+
     if(FLOODING){
         long accountIDGenerator = accountHigerLimit;
         while(accountIDGenerator>accountLowerLimit){
+            // query transid  1 (res: partial exec, open 100, exec 200 at 125)
             try{
                 Client client("127.0.0.1",PORT);
                 cout<<"Successfully connected"<<endl;
-                stringstream ss;
-                ss<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?><create><account id=\""<<accountIDGenerator<<"\" balance=\""<<100<<"\"/><symbol sym=\"SYM\"><account id=\""<<accountIDGenerator<<"\">100</account></symbol></create>";
-                sendString(client.socket_fd,ss.str());
+                string xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transactions id=\"1\"><query id=\"1\"/></transactions>";
+                sendString(client.socket_fd,xml);
                 string ans = recvString(client.socket_fd);
                 cout<<ans<<endl;
-            }catch(const exception e){
+            }catch(const exception & e){
                 cerr<<e.what()<<endl;
                 break;
             }
