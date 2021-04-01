@@ -8,7 +8,7 @@
 
 #define FLOODING true
 
-int main(){
+int main(int argc, char ** argv){
     using namespace std::chrono;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
@@ -230,9 +230,12 @@ int main(){
     //     pthread_create(&thread,NULL,keepFlooding,&curr_account_id);
     //     accountIDGenerator--;
     // }
+    long accountLowerLimit = atol(argv[1]); 
+    long accountHigerLimit = atol(argv[2]);
+    
     if(FLOODING){
-        long accountIDGenerator = 9999;
-        while(accountIDGenerator>200){
+        long accountIDGenerator = accountHigerLimit;
+        while(accountIDGenerator>accountLowerLimit){
             try{
                 Client client("127.0.0.1",PORT);
                 cout<<"Successfully connected"<<endl;
