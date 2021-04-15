@@ -1,6 +1,7 @@
 package edu.duke.ece568.erss.amazon;
 
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.*;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,13 +20,14 @@ public class AmazonServer {
 
     public static final int UPS_PORTNUM = 8888;
 
-    //private final ArrayList<AInitWareHouse> warehouses;
+    private final ArrayList<AInitWarehouse> warehouses;
 
     private InputStream input;
     private OutputStream output;
     Socket UPSocket;
 
     public AmazonServer(){
+        warehouses = new ArrayList<>();
         //waitingForUPS();
     }
 
@@ -53,19 +55,19 @@ public class AmazonServer {
     }
 
    
-    public boolean amazonToWorldConnection(long worldId){
+    public boolean amazonToWorldConnection(long worldId) throws IOException {
         Socket socket = new Socket(WORLD_HOST_IP, AMAZON_PORTNUM);
         input = socket.getInputStream();
         output = socket.getOutputStream();
-        AConnectOrBuilder builder = AConnect.newBuilder();
+        AConnect.Builder builder = AConnect.newBuilder();
         builder.setIsAmazon(true);
         builder.addAllInitwh(warehouses);
         builder.setWorldid(worldId);
     
-        AConnectedOrBuilder builderAConnected = AConnected.newBuilder();
+        AConnected.Builder builderAConnected = AConnected.newBuilder();
         // Send Msg to the World or warehouses
         builder.build().writeTo(output);
-        builderAConnected.parseFrom(input);
+        builderAConnected.mergeFrom(input);
 
         System.out.println("WorldID: " + builderAConnected.getWorldid());
         System.out.println("Result: " + builderAConnected.getResult());
