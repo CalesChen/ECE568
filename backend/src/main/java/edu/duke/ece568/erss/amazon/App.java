@@ -11,10 +11,12 @@ public class App {
     public static void main(String[] args) {
         //System.out.println(new App().getGreeting());
         AmazonServer s = new AmazonServer();
-        try{
-            s.waitingForUPS();
-        }catch(Exception e){
-            System.out.println(e.getMessage());
+        while(true){
+            try{
+                s.initiaition();
+            }catch(Exception e){
+                System.out.println(e.getMessage());
+            }
         }
         
     }

@@ -1,0 +1,107 @@
+syntax = "proto2";
+message ACommand {
+    required bool isRequest=1;
+    optional bool disconnect=2;
+    optional bool finished=3;
+    repeated newShipment newShipmentCreated=4;
+    repeated loadedPackage packageLoaded=5;
+    repeated checkUsername checkUsers=6;
+    repeated int64 acks=7;
+    repeated Err error=8;
+}
+
+message UCommand {
+    required bool isRequest=1;
+    optional bool disconnect=2;
+    optional bool finished=3;
+    // shipID and trackingNumbers should be one-to-one in the same order
+    repeated newShipmentResponse trackingNumberCreated=4;
+    repeated truckArrival arrived=5;
+    repeated deliveredPackage delivered=6;
+    repeated changeDeliveryAddress changeAddress=7;
+    repeated checkUsernameResponse checkUser=8;
+    repeated int64 acks=9;
+    repeated Err error=10;
+}
+
+message Err{
+  required string err = 1;
+  required int64 originseqnum = 2;
+  required int64 seqnum = 3;
+}
+
+message createWorld {
+    required int64 worldID=1;
+    required int64 seqnum=2;
+}
+
+message checkUsername {
+    required string upsUsername=1;
+    required int64 seqnum=2;
+}
+
+message checkUsernameResponse {
+//-1: username does not exist
+required int64 upsUserID=1;
+required int64 seqnum=2;
+}
+
+message newShipment {
+    required int64 shipID = 1;
+    required product productInfo=2;
+    required warehouse warehouseInfo=3;
+    required destination destinationInfo=4;
+    optional string upsUsername = 5;
+    required int64 seqnum=6;
+}
+
+message newShipmentResponse {
+    required int64 shipID = 1;
+    required int64 trackingNumber = 2;
+    //error status? 0:success 1:failure
+    required int32 status=3;
+    required int64 seqnum=4;
+}
+
+message product{
+    required int64 productID=1;
+    required string description=2;
+    required int32 count = 3;
+}
+
+message destination {
+    required int32 x=1;
+    required int32 y=2;
+}
+
+message warehouse{
+    required int32 warehouseID = 1;
+    required int32 x = 2;
+    required int32 y = 3;
+}
+
+message truckArrival {
+    required warehouse warehouseInfo=1;
+    required int32 truckID=2;
+    required int64 shipID = 3;
+    required int64 seqnum=4;
+}
+
+message loadedPackage {
+    repeated int64 trackingNumber=1;
+    required int32 truckID=2;
+    required int64 seqnum=3;
+}
+
+
+message deliveredPackage {
+    required int64 trackingNumber=1;
+    required int64 seqnum=2;
+}
+
+message changeDeliveryAddress {
+    required int64 trackingNumber=1;
+    required destination destinationInfo=2;
+    required int64 seqnum=3;
+}
+

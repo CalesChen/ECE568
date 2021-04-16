@@ -1,7 +1,10 @@
-package main.java.edu.duke.ece568.erss.amazon;
+package edu.duke.ece568.erss.amazon;
 
+import java.lang.Thread.State;
 import java.sql.*;
 import java.util.*;
+
+import edu.duke.ece568.erss.amazon.protos.WorldAmazon.AInitWarehouse;
 
 public class QueryFunctions {
     private static final String TABLE_WAREHOUSE = "amazonWeb_warehouse";
@@ -10,9 +13,32 @@ public class QueryFunctions {
     private static final String TABLE_CATEGORY = "amazonWeb_category";
     private static final String TABLE_PRODUCT = "amazonWeb_product";
 
-    private static final String dbURL = "";
+    private static final String dbURL = "jdbc:postgresql://db:5432/AMAZON";
     private static final String dbUSER = "postgres";
     private static final String dbPASSWD = "passw0rd";
 
-    
+    public static List<AInitWarehouse> qWarehouses(){
+        List<AInitWarehouse> ret = new ArrayList<>();
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+
+            Statement work = C.createStatement();
+            String sql = String.format("select * from %s", TABLE_WAREHOUSE);
+            ResultSet result = work.executeQuery(sql);
+            
+            while(result.next()){
+                AInitWarehouse.Builder builder = AInitWarehouse.newBuilder();
+                builder.setId(result.getInt("id"));
+                builder.setX(result.getInt("address_x"));
+                builder.setY(result.getInt("address_y"));
+                ret.add(builder.build());
+            }
+            
+        }catch(ClassNotFoundException | SQLException e){
+            System.err.println(e.toString());
+        }
+        return ret;
+    }
+
 }

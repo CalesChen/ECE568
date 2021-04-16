@@ -1,6 +1,7 @@
 package edu.duke.ece568.erss.amazon;
 
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.*;
+import edu.duke.ece568.erss.amazon.protos.AmazonUps.*;
 import org.checkerframework.checker.units.qual.A;
 
 import java.io.BufferedReader;
@@ -20,15 +21,47 @@ public class AmazonServer {
 
     public static final int UPS_PORTNUM = 8888;
 
-    private final ArrayList<AInitWarehouse> warehouses;
+    private final List<AInitWarehouse> warehouses;
 
     private InputStream input;
     private OutputStream output;
     Socket UPSocket;
 
     public AmazonServer(){
-        warehouses = new ArrayList<>();
+        //warehouses = new ArrayList<>();
+        warehouses = QueryFunctions.qWarehouses();
         //waitingForUPS();
+    }
+
+    public void initiaition() throws IOException{
+        System.out.println("Initializing the AmazonServer.");
+        System.out.println("UPS PORT is : " + UPS_PORTNUM);
+
+        while(true){
+            try{
+                waitingForUPS();
+            }catch(Exception e){
+                System.err.println(e.toString());
+            }
+            if(UPSocket != null){
+                createWorld.Builder cWorld = createWorld.newBuilder();
+                cWorld.mergeFrom(UPSocket.getInputStream());
+                if(cWorld.hasWorldID()){
+                    try{
+                        boolean connected = amazonToWorldConnection(cWorld.getWorldID());
+                        if(connected == true){
+                            System.out.println("Connected to the World.");
+                            break;
+                        }
+                    }catch(Exception e){
+                        System.err.println(e.toString());
+                    }
+                    
+                }
+                  
+            }
+            
+        }
     }
 
     public void waitingForUPS() throws IOException, SocketException{
@@ -36,10 +69,12 @@ public class AmazonServer {
         // Will wait for 10s without throw exception.
         ssockt.setSoTimeout(10000);
         try{
+            System.out.println("Waiting for UPS");
             UPSocket = ssockt.accept();
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
+        ssockt.close();
         //TODO: The ssockt needs to be closed.
         // this.input = UPSocket.getInputStream();
         // BufferedReader reader = new BufferedReader(new InputStreamReader(this.input));
@@ -73,5 +108,14 @@ public class AmazonServer {
         System.out.println("Result: " + builderAConnected.getResult());
         
         return builderAConnected.getResult().equals("connected!");
+    }
+
+    /**
+     * The proto says: every World Response will have 6 fields to handle
+     * and it will n
+     * @return
+     */
+    public boolean worldResponseHandler(){
+        return true;
     }
 }
