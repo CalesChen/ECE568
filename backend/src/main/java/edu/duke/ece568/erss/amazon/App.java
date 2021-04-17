@@ -14,6 +14,7 @@ public class App {
         while(true){
             try{
                 s.initiaition();
+                break;
             }catch(Exception e){
                 System.out.println(e.getMessage());
             }
