@@ -68,7 +68,8 @@ public class QueryFunctions {
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
 
             Statement work = C.createStatement();
-            String sql = String.format("update %s set status = %s where id = %d", TABLE_PACKAGE, status, packageId);
+            String sql = String.format("update %s set status = %s where id = %d", 
+                        TABLE_PACKAGE, status, packageId);
             work.executeUpdate(sql);
             C.commit();
             work.close();
