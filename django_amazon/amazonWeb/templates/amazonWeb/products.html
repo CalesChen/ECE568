@@ -1,0 +1,12 @@
+{% extends "amazonWeb/base.html" %}
+{% block content %}
+    {% for product in products %}
+        <article class="media content-section">
+            <div class="media-body">
+                <p><strong>{{ product.description }}</strong> </p>
+                <p>Price: {{ product.price }}</p>
+                <p>Category: {{ product.category }}</p>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content%}

@@ -18,7 +18,7 @@ def create_user(name,uEmail,pw):
 def create_category(names):
     from amazonWeb.models import Category
     if Category.objects.all().count()==0:
-        for i in range(len(names)):
+        for name in names:
             Category.objects.create(category=name)
 
 def create_product(descriptions,categories,prices):
@@ -30,8 +30,7 @@ def create_product(descriptions,categories,prices):
             cat = Category.objects.get(category=categories[i])
             Product.objects.create(description=descriptions[i],
                 category = cat,
-                price = prices[i],
-                count = 10
+                price = prices[i]
             )
 
 def create_warehouse(xs,ys):
