@@ -43,6 +43,8 @@ public class AmazonServer {
     // ThreadPool to execute the thread.
     private final ThreadPoolExecutor threadPool;
 
+    //private final Map<Long, Package> packageMap;
+
     public AmazonServer(){
         //warehouses = new ArrayList<>();
         this.warehouses = QueryFunctions.qWarehouses();
