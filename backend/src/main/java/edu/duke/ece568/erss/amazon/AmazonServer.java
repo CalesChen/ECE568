@@ -166,7 +166,7 @@ public class AmazonServer {
      * and it will n
      * @return
      */
-    public boolean worldResponseHandler(AResponses res){
+    public boolean worldResponseHandler(AResponses res) throws IOException {
         System.out.println("Receive World Response:" + res.toString());
         worldAckSender(res);
         for(APurchaseMore apc : res.getArrivedList()){
@@ -182,29 +182,29 @@ public class AmazonServer {
             System.err.println(ae.getErr());
         }
         for(APackage ap : res.getPackagestatusList()){
-            System.out.println(ap.getStatus);
+            System.out.println(ap.getStatus());
 
         }
         return true;
     }
 
-    public int seqNumGenerator(){
+    public long seqNumGenerator(){
         long temp = globalSeqNum;
         globalSeqNum += 1;
         return temp;
     }
 
-    public void buyOrder(long packageId){
-        System.out.println("Buying " + packageId);
-        this.threadPool.execute(()->{
-            long seqnum = seqNumGenerator();
-            APurchaseMore.Builder 
-        });
-    }
+//    public void buyOrder(long packageId){
+//        System.out.println("Buying " + packageId);
+//        this.threadPool.execute(()->{
+//            long seqnum = seqNumGenerator();
+//            APurchaseMore.Builder
+//        });
+//    }
 
 
 
-    public void worldAckSender(AResponses res){
+    public void worldAckSender(AResponses res) throws IOException {
         ArrayList<Long> seq = new ArrayList<>();
         for(APurchaseMore apc : res.getArrivedList()){
             seq.add(apc.getSeqnum());
@@ -213,7 +213,7 @@ public class AmazonServer {
             seq.add(ap.getSeqnum());
         }
         for(ALoaded al : res.getLoadedList()){
-            seq.add(al.getSequm());
+            seq.add(al.getSeqnum());
         }
         for(AErr ae : res.getErrorList()){
             seq.add(ae.getSeqnum());
@@ -227,7 +227,7 @@ public class AmazonServer {
             for(long s : seq){
                 ares.addAcks(s);
             }
-            synchronized(out){
+            synchronized(output){
                 System.out.println("Now Send Acks to the World.");
                 sendMSG(ares, output);    
             }
