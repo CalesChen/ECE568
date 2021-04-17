@@ -30,7 +30,8 @@ def create_product(descriptions,categories,prices):
             cat = Category.objects.get(category=categories[i])
             Product.objects.create(description=descriptions[i],
                 category = cat,
-                price = prices[i]
+                price = prices[i],
+                count = 10
             )
 
 def create_warehouse(xs,ys):

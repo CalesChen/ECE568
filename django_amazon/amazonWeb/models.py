@@ -21,6 +21,7 @@ class Product(models.Model):
     description = models.CharField(max_length=200, null = False, blank = False)
     category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null = True)
     price = models.FloatField(default = 9.99, null = False, blank = False)
+    count = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
         return f'<{self.description}, {self.price}>'
