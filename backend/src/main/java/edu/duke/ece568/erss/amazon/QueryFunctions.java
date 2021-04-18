@@ -4,6 +4,7 @@ import java.lang.Thread.State;
 import java.sql.*;
 import java.util.*;
 
+import edu.duke.ece568.erss.amazon.Address;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.AInitWarehouse;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.APurchaseMore;
 
@@ -80,4 +81,7 @@ public class QueryFunctions {
         return null;
     }
 
+    public static Address qAddress(long packageId){
+        
+    }
 }

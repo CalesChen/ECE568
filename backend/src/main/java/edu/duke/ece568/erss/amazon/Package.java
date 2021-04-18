@@ -1,5 +1,11 @@
 package edu.duke.ece568.erss.amazon;
 
+import javax.print.attribute.standard.Destination;
+
+import edu.duke.ece568.erss.amazon.Address;
+import edu.duke.ece568.erss.amazon.QueryFunctions;
+import edu.duke.ece568.erss.amazon.protos.AmazonUps.destination;
+import edu.duke.ece568.erss.amazon.protos.AmazonUps.warehouse;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.APack;
 
 public class Package {
@@ -14,6 +20,7 @@ public class Package {
 
     protected long shipID;
     protected int warehouseID;
+    protected Address address;
     protected int truckID;
     protected APack pack;
     protected String status;
@@ -21,6 +28,7 @@ public class Package {
     public Package(APack pack){
         this.shipID = pack.getShipid();
         this.warehouseID = pack.getWhnum();
+        this.address = QueryFunctions.qAddress(this.shipID);
         this.pack = pack;
         this.status = "";
         this.truckID = -1;
@@ -30,7 +38,7 @@ public class Package {
         return shipID;
     }
 
-    public int getWarehouseID() {
+    public int getwarehouseID() {
         return warehouseID;
     }
 
@@ -48,6 +56,12 @@ public class Package {
         return status;
     }
 
+    public destination getDestination(){
+        destination.Builder dest = destination.newBuilder();
+        dest.setX = address.getX();
+        dest.setY = address.getY();
+        return dest.build();
+    }
     public void setStatus(String status) {
         this.status = status;
         //TODO: Update Database

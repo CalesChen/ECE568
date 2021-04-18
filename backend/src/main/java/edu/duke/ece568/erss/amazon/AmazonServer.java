@@ -1,6 +1,7 @@
 package edu.duke.ece568.erss.amazon;
 
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.*;
+import edu.duke.ece568.erss.amazon.QueryFunctions;
 import edu.duke.ece568.erss.amazon.protos.AmazonUps.*;
 import org.checkerframework.checker.units.qual.A;
 
@@ -28,6 +29,8 @@ public class AmazonServer {
     public static final int AMAZON_PORTNUM = 23456;
 
     public static final int UPS_PORTNUM = 34567;
+
+    public static final int TIME_RESEND = 5000;
 
     // The list of all warehouses.
     private final List<AInitWarehouse> warehouses;
@@ -195,12 +198,113 @@ public class AmazonServer {
         return true;
     }
 
+    public boolean UPSResponseHandler(UCommand res){
+        System.out.println("Receive UPS Response:" + res.toString());
+        
+    }
+
     public long seqNumGenerator(){
         long temp = globalSeqNum;
         globalSeqNum += 1;
         return temp;
     }
 
+    public void packPackage(long packageId){
+        if(!packageMap.containsKey(packageId)){
+            System.out.println("There is no corresponding Package.");
+            return;
+        }
+        System.out.println("Packing " + packageId);
+        Package pac = packageMap.get(packageId);
+        pac.setStatus(Package.PACKING);
+        threadPool.execute(()->{
+            ACommands.Builder pack = ACommands.newBuilder();
+            long seq = seqNumGenerator();
+            APack toPack = packageMap.get(packageId).getPack();
+            pack.addTopack(toPack.toBuilder.setSeqnum(seq).build());
+            commandToWorld(seq, pack);
+        });
+    }
+
+    public warehouse getWarehouse(int warehouseNum){
+        for(AInitWarehouse a : warehouses){
+            if(a.getId() == warehouseNum){
+                warehouse.Builder wb = warehouse.newBuider();
+                wb.setWarehouseID(warehouseNum);
+                wb.setX(a.getX());
+                wb.setY(a.getY());
+                return wb.build();
+            }
+        }
+    }
+
+    public newShipment getNewShipment(AProduct p, warehouse w, long seqNum, long shipId){
+        newShipment.Builder newShip = newShipment.newBuilder();
+        newShip.setShipID(shipId);
+        product.Builder pBuilder = product.newBuilder();
+        pBuilder.setProductID(p.getId());
+        pBuilder.setDescription(p.getDescription());
+        pBuilder.setCount(p.getCount());
+        newShip.setProductInfo(pBuilder.build());
+        newShip.setDestinationInfo(pac.getDestination());
+        newShip.setWarehouseInfo(w);
+        newShip.setSeqnum(seqNum);
+    }
+    
+    public void pickPackage(long packageId){
+        if(!packageMap.containsKey(packageId)){
+            return;
+        }
+        System.out.println("Tell Truck to pick " + packageId);
+        Package pac = packageMap.get(packageId);
+        threadPool.execute(()->{
+            ACommand.Builder toUps = ACommand.newBuilder();
+            toUps.setIsRequest(false);
+            long seqNum = seqNumGenerator();
+            long shipId = pac.getShipID();
+            APack apc = pac.getPack();
+            warehouse w = getWarehouse(pac.getWarehouse());
+            for(AProduct p : apc.getThings()){
+                newShipment n = getNewShipment(p, w, seqNum, shipId);
+                toUps.addNewShipmentCreated(newShip.build());
+            }
+            // Send msg to UPS
+            commandToUPS(seqNum, command);
+        });
+    }
+    
+    public void commandToWorld(long seq, ACommand.Builder command){
+        System.out.println("Sending Command to World");
+        command.setSimspeed(100);
+        Timer work = new Timer();
+        work.schedule(new TimerTask(){
+            @Override
+            public void run(){
+                synchronized(output){
+                    sendMSG(command, output);
+                }
+            }
+        }, 0, TIME_RESEND);
+        worldRequestMap.put(seq, work);
+
+    }
+    
+    public void commandToUPS(long seq, ACommand.Builder command){
+        System.out.println("Sending Command to UPS");
+        command.setSimspeed(100);
+        Timer work = new Timer();
+        work.schedule(new TimerTask(){
+            @Override
+            public void run(){
+                OutputStream out = UPSocket.getOutputStream();
+                synchronized(out){
+                    sendMSG(command, out);
+                }
+            }
+        }, 0, TIME_RESEND);
+        UPSRequestMap.put(seq, work);
+    }
+    
     // public void buyOrder(long packageId){
     //     System.out.println("Buying " + packageId);
     //     this.threadPool.execute(()->{
@@ -208,6 +312,7 @@ public class AmazonServer {
     //         APurchaseMore.Builder 
     //     });
     // }
+
 
     public void worldAckSender(AResponses res) throws IOException{
         ArrayList<Long> seq = new ArrayList<>();
