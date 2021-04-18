@@ -46,6 +46,7 @@ public class Package {
     public int getTruckID() {
         return truckID;
     }
+    public void setTruckID(int truckID){this.truckID = truckID;}
 
 
     public APack getPack() {

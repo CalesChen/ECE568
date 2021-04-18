@@ -191,9 +191,11 @@ public class AmazonServer {
         worldAckSender(res);
         for(APurchaseMore apc : res.getArrivedList()){
             //TODO : Purchase More Function
+            purchaseFinished(apc);
         }
         for(APacked ap : res.getReadyList()){
             //TODO : Pack Package Function
+            toLoadPackage(ap.getShipid());
         }
         for(ALoaded al : res.getLoadedList()){
             //TODO : Load Function
@@ -203,7 +205,15 @@ public class AmazonServer {
         }
         for(APackage ap : res.getPackagestatusList()){
             System.out.println(ap.getStatus());
-
+        }
+        for(long ack : res.getAcksList()){
+            if(worldRequestMap.containsKey(ack)){
+                worldRequestMap.get(ack).cancel();
+                worldRequestMap.remove(ack);
+            }
+        }
+        if(res.hasFinished()){
+            System.out.println("Amazon Disconnected from the World!");
         }
         return true;
     }
@@ -214,9 +224,27 @@ public class AmazonServer {
         UPSAckSender(res);
         //TODO: replace placeholder with useful code
         for(newShipmentResponse nsp : res.getTrackingNumberCreatedList()){
-
+            QueryFunctions.updateStatus(nsp.getShipID(), nsp.getStatus());
+            QueryFunctions.updtaeTrackingNum(nsp.getShipID(), nsp.getTrackingNumber());
         }
-
+        for(truckArrival ta : res.getArrivedList()){
+            truckLoader(ta.getShipID(), ta.getTruckID());
+        }
+        for(deliveredPackage dp : res.getDeliveredList()){
+            // TODO : Process the Delievered Package.
+        }
+        for(checkUsernameResponse cur : res.getCheckUserList()){
+            // TODO: -1 username(long) means donot Exist.
+        }
+        for(long ack : res.getAcksList()){
+            if(UPSRequestMap.containsKey(ack)){
+                UPSRequestMap.get(ack).cancel();
+                UPSRequestMap.remove(ack);
+            }
+        }
+        if(res.getFinished()){
+            System.out.println("UPS Disconnected!");
+        }
         return true;
     }
 
@@ -224,6 +252,26 @@ public class AmazonServer {
         long temp = globalSeqNum;
         globalSeqNum += 1;
         return temp;
+    }
+
+    //After Purchase, we will tell the world to pack and tell the UPS to pick.
+    public void purchaseFinished(APurchaseMore apc){
+        synchronized (packageMap){
+            // Find the Package in the corresponding warehouse
+            for(Package p : packageMap.values()){
+                if(p.getwarehouseID() != apc.getWhnum()){
+                    continue;
+                }
+                if(!p.getPack().getThingsList().equals(apc.getThingsList())){
+                    continue;
+                }
+                System.out.println("Tell the UPS to pick and Tell the World to Pack!");
+                p.setStatus(Package.PACKING);
+                packPackage(p.getShipID());
+                pickPackage(p.getShipID());
+                break;
+            }
+        }
     }
 
     public void packPackage(long packageId){
@@ -240,6 +288,27 @@ public class AmazonServer {
             APack toPack = packageMap.get(packageId).getPack();
             pack.addTopack(toPack.toBuilder().setSeqnum(seq).build());
             commandToWorld(seq, pack);
+        });
+    }
+    public void pickPackage(long packageId) {
+        if(!packageMap.containsKey(packageId)){
+            return;
+        }
+        System.out.println("Tell Truck to pick " + packageId);
+        Package pac = packageMap.get(packageId);
+        threadPool.execute(()->{
+            ACommand.Builder toUps = ACommand.newBuilder();
+            toUps.setIsRequest(false);
+            long seqNum = seqNumGenerator();
+            long shipId = pac.getShipID();
+            APack apc = pac.getPack();
+            warehouse w = getWarehouse(pac.getwarehouseID());
+            for(AProduct p : apc.getThingsList()){
+                newShipment n = getNewShipment(p, w, pac, shipId);
+                toUps.addNewShipmentCreated(n);
+            }
+            // Send msg to UPS
+            commandToUPS(seqNum, toUps);
         });
     }
 
@@ -271,40 +340,83 @@ public class AmazonServer {
         return newShip.build();
     }
     
-    public void pickPackage(long packageId) {
+
+    // We will set the Package and When everything done, load it.
+    public void toLoadPackage(long packageId){
         if(!packageMap.containsKey(packageId)){
             return;
         }
-        System.out.println("Tell Truck to pick " + packageId);
+        System.out.println("Ready To Load " + packageId);
         Package pac = packageMap.get(packageId);
+        pac.setStatus(Package.PACKED);
+        // The Package status needs to be PACKED and the Truck need to be ready.
+        if(pac.getTruckID() != -1){
+            LoadPackage(packageId);
+        }
+    }
+    public void LoadPackage(long packageId){
+        if(!packageMap.containsKey(packageId)){
+            return;
+        }
+        System.out.println("The UPS is Loading");
+        Package p = packageMap.get(packageId);
+        p.setStatus(Package.LOADING);
         threadPool.execute(()->{
-            ACommand.Builder toUps = ACommand.newBuilder();
-            toUps.setIsRequest(false);
-            long seqNum = seqNumGenerator();
-            long shipId = pac.getShipID();
-            APack apc = pac.getPack();
-            warehouse w = getWarehouse(pac.getwarehouseID());
-            for(AProduct p : apc.getThingsList()){
-                newShipment n = getNewShipment(p, w, pac, shipId);
-                toUps.addNewShipmentCreated(n);
-            }
-            // Send msg to UPS
-            commandToUPS(seqNum, toUps);
+            ACommands.Builder ab = ACommands.newBuilder();
+            long seq = seqNumGenerator();
+            APutOnTruck.Builder apto = APutOnTruck.newBuilder();
+            apto.setSeqnum(seq);
+            apto.setWhnum(p.getwarehouseID());
+            apto.setShipid(p.getShipID());
+            apto.setTruckid(p.getTruckID());
+            ab.addLoad(apto.build());
+            commandToWorld(seq, ab);
         });
     }
-    
-    public void toLoadPackage(long packageId){
-
+    public void truckLoader(long packageId, int truckId){
+        if(!packageMap.containsKey(packageId)){
+            return;
+        }
+        System.out.println("The Trucking is loading");
+        Package p = packageMap.get(packageId);
+        p.setTruckID(truckId);
+        // The Package status needs to be PACKED and the Truck need to be ready.
+        if(p.getStatus().equals(Package.PACKED)){
+            LoadPackage(packageId);
+        }
     }
-    public void loadPackage(long packageId){
 
-    }
+
     public void toDelieverPackage(long pacakgeId){
-
+        if(!packageMap.containsKey(pacakgeId)){
+            return;
+        }
+        System.out.println("The World have loaded the package and Ready to Deliever");
+        Package p = packageMap.get(pacakgeId);
+        p.setStatus(Package.LOADED);
+        deliverPackage(pacakgeId);
     }
-//    public void delieverPackage(long pacakgeId){
-//
-//    }
+    public void deliverPackage(long pacakgeId){
+        if(!packageMap.containsKey(pacakgeId)){
+            return;
+        }
+        System.out.println("The world is Delivering Package");
+        Package p = packageMap.get(pacakgeId);
+        p.setStatus(Package.DELIVERING);
+        threadPool.execute(()->{
+            long seq = seqNumGenerator();
+            ACommand.Builder ab = ACommand.newBuilder();
+            ab.setIsRequest(true);
+            APack apc = p.getPack();
+            for(AProduct pro : apc.getThingsList()){
+                long trackingNum = QueryFunctions.qTrackingNum(pacakgeId);
+                long packSeq = seqNumGenerator();
+                loadedPackage.Builder lb = loadedPackage.newBuilder();
+                lb.setSeqnum(packSeq);
+                lb.setTrackingNumber()
+            }
+        });
+    }
     public void commandToWorld(long seq, ACommands.Builder command){
         System.out.println("Sending Command to World");
         command.setSimspeed(100);
@@ -377,7 +489,7 @@ public class AmazonServer {
         }
         // This means it at least needs to send one ack.
         if(seq.size() > 0){
-            ACommand.Builder ares = ACommand.newBuilder();
+            ACommands.Builder ares = ACommands.newBuilder();
             for(long s : seq){
                 ares.addAcks(s);
             }
@@ -389,10 +501,35 @@ public class AmazonServer {
     }
     public void UPSAckSender(UCommand res) throws IOException{
         ArrayList<Long> seq = new ArrayList<>();
-        seq.add(res.getAcks());
+
         for(newShipmentResponse ns : res.getTrackingNumberCreatedList()){
             seq.add(ns.getSeqnum());
         }
-        for(newShipmentResponse);
+        for(truckArrival ta : res.getArrivedList()){
+            seq.add(ta.getSeqnum());
+        }
+        for(deliveredPackage dp : res.getDeliveredList()){
+            seq.add(dp.getSeqnum());
+        }
+        for(changeDeliveryAddress cda : res.getChangeAddressList()){
+            seq.add(cda.getSeqnum());
+        }
+        for(checkUsernameResponse cur : res.getCheckUserList()){
+            seq.add(cur.getSeqnum());
+        }
+        for(Err err: res.getErrorList()){
+            seq.add(err.getSeqnum());
+        }
+        if(seq.size() > 0){
+            ACommand.Builder ab = ACommand.newBuilder();
+            for(long s : seq){
+                ab.addAcks(s);
+            }
+            OutputStream toUps = UPSocket.getOutputStream();
+            synchronized (toUps){
+                System.out.println("Send ACKS to UPS");
+                sendMSG(ab, toUps);
+            }
+        }
     }
 }

@@ -65,6 +65,29 @@ public class QueryFunctions {
         }
         return false;
     }
+    public static boolean updateStatus(long packageId, int status){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+
+            Statement work = C.createStatement();
+            String s;
+            if(status == 0){
+                s = Package.FINISHED;
+            }else{
+                s = "Error";
+            }
+            String sql = String.format("update %s set status = %s where id = %d", TABLE_PACKAGE, s, packageId);
+            work.executeUpdate(sql);
+            C.commit();
+            work.close();
+            C.close();
+            return true;
+        }catch(Exception e){
+            System.err.println(e.toString());
+        }
+        return false;
+    }
 
     public static APurchaseMore.Builder qPackage(long packageId){
         try{
