@@ -51,7 +51,7 @@ public class AmazonServer {
 
     private Map<Long, Timer> worldRequestMap;
     
-    private Map<Long, Timer> upsRequestMap;
+    private Map<Long, Timer> UPSRequestMap;
 
     private FrontEndListener frontEndListener;
 
@@ -248,6 +248,7 @@ public class AmazonServer {
                 return wb.build();
             }
         }
+        return null;
     }
 
     public newShipment getNewShipment(AProduct p, warehouse w, Package pac, long seqNum, long shipId){
@@ -261,9 +262,10 @@ public class AmazonServer {
         newShip.setDestinationInfo(pac.getDestination());
         newShip.setWarehouseInfo(w);
         newShip.setSeqnum(seqNum);
+        return newShip.build();
     }
     
-    public void pickPackage(long packageId){
+    public void pickPackage(long packageId) {
         if(!packageMap.containsKey(packageId)){
             return;
         }
@@ -275,13 +277,13 @@ public class AmazonServer {
             long seqNum = seqNumGenerator();
             long shipId = pac.getShipID();
             APack apc = pac.getPack();
-            warehouse w = getWarehouse(pac.getWarehouse());
-            for(AProduct p : apc.getThings()){
+            warehouse w = getWarehouse(pac.getwarehouseID());
+            for(AProduct p : apc.getThingsList()){
                 newShipment n = getNewShipment(p, w, pac, seqNum, shipId);
-                toUps.addNewShipmentCreated(newShip.build());
+                toUps.addNewShipmentCreated(n);
             }
             // Send msg to UPS
-            commandToUPS(seqNum, command);
+            commandToUPS(seqNum, toUps);
         });
     }
     
@@ -305,16 +307,25 @@ public class AmazonServer {
 
     }
     
-    public void commandToUPS(long seq, ACommand.Builder command){
+    public void commandToUPS(long seq, ACommand.Builder command) {
         System.out.println("Sending Command to UPS");
-        command.setSimspeed(100);
+
         Timer work = new Timer();
         work.schedule(new TimerTask(){
             @Override
             public void run(){
-                OutputStream out = UPSocket.getOutputStream();
+                OutputStream out = null;
+                try {
+                    out = UPSocket.getOutputStream();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 synchronized(out){
-                    sendMSG(command, out);
+                    try {
+                        sendMSG(command, out);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }, 0, TIME_RESEND);
