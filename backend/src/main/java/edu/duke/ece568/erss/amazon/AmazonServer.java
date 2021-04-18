@@ -208,14 +208,19 @@ public class AmazonServer {
         return true;
     }
 
-    public boolean UPSResponseHandler(UCommand res){
+    public boolean UPSResponseHandler(UCommand res) throws IOException{
         System.out.println("Receive UPS Response:" + res.toString());
+
+        UPSAckSender(res);
         //TODO: replace placeholder with useful code
-        boolean placeHolder = true;
-        return placeHolder;
+        for(newShipmentResponse nsp : res.getTrackingNumberCreatedList()){
+
+        }
+
+        return true;
     }
 
-    public long seqNumGenerator(){
+    public synchronized long seqNumGenerator(){
         long temp = globalSeqNum;
         globalSeqNum += 1;
         return temp;
@@ -251,7 +256,7 @@ public class AmazonServer {
         return null;
     }
 
-    public newShipment getNewShipment(AProduct p, warehouse w, Package pac, long seqNum, long shipId){
+    public newShipment getNewShipment(AProduct p, warehouse w, Package pac, long shipId){
         newShipment.Builder newShip = newShipment.newBuilder();
         newShip.setShipID(shipId);
         product.Builder pBuilder = product.newBuilder();
@@ -261,7 +266,8 @@ public class AmazonServer {
         newShip.setProductInfo(pBuilder.build());
         newShip.setDestinationInfo(pac.getDestination());
         newShip.setWarehouseInfo(w);
-        newShip.setSeqnum(seqNum);
+        long seq = seqNumGenerator();
+        newShip.setSeqnum(seq);
         return newShip.build();
     }
     
@@ -279,7 +285,7 @@ public class AmazonServer {
             APack apc = pac.getPack();
             warehouse w = getWarehouse(pac.getwarehouseID());
             for(AProduct p : apc.getThingsList()){
-                newShipment n = getNewShipment(p, w, pac, seqNum, shipId);
+                newShipment n = getNewShipment(p, w, pac, shipId);
                 toUps.addNewShipmentCreated(n);
             }
             // Send msg to UPS
@@ -296,9 +302,9 @@ public class AmazonServer {
     public void toDelieverPackage(long pacakgeId){
 
     }
-    public void delieverPackage(long pacakgeId){
-        
-    }
+//    public void delieverPackage(long pacakgeId){
+//
+//    }
     public void commandToWorld(long seq, ACommands.Builder command){
         System.out.println("Sending Command to World");
         command.setSimspeed(100);
@@ -380,5 +386,13 @@ public class AmazonServer {
                 sendMSG(ares, output);    
             }
         }
+    }
+    public void UPSAckSender(UCommand res) throws IOException{
+        ArrayList<Long> seq = new ArrayList<>();
+        seq.add(res.getAcks());
+        for(newShipmentResponse ns : res.getTrackingNumberCreatedList()){
+            seq.add(ns.getSeqnum());
+        }
+        for(newShipmentResponse);
     }
 }

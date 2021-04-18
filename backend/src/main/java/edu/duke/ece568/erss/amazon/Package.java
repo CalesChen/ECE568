@@ -65,5 +65,6 @@ public class Package {
     public void setStatus(String status) {
         this.status = status;
         //TODO: Update Database
+        QueryFunctions.updateStatus(this.shipID, status);
     }
 }
