@@ -117,4 +117,21 @@ public class QueryFunctions {
         }
         return null;
     }
+
+    public static boolean updtaeTrackingNum(long packageId, long trackingNum){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            Statement work = C.createStatement();
+            String sql = String.format("update %s set track_num = %d where id = %d", TABLE_PACKAGE, trackingNum, packageId);
+            work.executeUpdate(sql);
+            C.commit();
+            work.close();
+            C.close();
+            return true;
+        }catch(Exception e){
+            System.err.println(e.toString());
+        }
+        return false;
+    }
 }
