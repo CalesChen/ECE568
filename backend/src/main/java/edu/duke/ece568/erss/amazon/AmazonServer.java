@@ -78,7 +78,7 @@ public class AmazonServer {
     void runFrontEndListener() {
         frontEndListener = new FrontEndListener(packageID -> {
             System.out.println(String.format("Receive new buying request, id: %d", packageID));
-            // use purchase (packageID) method in amazonserver
+            buyOrder(packageID);
         });
         frontEndListener.start();
     }
@@ -518,14 +518,27 @@ public class AmazonServer {
         }, 0, TIME_RESEND);
         UPSRequestMap.put(seq, work);
     }
-    
-    // public void buyOrder(long packageId){
-    //     System.out.println("Buying " + packageId);
-    //     this.threadPool.execute(()->{
-    //         long seqnum = seqNumGenerator();
-    //         APurchaseMore.Builder 
-    //     });
-    // }
+
+    void buyOrder(long packageID) {
+        threadPool.execute(() -> {
+            long seq = seqNumGenerator();
+            APurchaseMore.Builder newPackage = QueryFunctions.qPackage(packageID);
+            if(newPackage==null) return;
+            newPackage.setSeqnum(seq);
+
+            APack.Builder builder = APack.newBuilder();
+            builder.setWhnum(newPackage.getWhnum());
+            builder.addAllThings(newPackage.getThingsList());
+            builder.setShipid(packageID);
+            builder.setSeqnum(-1);
+            Package p = new Package(builder.build());
+            p.setStatus(Package.PROCESSING);
+
+            packageMap.put(packageID, p);
+
+            commandToWorld(seq, ACommands.newBuilder().addBuy(newPackage));
+        });
+    }
 
 
     public void worldAckSender(AResponses res) throws IOException{
