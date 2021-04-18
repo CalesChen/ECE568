@@ -58,8 +58,8 @@ public class Package {
 
     public destination getDestination(){
         destination.Builder dest = destination.newBuilder();
-        dest.setX = address.getX();
-        dest.setY = address.getY();
+        dest.setX(address.getX());
+        dest.setY(address.getY());
         return dest.build();
     }
     public void setStatus(String status) {

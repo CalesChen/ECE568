@@ -210,7 +210,9 @@ public class AmazonServer {
 
     public boolean UPSResponseHandler(UCommand res){
         System.out.println("Receive UPS Response:" + res.toString());
-        
+        //TODO: replace placeholder with useful code
+        boolean placeHolder = true;
+        return placeHolder;
     }
 
     public long seqNumGenerator(){
@@ -231,7 +233,7 @@ public class AmazonServer {
             ACommands.Builder pack = ACommands.newBuilder();
             long seq = seqNumGenerator();
             APack toPack = packageMap.get(packageId).getPack();
-            pack.addTopack(toPack.toBuilder.setSeqnum(seq).build());
+            pack.addTopack(toPack.toBuilder().setSeqnum(seq).build());
             commandToWorld(seq, pack);
         });
     }
@@ -239,7 +241,7 @@ public class AmazonServer {
     public warehouse getWarehouse(int warehouseNum){
         for(AInitWarehouse a : warehouses){
             if(a.getId() == warehouseNum){
-                warehouse.Builder wb = warehouse.newBuider();
+                warehouse.Builder wb = warehouse.newBuilder();
                 wb.setWarehouseID(warehouseNum);
                 wb.setX(a.getX());
                 wb.setY(a.getY());
@@ -248,7 +250,7 @@ public class AmazonServer {
         }
     }
 
-    public newShipment getNewShipment(AProduct p, warehouse w, long seqNum, long shipId){
+    public newShipment getNewShipment(AProduct p, warehouse w, Package pac, long seqNum, long shipId){
         newShipment.Builder newShip = newShipment.newBuilder();
         newShip.setShipID(shipId);
         product.Builder pBuilder = product.newBuilder();
@@ -275,7 +277,7 @@ public class AmazonServer {
             APack apc = pac.getPack();
             warehouse w = getWarehouse(pac.getWarehouse());
             for(AProduct p : apc.getThings()){
-                newShipment n = getNewShipment(p, w, seqNum, shipId);
+                newShipment n = getNewShipment(p, w, pac, seqNum, shipId);
                 toUps.addNewShipmentCreated(newShip.build());
             }
             // Send msg to UPS
@@ -283,7 +285,7 @@ public class AmazonServer {
         });
     }
     
-    public void commandToWorld(long seq, ACommand.Builder command){
+    public void commandToWorld(long seq, ACommands.Builder command){
         System.out.println("Sending Command to World");
         command.setSimspeed(100);
         Timer work = new Timer();
@@ -291,7 +293,11 @@ public class AmazonServer {
             @Override
             public void run(){
                 synchronized(output){
-                    sendMSG(command, output);
+                    try {
+                        sendMSG(command, output);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }, 0, TIME_RESEND);
