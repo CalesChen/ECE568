@@ -134,4 +134,25 @@ public class QueryFunctions {
         }
         return false;
     }
+
+    public static long qTrackingNum(long packageId){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            Statement work = C.createStatement();
+            String sql = String.format("select track_num from %s where id = %d", TABLE_PACKAGE, packageId);
+            ResultSet result = work.executeQuery(sql);
+            long trackingNum = -1;
+            while(result.next()){
+                trackingNum = result.getInt("track_num");
+            }
+            work.close();
+            C.close();
+            return trackingNum;
+        }catch(ClassNotFoundException | SQLException e){
+            System.err.println(e.toString());
+        }
+        return -1;
+    }
+
 }
