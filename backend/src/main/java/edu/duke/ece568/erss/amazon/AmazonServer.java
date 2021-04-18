@@ -1,5 +1,6 @@
 package edu.duke.ece568.erss.amazon;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.*;
 import edu.duke.ece568.erss.amazon.QueryFunctions;
 import edu.duke.ece568.erss.amazon.protos.AmazonUps.*;
@@ -60,6 +61,9 @@ public class AmazonServer {
         this.warehouses = QueryFunctions.qWarehouses();
         this.threadPool = new ThreadPoolExecutor(20, 80, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         this.globalSeqNum = 0;
+        worldRequestMap = new ConcurrentHashMap<>();
+        UPSRequestMap = new ConcurrentHashMap<>();
+        packageMap = new ConcurrentHashMap<>();
     }
 
     public <T extends GeneratedMessageV3.Builder<?>> boolean sendMSG(T builder, OutputStream output) throws IOException{
@@ -70,6 +74,7 @@ public class AmazonServer {
             return true;
     }
 
+
     void runFrontEndListener() {
         frontEndListener = new FrontEndListener(packageID -> {
             System.out.println(String.format("Receive new buying request, id: %d", packageID));
@@ -77,7 +82,48 @@ public class AmazonServer {
         });
         frontEndListener.start();
     }
+    public void runWorldServer(){
+        Thread worldServer = new Thread(()->{
+            while(!Thread.currentThread().isInterrupted()){
+                try{
+                    CodedInputStream codedInputStream = CodedInputStream.newInstance(input);
+                    AResponses resp = AResponses.parseFrom(codedInputStream.readByteArray());
+                    worldResponseHandler(resp);
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        worldServer.start();
+    }
+    public void runUPServer(){
+        Thread UPSServer = new Thread(()->{
+            while(!Thread.currentThread().isInterrupted()){
+                if(UPSocket != null){
+                    try{
+                        CodedInputStream codedInputStream = CodedInputStream.newInstance(input);
+                        UCommand resp = UCommand.parseFrom(codedInputStream.readByteArray());
+                        UPSResponseHandler(resp);
+                    } catch (InvalidProtocolBufferException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        UPSServer.start();
+    }
 
+    public void runAll(){
+        threadPool.prestartAllCoreThreads();
+        runUPServer();
+        runFrontEndListener();
+        runWorldServer();
+
+    }
     // public <T extends GeneratedMessageV3.Builder<?>> boolean recvMSG(InputStream input){
     //     CodedInputStream codedInputStream = CodedInputStream.newInstance(UPSocket.getInputStream());
     //     createWorld cWorld = createWorld.parseFrom(codedInputStream.readByteArray());
@@ -199,6 +245,7 @@ public class AmazonServer {
         }
         for(ALoaded al : res.getLoadedList()){
             //TODO : Load Function
+            toDelieverPackage(al.getShipid());
         }
         for(AErr ae : res.getErrorList()){
             System.err.println(ae.getErr());
@@ -232,6 +279,8 @@ public class AmazonServer {
         }
         for(deliveredPackage dp : res.getDeliveredList()){
             // TODO : Process the Delievered Package.
+            long packageId = QueryFunctions.qPackageId(dp.getTrackingNumber());
+            finishDeliver(packageId);
         }
         for(checkUsernameResponse cur : res.getCheckUserList()){
             // TODO: -1 username(long) means donot Exist.
@@ -387,35 +436,44 @@ public class AmazonServer {
     }
 
 
-    public void toDelieverPackage(long pacakgeId){
-        if(!packageMap.containsKey(pacakgeId)){
+    public void toDelieverPackage(long packageId){
+        if(!packageMap.containsKey(packageId)){
             return;
         }
         System.out.println("The World have loaded the package and Ready to Deliever");
-        Package p = packageMap.get(pacakgeId);
+        Package p = packageMap.get(packageId);
         p.setStatus(Package.LOADED);
-        deliverPackage(pacakgeId);
+        deliverPackage(packageId);
     }
-    public void deliverPackage(long pacakgeId){
-        if(!packageMap.containsKey(pacakgeId)){
+
+    public void deliverPackage(long packageId){
+        if(!packageMap.containsKey(packageId)){
             return;
         }
         System.out.println("The world is Delivering Package");
-        Package p = packageMap.get(pacakgeId);
+        Package p = packageMap.get(packageId);
         p.setStatus(Package.DELIVERING);
         threadPool.execute(()->{
             long seq = seqNumGenerator();
             ACommand.Builder ab = ACommand.newBuilder();
             ab.setIsRequest(true);
             APack apc = p.getPack();
-            for(AProduct pro : apc.getThingsList()){
-                long trackingNum = QueryFunctions.qTrackingNum(pacakgeId);
-                long packSeq = seqNumGenerator();
-                loadedPackage.Builder lb = loadedPackage.newBuilder();
-                lb.setSeqnum(packSeq);
-                lb.setTrackingNumber()
-            }
+            loadedPackage.Builder lb = loadedPackage.newBuilder();
+            lb.setSeqnum(seq);
+            long trackingNum = QueryFunctions.qTrackingNum(packageId);
+            lb.addTrackingNumber(trackingNum);
+            ab.addPackageLoaded(lb.build());
+            commandToUPS(seq, ab);
         });
+    }
+    // Clean the packageMap.
+    public void finishDeliver(long packageId){
+        if(!packageMap.containsKey(packageId)){
+            return;
+        }
+        System.out.println("Package Been Delivered!");
+        packageMap.get(packageId).setStatus(Package.DELIVERED);
+        packageMap.remove(packageId);
     }
     public void commandToWorld(long seq, ACommands.Builder command){
         System.out.println("Sending Command to World");
