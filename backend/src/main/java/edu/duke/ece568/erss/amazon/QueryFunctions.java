@@ -75,7 +75,7 @@ public class QueryFunctions {
             Statement work = C.createStatement();
             String sql = String.format("SELECT products.id, products.description, orders.product_num, packages.warehouse_id " +
                             "FROM %s AS products, %s AS orders, %s AS packages " +
-                            "WHERE products.id=orders.product_id AND orders.package_id = %d AND packages.id=%d;",
+                            "WHERE products.id=orders.product_id AND orders.package_id = %d AND packages.id = %d;",
                     TABLE_PRODUCT, TABLE_ORDER, TABLE_PACKAGE, packageId, packageId);
             ResultSet result = work.executeQuery(sql);
             APurchaseMore.Builder purchaseBuilder = APurchaseMore.newBuilder();
@@ -97,7 +97,24 @@ public class QueryFunctions {
     }
 
     public static Address qAddress(long packageId){
-        Address placeHolder = new Address(1,1);
-        return placeHolder;
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            Statement work = C.createStatement();
+            String sql = String.format("select address_x, address_y from %s where id = %d", TABLE_PACKAGE, packageId);
+            ResultSet result = work.executeQuery(sql);
+            Address dest = null;
+            while(result.next()){
+                int x = result.getInt("address_x");
+                int y = result.getInt("address_y");
+                dest = new Address(x,y);
+            }
+            work.close();
+            C.close();
+            return dest;
+        }catch(ClassNotFoundException | SQLException e){
+            System.err.println(e.toString());
+        }
+        return null;
     }
 }
