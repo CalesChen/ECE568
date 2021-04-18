@@ -287,6 +287,18 @@ public class AmazonServer {
         });
     }
     
+    public void toLoadPackage(long packageId){
+
+    }
+    public void loadPackage(long packageId){
+
+    }
+    public void toDelieverPackage(long pacakgeId){
+
+    }
+    public void delieverPackage(long pacakgeId){
+        
+    }
     public void commandToWorld(long seq, ACommands.Builder command){
         System.out.println("Sending Command to World");
         command.setSimspeed(100);
@@ -304,7 +316,6 @@ public class AmazonServer {
             }
         }, 0, TIME_RESEND);
         worldRequestMap.put(seq, work);
-
     }
     
     public void commandToUPS(long seq, ACommand.Builder command) {
