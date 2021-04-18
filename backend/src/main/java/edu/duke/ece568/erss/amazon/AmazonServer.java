@@ -53,6 +53,8 @@ public class AmazonServer {
     
     private Map<Long, Timer> upsRequestMap;
 
+    private FrontEndListener frontEndListener;
+
     public AmazonServer(){
         //warehouses = new ArrayList<>();
         this.warehouses = QueryFunctions.qWarehouses();
@@ -66,6 +68,14 @@ public class AmazonServer {
             builder.build().writeTo(codedOutputStream);
             codedOutputStream.flush();
             return true;
+    }
+
+    void runFrontEndListener() {
+        frontEndListener = new FrontEndListener(packageID -> {
+            System.out.println(String.format("Receive new buying request, id: %d", packageID));
+            // use purchase (packageID) method in amazonserver
+        });
+        frontEndListener.start();
     }
 
     // public <T extends GeneratedMessageV3.Builder<?>> boolean recvMSG(InputStream input){
