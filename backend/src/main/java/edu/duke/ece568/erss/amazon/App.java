@@ -11,6 +11,7 @@ public class App {
     public static void main(String[] args) {
         //System.out.println(new App().getGreeting());
         AmazonServer s = new AmazonServer();
+
         while(true){
             try{
                 s.initiaition();

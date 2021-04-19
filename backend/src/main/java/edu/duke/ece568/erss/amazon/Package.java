@@ -9,14 +9,14 @@ import edu.duke.ece568.erss.amazon.protos.AmazonUps.warehouse;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.APack;
 
 public class Package {
-    public static final String PROCESSING = "processing";
-    public static final String FINISHED = "finished";
-    public static final String PACKING = "packing";
-    public static final String PACKED = "packed";
-    public static final String LOADING = "loading";
-    public static final String LOADED = "loaded";
-    public static final String DELIVERING = "delivering";
-    public static final String DELIVERED = "delivered";
+    public static final String PROCESSING = "\'processing\'";
+    public static final String FINISHED = "\'finished\'";
+    public static final String PACKING = "\'packing\'";
+    public static final String PACKED = "\'packed\'";
+    public static final String LOADING = "\'loading\'";
+    public static final String LOADED = "\'loaded\'";
+    public static final String DELIVERING = "\'delivering\'";
+    public static final String DELIVERED = "\'delivered\'";
 
     protected long shipID;
     protected int warehouseID;

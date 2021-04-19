@@ -37,7 +37,7 @@ public class FrontEndListener extends Thread{
         String req = reader.readLine();
         System.out.println("new buying request: " + req);
         long id = Long.parseLong(req);
-        writer.write(String.format("ack %d", id));
+        writer.write(String.format("received %d", id));
         writer.flush();
         // close the connection
         s.close();

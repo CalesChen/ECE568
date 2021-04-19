@@ -27,6 +27,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
 
             Statement work = C.createStatement();
             String sql = String.format("select * from %s", TABLE_WAREHOUSE);
@@ -52,6 +53,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
 
             Statement work = C.createStatement();
             String sql = String.format("update %s set status = %s where id = %d", TABLE_PACKAGE, status, packageId);
@@ -69,6 +71,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
 
             Statement work = C.createStatement();
             String s;
@@ -93,6 +96,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
             //need product id, description, count to construct Aproduct
             //need whnum, product list, seqnum to construct Apurchasemore
             Statement work = C.createStatement();
@@ -123,6 +127,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
             Statement work = C.createStatement();
             String sql = String.format("select address_x, address_y from %s where id = %d", TABLE_PACKAGE, packageId);
             ResultSet result = work.executeQuery(sql);
@@ -145,6 +150,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
             Statement work = C.createStatement();
             String sql = String.format("update %s set track_num = %d where id = %d", TABLE_PACKAGE, trackingNum, packageId);
             work.executeUpdate(sql);
@@ -162,6 +168,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
             Statement work = C.createStatement();
             String sql = String.format("select track_num from %s where id = %d", TABLE_PACKAGE, packageId);
             ResultSet result = work.executeQuery(sql);
@@ -182,6 +189,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
             Statement work = C.createStatement();
             String sql = String.format("select id from %s where track_num = %d", TABLE_PACKAGE, trackingNum);
             ResultSet result = work.executeQuery(sql);

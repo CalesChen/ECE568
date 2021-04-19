@@ -103,7 +103,12 @@ public class AmazonServer {
             while(!Thread.currentThread().isInterrupted()){
                 if(UPSocket != null){
                     try{
-                        CodedInputStream codedInputStream = CodedInputStream.newInstance(input);
+                        
+                        InputStream UpsInput = UPSocket.getInputStream();
+                        if(UpsInput.available() == 0){
+                            continue;
+                        }
+                        CodedInputStream codedInputStream = CodedInputStream.newInstance(UpsInput);
                         UCommand resp = UCommand.parseFrom(codedInputStream.readByteArray());
                         UPSResponseHandler(resp);
                     } catch (InvalidProtocolBufferException e) {
@@ -148,6 +153,13 @@ public class AmazonServer {
                 // createWorld cWorld = createWorld.parseDelimitedFrom(UPSocket.getInputStream());
                 CodedInputStream codedInputStream = CodedInputStream.newInstance(UPSocket.getInputStream());
                 createWorld cWorld = createWorld.parseFrom(codedInputStream.readByteArray());
+                
+                ACommand.Builder ab = ACommand.newBuilder();
+                ab.setIsRequest(false);
+                ab.addAcks(cWorld.getSeqnum());
+                long seq = seqNumGenerator();
+                sendMSG(ab, UPSocket.getOutputStream());
+
                 System.out.println("cWorld");
                 System.out.println(cWorld);
                 if(cWorld.hasWorldID()){
@@ -347,7 +359,7 @@ public class AmazonServer {
         Package pac = packageMap.get(packageId);
         threadPool.execute(()->{
             ACommand.Builder toUps = ACommand.newBuilder();
-            toUps.setIsRequest(false);
+            toUps.setIsRequest(true);
             long seqNum = seqNumGenerator();
             long shipId = pac.getShipID();
             APack apc = pac.getPack();
@@ -496,7 +508,7 @@ public class AmazonServer {
     
     public void commandToUPS(long seq, ACommand.Builder command) {
         System.out.println("Sending Command to UPS");
-
+        command.setIsRequest(false);
         Timer work = new Timer();
         work.schedule(new TimerTask(){
             @Override
@@ -532,8 +544,9 @@ public class AmazonServer {
             builder.setShipid(packageID);
             builder.setSeqnum(-1);
             Package p = new Package(builder.build());
+            System.out.println("The Error MSG");
             p.setStatus(Package.PROCESSING);
-
+            System.out.println("The 2 MSG");
             packageMap.put(packageID, p);
 
             commandToWorld(seq, ACommands.newBuilder().addBuy(newPackage));
