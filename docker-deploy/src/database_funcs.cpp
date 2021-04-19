@@ -424,7 +424,8 @@ string cancelResult(connection * C, long trans_id){
 
     auto rti = rT.begin();
     double canceledShare = rti[1].as<double>(); 
-    
+    string status = rti[0].as<string>();
+
     stringstream sqlStatement_deal;
     sqlStatement_deal << "SELECT PRICE, AMOUNT, TIME FROM DEAL WHERE TRANS_ID="
     << W.quote(trans_id) << ";";
@@ -441,13 +442,15 @@ string cancelResult(connection * C, long trans_id){
     sqlUpdate<<"UPDATE TRANSACTIONS SET STATUS="<<W.quote("CANCELED");
     sqlUpdate<<" Where TRANS_ID="<<trans_id<<";";
     string sqlUpdateStr = sqlUpdate.str();
+    long currentTime = getCurrTime();
+    Result res;
+    if(status=="CANCELED"){
+        return res.cancelResult(trans_id,canceledShare, currentTime,deal_shares, deal_price, deal_time); 
+    }
     
     stringstream sqlInsert;
-    long currentTime = getCurrTime();
     sqlInsert<<"INSERT INTO CANCELTIME VALUES("<<trans_id<<", "<<currentTime<<");";
     string sqlInsertStr = sqlInsert.str();
-
-    Result res;
     while(true){
         try{
             W.exec(sqlUpdateStr);
@@ -456,11 +459,9 @@ string cancelResult(connection * C, long trans_id){
             return res.cancelResult(trans_id,canceledShare, currentTime,deal_shares, deal_price, deal_time); 
         }catch(exception & e){
             //JKLDFJF
-            cerr<<"Need to Execuate again ID:"<<trans_id<<endl; 
+            cerr<<"Need to Execuate again ID:"<<trans_id<<endl;
         }
     }
-
-
 }
 
 
