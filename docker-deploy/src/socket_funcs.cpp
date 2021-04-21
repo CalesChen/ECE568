@@ -16,3 +16,13 @@ string recvString(int fd){
     string ans(content,recv_len);
     return ans;
 }
+
+string recvXML(int fd){
+    string wholeMsg = recvString(fd);
+    string::size_type pos = wholeMsg.find_first_of('\n');
+    if(pos==wholeMsg.npos){
+        return wholeMsg;
+    }
+    int len = stoi(wholeMsg.substr(0,pos));
+    return wholeMsg.substr(pos+1,len);
+}

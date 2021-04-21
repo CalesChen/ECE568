@@ -16,5 +16,5 @@ using namespace std;
 
 void sendString(int fd, string msg);
 string recvString(int fd);
-
+string recvXML(int fd);
 #endif

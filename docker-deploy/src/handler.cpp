@@ -9,9 +9,11 @@ void *xmlHandler(void * p){
 
     string request;
     try{
-        request = recvString(client_fd);
+        //request = recvString(client_fd);
+        request = recvXML(client_fd);
     }catch(const exception &e){
-        cerr<<"Not receiving anything from client fd: "<<client_fd<<endl;
+        cerr<<e.what()<<endl;
+        //cerr<<"Not receiving anything from client fd: "<<client_fd<<endl;
         return NULL;
     }
 
