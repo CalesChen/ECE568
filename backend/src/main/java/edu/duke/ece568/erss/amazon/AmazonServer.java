@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 public class AmazonServer {
 
-    public static final String WORLD_HOST_IP = "vcm-18228.vm.duke.edu";
+    public static final String WORLD_HOST_IP = "vcm-19389.vm.duke.edu";
     public static final int AMAZON_PORTNUM = 23456;
 
     public static final int UPS_PORTNUM = 34567;
@@ -86,7 +86,7 @@ public class AmazonServer {
         Thread worldServer = new Thread(()->{
             while(!Thread.currentThread().isInterrupted()){
                 try{
-                    CodedInputStream codedInputStream = CodedInputStream.newInstance(input);
+                    CodedInputStream codedInputStream = CodedInputStream.newInstance(this.input);
                     AResponses resp = AResponses.parseFrom(codedInputStream.readByteArray());
                     worldResponseHandler(resp);
                 } catch (InvalidProtocolBufferException e) {
@@ -155,7 +155,7 @@ public class AmazonServer {
                 createWorld cWorld = createWorld.parseFrom(codedInputStream.readByteArray());
                 
                 ACommand.Builder ab = ACommand.newBuilder();
-                ab.setIsRequest(false);
+                //ab.setIsRequest(false);
                 ab.addAcks(cWorld.getSeqnum());
                 long seq = seqNumGenerator();
                 sendMSG(ab, UPSocket.getOutputStream());
@@ -169,10 +169,10 @@ public class AmazonServer {
                         if(connected == true){
                             System.out.println("Connected to the World.");
                             
-                            ACommand.Builder builder = ACommand.newBuilder();
+                            ACommands.Builder builder = ACommands.newBuilder();
                             
                             builder.addAcks(cWorld.getSeqnum());
-                            builder.setIsRequest(false);
+                            //builder.setIsRequest(false);
                             
                             sendMSG(builder, this.output);
                             // CodedOutputStream codedOutputStream = CodedOutputStream.newInstance(output);
@@ -282,6 +282,15 @@ public class AmazonServer {
 
         UPSAckSender(res);
         //TODO: replace placeholder with useful code
+        for(long ack : res.getAcksList()){
+            System.out.println("UPS ACK is :" + ack);
+            if(UPSRequestMap.containsKey(ack)){
+                
+                UPSRequestMap.get(ack).cancel();
+                UPSRequestMap.remove(ack);
+                System.out.println("Canceled UPS ACK is :" + ack);
+            }
+        }
         for(newShipmentResponse nsp : res.getTrackingNumberCreatedList()){
             QueryFunctions.updateStatus(nsp.getShipID(), nsp.getStatus());
             QueryFunctions.updtaeTrackingNum(nsp.getShipID(), nsp.getTrackingNumber());
@@ -297,12 +306,7 @@ public class AmazonServer {
         for(checkUsernameResponse cur : res.getCheckUserList()){
             // TODO: -1 username(long) means donot Exist.
         }
-        for(long ack : res.getAcksList()){
-            if(UPSRequestMap.containsKey(ack)){
-                UPSRequestMap.get(ack).cancel();
-                UPSRequestMap.remove(ack);
-            }
-        }
+        
         if(res.getFinished()){
             System.out.println("UPS Disconnected!");
         }
@@ -359,7 +363,7 @@ public class AmazonServer {
         Package pac = packageMap.get(packageId);
         threadPool.execute(()->{
             ACommand.Builder toUps = ACommand.newBuilder();
-            toUps.setIsRequest(true);
+            //toUps.setIsRequest(true);
             long seqNum = seqNumGenerator();
             long shipId = pac.getShipID();
             APack apc = pac.getPack();
@@ -369,6 +373,7 @@ public class AmazonServer {
                 toUps.addNewShipmentCreated(n);
             }
             // Send msg to UPS
+            seqNum = toUps.getNewShipmentCreatedList().get(0).getSeqnum();
             commandToUPS(seqNum, toUps);
         });
     }
@@ -468,12 +473,13 @@ public class AmazonServer {
         threadPool.execute(()->{
             long seq = seqNumGenerator();
             ACommand.Builder ab = ACommand.newBuilder();
-            ab.setIsRequest(true);
+            //ab.setIsRequest(true);
             APack apc = p.getPack();
-            loadedPackage.Builder lb = loadedPackage.newBuilder();
+            loadedPackages.Builder lb = loadedPackages.newBuilder();
             lb.setSeqnum(seq);
             long trackingNum = QueryFunctions.qTrackingNum(packageId);
             lb.addTrackingNumber(trackingNum);
+            lb.setTruckID(p.getTruckID());
             ab.addPackageLoaded(lb.build());
             commandToUPS(seq, ab);
         });
@@ -508,7 +514,7 @@ public class AmazonServer {
     
     public void commandToUPS(long seq, ACommand.Builder command) {
         System.out.println("Sending Command to UPS");
-        command.setIsRequest(false);
+        //command.setIsRequest(false);
         Timer work = new Timer();
         work.schedule(new TimerTask(){
             @Override
@@ -528,6 +534,8 @@ public class AmazonServer {
                 }
             }
         }, 0, TIME_RESEND);
+        System.out.println(command.toString() + "Seqnum is : " + seq);
+        
         UPSRequestMap.put(seq, work);
     }
 
@@ -609,6 +617,7 @@ public class AmazonServer {
             for(long s : seq){
                 ab.addAcks(s);
             }
+            //ab.setIsRequest(false);
             OutputStream toUps = UPSocket.getOutputStream();
             synchronized (toUps){
                 System.out.println("Send ACKS to UPS");
