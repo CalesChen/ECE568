@@ -6,6 +6,7 @@
                 <p><strong>{{ product.description }}</strong> </p>
                 <p>Price: {{ product.price }}</p>
                 <p>Category: {{ product.category }}</p>
+                <a href="{% url 'amazon-checkout' product_id=product.id%}">buy this product</a>
             </div>
         </article>
     {% endfor %}

@@ -1,4 +1,6 @@
 from socket import *
+from .models import *
+import math
 serverName = '127.0.0.1'
 serverPort = 8888
 ADDRESS = (serverName, serverPort)
@@ -18,6 +20,18 @@ def notify_backend(packageID):
     if components[0] == 'received' and components[1]==str(packageID):
         return 'Successfully sent and received'
     else:
-        if DEBUG:
-            print('backend says: '+response)
+        print('backend says: '+response)
         return 'Sent and recievd not the same'
+
+def get_closest_wh(address_x, address_y):
+    min_dist = float('inf')
+    whID = 1
+    all_whs = Warehouse.objects.all()
+    for wh in all_whs:
+        wh_x = wh.address_x
+        wh_y = wh.address_y
+        dist = math.sqrt(math.pow(address_x-wh_x,2)+math.pow(address_y-wh_y,2))
+        if dist<min_dist:
+            min_dist = dist
+            whID = wh.id
+    return whID
