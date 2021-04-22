@@ -19,5 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/',include('account.urls')),
-    path('amazonweb/',include('amazonWeb.urls')),
+    path('',include('amazonWeb.urls')),
 ]

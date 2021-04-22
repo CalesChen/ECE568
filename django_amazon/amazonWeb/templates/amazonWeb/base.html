@@ -12,34 +12,34 @@
     <link rel="stylesheet" type="text/css" href="{% static 'amazonWeb/main.css' %}">
 
     {% if title %}
-    <title>Amazon Webpage - {{ title }}</title>  
+    <title>Mini Amazon - {{ title }}</title>  
     {% else %}
-    <title>Amazon Webpage</title>
+    <title>Mini Amazon</title>
     {% endif %}  
 </head>
 <body>
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
           <div class="container">
-            {% comment %} <a class="navbar-brand mr-4" href="{% url '' %}">Ride Share System</a> {% endcomment %}
+            <a class="navbar-brand mr-4" href="{% url 'amazon-products' %}">Mini Amazon</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
-                {% comment %} <a class="nav-item nav-link" href="{% url '' %}">As a Rider</a>
-                <a class="nav-item nav-link" href="{% url '' %}">As a Driver</a> {% endcomment %}
-              </div>
+                <!-- <a class="nav-item nav-link" href="{% url 'account-home' %}">As a Rider</a>
+                <a class="nav-item nav-link" href="{% url 'account-home' %}">As a Driver</a> -->
+              </div> 
               <!-- Navbar Right Side -->
-              {% comment %} <div class="navbar-nav">
+              <div class="navbar-nav">
                 {% if user.is_authenticated %}
-                  <a class="nav-item nav-link" href="{% url '' %}">Hi, {{user.username}} !</a>
-                  <a class="nav-item nav-link" href="{% url '' %}">Logout</a>
+                  <a class="nav-item nav-link" href="{% url 'account-profile' %}">Hi, {{user.username}} !</a>
+                  <a class="nav-item nav-link" href="{% url 'account-logout' %}">Logout</a>
                 {% else %}
-                  <a class="nav-item nav-link" href="{% url '' %}">Login</a>
-                  <a class="nav-item nav-link" href="{% url '' %}">Register</a>
+                  <a class="nav-item nav-link" href="{% url 'account-login' %}">Login</a>
+                  <a class="nav-item nav-link" href="{% url 'account-register' %}">Register</a>
                 {% endif %}
-              </div> {% endcomment %}
+              </div>
             </div>
           </div>
         </nav>
