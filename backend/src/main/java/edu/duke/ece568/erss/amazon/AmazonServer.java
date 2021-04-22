@@ -2,7 +2,6 @@ package edu.duke.ece568.erss.amazon;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.*;
-import edu.duke.ece568.erss.amazon.QueryFunctions;
 import edu.duke.ece568.erss.amazon.protos.AmazonUps.*;
 import org.checkerframework.checker.units.qual.A;
 
@@ -255,9 +254,13 @@ public class AmazonServer {
             //TODO : Pack Package Function
             toLoadPackage(ap.getShipid());
         }
+        List<Long> loadedIds = new ArrayList<>();
         for(ALoaded al : res.getLoadedList()){
             //TODO : Load Function
-            toDelieverPackage(al.getShipid());
+            loadedIds.add(al.getShipid());
+        }
+        if(loadedIds.size() > 0){
+            toDelieverPackage(loadedIds);
         }
         for(AErr ae : res.getErrorList()){
             System.err.println(ae.getErr());
@@ -296,7 +299,7 @@ public class AmazonServer {
             QueryFunctions.updtaeTrackingNum(nsp.getShipID(), nsp.getTrackingNumber());
         }
         for(truckArrival ta : res.getArrivedList()){
-            truckLoader(ta.getShipID(), ta.getTruckID());
+            truckLoader(ta.getShipIDList(), ta.getTruckID());
         }
         for(deliveredPackage dp : res.getDeliveredList()){
             // TODO : Process the Delievered Package.
@@ -420,71 +423,107 @@ public class AmazonServer {
         Package pac = packageMap.get(packageId);
         pac.setStatus(Package.PACKED);
         // The Package status needs to be PACKED and the Truck need to be ready.
-        if(pac.getTruckID() != -1){
-            LoadPackage(packageId);
-        }
+//        if(pac.getTruckID() != -1){
+//            LoadPackage(packageId);
+//        }
     }
-    public void LoadPackage(long packageId){
-        if(!packageMap.containsKey(packageId)){
+    public void LoadPackage(List<Long> packageIds){
+        for(long id :packageIds){
+            if(!packageMap.containsKey(id)){
+                packageIds.remove(id);
+            }
+        }
+        if(packageIds.size()== 0) {
             return;
         }
         System.out.println("The UPS is Loading");
-        Package p = packageMap.get(packageId);
-        p.setStatus(Package.LOADING);
+
         threadPool.execute(()->{
             ACommands.Builder ab = ACommands.newBuilder();
-            long seq = seqNumGenerator();
-            APutOnTruck.Builder apto = APutOnTruck.newBuilder();
-            apto.setSeqnum(seq);
-            apto.setWhnum(p.getwarehouseID());
-            apto.setShipid(p.getShipID());
-            apto.setTruckid(p.getTruckID());
-            ab.addLoad(apto.build());
+            for(long packageid : packageIds) {
+                Package p = packageMap.get(packageIds);
+                p.setStatus(Package.LOADING);
+                long seq = seqNumGenerator();
+                APutOnTruck.Builder apto = APutOnTruck.newBuilder();
+                apto.setSeqnum(seq);
+                apto.setWhnum(p.getwarehouseID());
+                apto.setShipid(p.getShipID());
+                apto.setTruckid(p.getTruckID());
+                ab.addLoad(apto.build());
+            }
+            long seq = ab.getLoad(0).getSeqnum();
             commandToWorld(seq, ab);
         });
     }
-    public void truckLoader(long packageId, int truckId){
-        if(!packageMap.containsKey(packageId)){
+    public void truckLoader(List<Long> packageIds, int truckId){
+        for(long id :packageIds){
+            if(!packageMap.containsKey(id)){
+                packageIds.remove(id);
+            }
+        }
+        if(packageIds.size()== 0) {
             return;
         }
         System.out.println("The Trucking is loading");
-        Package p = packageMap.get(packageId);
-        p.setTruckID(truckId);
-        // The Package status needs to be PACKED and the Truck need to be ready.
-        if(p.getStatus().equals(Package.PACKED)){
-            LoadPackage(packageId);
+        List<Long> toBeLoaded = new ArrayList<>();
+        for(long pid : packageIds){
+            Package p = packageMap.get(pid);
+            p.setTruckID(truckId);
+            // wait for all of the package been loaded.
+            while(p.getStatus().equals(Package.PACKED)){
+                try{
+                    Thread.sleep(500);
+                }catch(Exception e){
+                    System.out.println("In TruckLoader, Error:"+e.toString());
+                }
+            }
         }
+        // The Package status needs to be PACKED and the Truck need to be ready.
+        LoadPackage(packageIds);
     }
 
 
-    public void toDelieverPackage(long packageId){
-        if(!packageMap.containsKey(packageId)){
+    public void toDelieverPackage(List<Long> packageIds){
+        for(long id :packageIds){
+            if(!packageMap.containsKey(id)){
+                packageIds.remove(id);
+            }
+        }
+        if(packageIds.size()== 0) {
             return;
         }
         System.out.println("The World have loaded the package and Ready to Deliever");
-        Package p = packageMap.get(packageId);
+        Package p = packageMap.get(packageIds);
         p.setStatus(Package.LOADED);
-        deliverPackage(packageId);
+        deliverPackage(packageIds);
     }
 
-    public void deliverPackage(long packageId){
-        if(!packageMap.containsKey(packageId)){
+    public void deliverPackage(List<Long> packageIds){
+        for(long id :packageIds){
+            if(!packageMap.containsKey(id)){
+                packageIds.remove(id);
+            }
+        }
+        if(packageIds.size()== 0) {
             return;
         }
         System.out.println("The world is Delivering Package");
-        Package p = packageMap.get(packageId);
-        p.setStatus(Package.DELIVERING);
+
         threadPool.execute(()->{
             long seq = seqNumGenerator();
             ACommand.Builder ab = ACommand.newBuilder();
             //ab.setIsRequest(true);
-            APack apc = p.getPack();
-            loadedPackages.Builder lb = loadedPackages.newBuilder();
-            lb.setSeqnum(seq);
-            long trackingNum = QueryFunctions.qTrackingNum(packageId);
-            lb.addTrackingNumber(trackingNum);
-            lb.setTruckID(p.getTruckID());
-            ab.addPackageLoaded(lb.build());
+            for(long packageId : packageIds){
+                Package p = packageMap.get(packageId);
+                p.setStatus(Package.DELIVERING);
+                APack apc = p.getPack();
+                loadedPackage.Builder lb = loadedPackage.newBuilder();
+                lb.setSeqnum(seq);
+                long trackingNum = QueryFunctions.qTrackingNum(packageId);
+                lb.addTrackingNumber(trackingNum);
+                lb.setTruckID(p.getTruckID());
+                ab.addPackageLoaded(lb.build());
+            }
             commandToUPS(seq, ab);
         });
     }
