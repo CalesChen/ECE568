@@ -300,6 +300,7 @@ public class AmazonServer {
         }
         for(deliveredPackage dp : res.getDeliveredList()){
             // TODO : Process the Delievered Package.
+            System.out.println("Package Delievered.\n");
             long packageId = QueryFunctions.qPackageId(dp.getTrackingNumber());
             finishDeliver(packageId);
         }
@@ -328,6 +329,9 @@ public class AmazonServer {
                     continue;
                 }
                 if(!p.getPack().getThingsList().equals(apc.getThingsList())){
+                    continue;
+                }
+                if(!p.status.equals(Package.PROCESSING)){
                     continue;
                 }
                 System.out.println("Tell the UPS to pick and Tell the World to Pack!");
@@ -487,6 +491,7 @@ public class AmazonServer {
     // Clean the packageMap.
     public void finishDeliver(long packageId){
         if(!packageMap.containsKey(packageId)){
+            System.out.println("No Package"+ packageId);
             return;
         }
         System.out.println("Package Been Delivered!");
@@ -495,7 +500,7 @@ public class AmazonServer {
     }
     public void commandToWorld(long seq, ACommands.Builder command){
         System.out.println("Sending Command to World");
-        command.setSimspeed(100);
+        command.setSimspeed(300);
         Timer work = new Timer();
         work.schedule(new TimerTask(){
             @Override
