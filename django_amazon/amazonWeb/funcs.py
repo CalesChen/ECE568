@@ -1,7 +1,8 @@
 from socket import *
 from .models import *
 import math
-serverName = '127.0.0.1'
+serverName = 'vcm-19383.vm.duke.edu'
+#'127.0.0.1'
 serverPort = 8888
 ADDRESS = (serverName, serverPort)
 

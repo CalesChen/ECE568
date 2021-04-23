@@ -1,5 +1,6 @@
 {% extends "amazonWeb/base.html" %}
 {% block content %}
+<h1>Showing {{ category }} products</h1>
     {% for product in products %}
         <article class="media content-section">
             <div class="media-body">
@@ -11,3 +12,17 @@
         </article>
     {% endfor %}
 {% endblock content%}
+{% block sidebar %}
+<div class="col-md-4">
+    <div class="content-section">
+    <h3>Categories</h3>
+    <p class='text-muted'>
+        <ul class="list-group">
+            {% for cat in categories %}
+            <li class="list-group-item list-group-item-light"><a href="{% url 'amazon-categoryView' category_id=cat.id%}">{{ cat.category }}</a></li>
+            {% endfor %}
+        </ul>
+    </p>
+    </div>
+</div>
+{% endblock %}

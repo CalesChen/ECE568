@@ -25,7 +25,7 @@ SECRET_KEY = '41%4^&f^-$rw71h+2j%vw$r#j@tx1t9l$&*sz*lm!dfyc(&(%v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','vcm-19383.vm.duke.edu']
+ALLOWED_HOSTS = ['127.0.0.1','vcm-19383.vm.duke.edu','vcm-18311.vm.duke.edu']
 
 
 # Application definition
@@ -132,5 +132,5 @@ STATIC_URL = '/static/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'account-home'
+LOGIN_REDIRECT_URL = 'account-profile'
 LOGIN_URL = 'account-login'

@@ -32,7 +32,7 @@ class Package(models.Model):
     address_y = models.IntegerField(default=1)
     pack_time = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=50,default = "processing")
-    ups_username = models.CharField(max_length=16,default = "", blank = True)
+    ups_username = models.CharField(max_length=50,default = "", blank = True)
     track_num = models.IntegerField(default = -1)
 
     def __str__(self):

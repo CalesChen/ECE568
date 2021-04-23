@@ -6,7 +6,8 @@ class UserAccount(models.Model):
     user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
     phone = models.BigIntegerField(default=0)
     cardInfo = models.BigIntegerField(default=0)
-    ups_account_name = models.CharField(max_length=50, default="", blank=True)
+    ups_username = models.CharField(max_length=50, default="", blank=True)
+    ups_userid = models.IntegerField(default=-1)
     def __str__(self):
         return f'{self.user.username} Account Info'
 

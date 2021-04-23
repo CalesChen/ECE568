@@ -4,8 +4,9 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
-# @login_required
+@login_required
 def checkout(request, product_id):
+
     address_x = 1
     address_y = 1
     whID = get_closest_wh(address_x, address_y)
@@ -31,10 +32,29 @@ class htmlProduct:
 
 def products(request):
     context = {}
+    context["category"] = "all"
     all_products = Product.objects.all()
     htmlProducts = []
     for product in all_products:
         cat = Category.objects.filter(id = product.category_id).first().category
         htmlProducts.append(htmlProduct(product.id,product.description,cat,product.price))
     context["products"]=htmlProducts
+    context["categories"] = Category.objects.all()
+    return render(request,'amazonWeb/products.html',context)
+
+def productsByCategory(request, category_id):
+    context = {}
+    if(category_id==-1):
+        context["category"] = "all"
+        all_products = Product.objects.all()
+    else:
+        cat = Category.objects.filter(id=category_id).first()
+        context["category"] = cat.category
+        all_products = cat.products.all()
+    htmlProducts = []
+    for product in all_products:
+        cat = Category.objects.filter(id = product.category_id).first().category
+        htmlProducts.append(htmlProduct(product.id,product.description,cat,product.price))
+    context["products"]=htmlProducts
+    context["categories"] = Category.objects.all()
     return render(request,'amazonWeb/products.html',context)
