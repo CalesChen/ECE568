@@ -1,6 +1,6 @@
 package edu.duke.ece568.erss.amazon;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.*;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.*;
 import edu.duke.ece568.erss.amazon.protos.AmazonUps.*;
 import org.checkerframework.checker.units.qual.A;
@@ -12,9 +12,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.AccessibleObject;
 import java.io.InputStreamReader;
-import com.google.protobuf.CodedInputStream;
-import com.google.protobuf.CodedOutputStream;
-import com.google.protobuf.GeneratedMessageV3;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.ServerSocket;
@@ -90,9 +87,16 @@ public class AmazonServer {
         frontEndListener = new FrontEndListener(packageID -> {
             System.out.println(String.format("Receive new buying request, id: %d", packageID));
             buyOrder(packageID);
-        });
+        },null);
         frontEndListener.start();
     }
+    void runFrontUsernameChecker(){
+        frontEndListener = new FrontEndListener(null,username -> {
+           System.out.println("Received new Username Checker, name :" + username);
+           checkOrder(username);
+        });
+    }
+
     public void runWorldServer(){
         Thread worldServer = new Thread(()->{
             while(!Thread.currentThread().isInterrupted()){
@@ -176,7 +180,7 @@ public class AmazonServer {
                     try{
                         System.out.println("begin world");
                         this.worldId = cWorld.getWorldID();
-                        boolean connected = amazonToWorldConnection(cWorld.getWorldID());
+                        boolean connected = amazonToWorldConnection(cWorld.getWorldID(), false);
                         if(connected == true){
                             System.out.println("Connected to the World.");
                             
@@ -226,13 +230,15 @@ public class AmazonServer {
     }
 
    
-    public boolean amazonToWorldConnection(long worldId) throws IOException {
+    public boolean amazonToWorldConnection(long worldId, boolean reconnect) throws IOException {
         Socket socket = new Socket(WORLD_HOST_IP, AMAZON_PORTNUM);
         input = socket.getInputStream();
         output = socket.getOutputStream();
         AConnect.Builder builder = AConnect.newBuilder();
         builder.setIsAmazon(true);
-        builder.addAllInitwh(warehouses);
+        if(!reconnect){
+            builder.addAllInitwh(warehouses);
+        }
         builder.setWorldid(worldId);
         System.out.println(builder);
 
@@ -288,7 +294,7 @@ public class AmazonServer {
         }
         if(res.hasFinished()){
             System.out.println("Amazon Disconnected from the World!");
-            amazonToWorldConnection(this.worldId);
+            amazonToWorldConnection(this.worldId, true);
         }
         return true;
     }
@@ -309,7 +315,7 @@ public class AmazonServer {
         }
         for(newShipmentResponse nsp : res.getTrackingNumberCreatedList()){
             QueryFunctions.updateStatus(nsp.getShipID(), nsp.getStatus());
-            QueryFunctions.updtaeTrackingNum(nsp.getShipID(), nsp.getTrackingNumber());
+            QueryFunctions.updateTrackingNum(nsp.getShipID(), nsp.getTrackingNumber());
         }
         for(truckArrival ta : res.getArrivedList()){
             truckLoader(ta.getShipIDList(), ta.getTruckID());
@@ -322,6 +328,7 @@ public class AmazonServer {
         }
         for(checkUsernameResponse cur : res.getCheckUserList()){
             // TODO: -1 username(long) means donot Exist.
+            usernameUpdate(cur);
         }
         
         if(res.getFinished()){
@@ -556,6 +563,13 @@ public class AmazonServer {
         packageMap.get(packageId).setStatus(Package.DELIVERED);
         packageMap.remove(packageId);
     }
+
+    public void usernameUpdate(checkUsernameResponse cur){
+        String username = cur.getUpsUsername();
+        long id = cur.getUpsUserID();
+        QueryFunctions.updateUsername(username, id);
+    }
+
     public void commandToWorld(long seq, ACommands.Builder command){
         System.out.println("Sending Command to World");
         command.setSimspeed(300);
@@ -606,6 +620,7 @@ public class AmazonServer {
         threadPool.execute(() -> {
             long seq = seqNumGenerator();
             APurchaseMore.Builder newPackage = QueryFunctions.qPackage(packageID);
+            String upsUsername = QueryFunctions.qUpsUsername(packageID);
             if(newPackage==null) return;
             newPackage.setSeqnum(seq);
 
@@ -614,13 +629,26 @@ public class AmazonServer {
             builder.addAllThings(newPackage.getThingsList());
             builder.setShipid(packageID);
             builder.setSeqnum(-1);
-            Package p = new Package(builder.build());
+            Package p = new Package(builder.build(), upsUsername);
             System.out.println("The Error MSG");
             p.setStatus(Package.PROCESSING);
             System.out.println("The 2 MSG");
             packageMap.put(packageID, p);
 
             commandToWorld(seq, ACommands.newBuilder().addBuy(newPackage));
+        });
+    }
+
+    void checkOrder(String username){
+        threadPool.execute(()->{
+            long seq = seqNumGenerator();
+            checkUsername.Builder cb = checkUsername.newBuilder();
+            cb.setSeqnum(seq);
+            cb.setUpsUsername(username);
+            System.out.println("Checking Username:" + username);
+            ACommand.Builder ab = ACommand.newBuilder();
+            ab.addCheckUsers(cb.build());
+            commandToUPS(seq, ab);
         });
     }
 

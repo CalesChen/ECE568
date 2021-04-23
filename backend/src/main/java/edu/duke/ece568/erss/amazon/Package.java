@@ -24,14 +24,15 @@ public class Package {
     protected int truckID;
     protected APack pack;
     protected String status;
-    
-    public Package(APack pack){
+    protected String upsUsername;
+    public Package(APack pack, String upsUsername){
         this.shipID = pack.getShipid();
         this.warehouseID = pack.getWhnum();
         this.address = QueryFunctions.qAddress(this.shipID);
         this.pack = pack;
         this.status = "";
         this.truckID = -1;
+        this.upsUsername = upsUsername;
     }
 
     public long getShipID() {

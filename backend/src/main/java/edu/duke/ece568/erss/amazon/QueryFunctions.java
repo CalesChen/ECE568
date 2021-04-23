@@ -17,6 +17,7 @@ public class QueryFunctions {
     private static final String TABLE_PACKAGE = "\"amazonWeb_package\"";
     private static final String TABLE_CATEGORY = "\"amazonWeb_category\"";
     private static final String TABLE_PRODUCT = "\"amazonWeb_product\"";
+    private static final String TABLE_USERACCOUNT = "\"useraccount\"";
 
     private static final String dbURL = "jdbc:postgresql://localhost/AMAZON";
     private static final String dbUSER = "postgres";
@@ -126,6 +127,26 @@ public class QueryFunctions {
         return null;
     }
 
+    public static String qUpsUsername(long packageId){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+            Statement work = C.createStatement();
+
+            String sql = String.format("select packages.ups_username from %s as packages where packages.id = %d", TABLE_PACKAGE, packageId);
+            String username = null;
+            ResultSet result = work.executeQuery(sql);
+            while(result.next()){
+                username = result.getString("ups_username");
+            }
+            return username;
+        }catch (Exception e){
+            System.err.println(e.toString());
+        }
+        return null;
+    }
+
     public static Address qAddress(long packageId){
         try{
             Class.forName("org.postgresql.Driver");
@@ -149,7 +170,7 @@ public class QueryFunctions {
         return null;
     }
 
-    public static boolean updtaeTrackingNum(long packageId, long trackingNum){
+    public static boolean updateTrackingNum(long packageId, long trackingNum){
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
@@ -162,6 +183,24 @@ public class QueryFunctions {
             C.close();
             return true;
         }catch(Exception e){
+            System.err.println(e.toString());
+        }
+        return false;
+    }
+    // For UPS Username and UserID only.
+    public static boolean updateUsername(String username, long userID){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+
+            Statement work = C.createStatement();
+            String sql = String.format("update %s set ups_userid = %d where ups.username = %s", TABLE_USERACCOUNT, userID, username);
+            work.executeUpdate(sql);
+            C.commit();
+            C.close();
+            return true;
+        }catch (Exception e){
             System.err.println(e.toString());
         }
         return false;

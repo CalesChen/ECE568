@@ -9,9 +9,10 @@ import java.net.Socket;
 
 public class FrontEndListener extends Thread{
     OrderListener orderListener;
-
-    public FrontEndListener(OrderListener orderListener){
+    UsernameListener usernameListener;
+    public FrontEndListener(OrderListener orderListener, UsernameListener usernameListener){
         this.orderListener = orderListener;
+        this.usernameListener = usernameListener;
         this.setDaemon(true);
     }
     @Override
@@ -22,7 +23,12 @@ public class FrontEndListener extends Thread{
                 while (!Thread.currentThread().isInterrupted()){
                     Socket s = daemonServer.accept();
                     if (s != null){
-                        processPackage(s);
+                        if(orderListener == null){
+                            usernameChecker(s);
+                        }
+                        if(usernameListener == null){
+                            processPackage(s);
+                        }
                     }
                 }
             }catch (Exception e){
@@ -43,6 +49,19 @@ public class FrontEndListener extends Thread{
         s.close();
         if (orderListener != null){
             orderListener.onOrder(id);
+        }
+    }
+
+    public void usernameChecker(Socket s) throws  IOException{
+        BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        PrintWriter writer = new PrintWriter(s.getOutputStream());
+        String req = reader.readLine();
+        System.out.println("Name to be Checked is : " + req);
+        writer.write("Received Name : " + req);
+        writer.flush();
+        s.close();
+        if(usernameListener != null){
+            usernameListener.onName(req);
         }
     }
 }
