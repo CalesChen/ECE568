@@ -5,11 +5,11 @@
         <form method="POST">
             {% csrf_token %}
             {{ form|crispy }}
-            <button class="btn btn-outline-info" type="submit"> Save Changes </button>
+            <button class="btn btn-outline-info" type="submit"> Buy </button>
         </form>
         <div class="border-top pt-3">
             <small class="text-muted">
-                <a class="ml-2" href="{% url 'account-profile' %}">Cancel</a>
+                <a class="ml-2" href="{% url 'amazon-products' %}">Cancel</a>
             </small>
         </div>
     </div>

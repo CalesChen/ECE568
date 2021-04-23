@@ -132,5 +132,5 @@ STATIC_URL = '/static/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'account-profile'
+LOGIN_REDIRECT_URL = 'amazon-products'
 LOGIN_URL = 'account-login'

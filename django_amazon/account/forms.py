@@ -24,7 +24,7 @@ class EditProfileForm(forms.Form):
     last_name = forms.CharField(max_length=100,required=True)
 
 class AddAddressForm(forms.Form):
-    ADDRESS_TAGS = (('home','home'),('home','company'),('home','school'),('home','my own tag'))
+    ADDRESS_TAGS = (('home','home'),('company','company'),('school','school'),('my own tag','my own tag'))
     addressName = forms.CharField(max_length=100,required=True)
     tag = forms.CharField(widget=forms.widgets.Select(choices=ADDRESS_TAGS))
     myTag = forms.CharField(max_length=100, required = False)

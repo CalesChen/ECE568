@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from amazonWeb.funcs import check_username
 from .models import *
 from .forms import *
 # Create your views here.
@@ -32,16 +33,21 @@ def profile(request):
     context["email"] = user.email
     userAccount = user.useraccount
     context["useraccount"] = userAccount
-    not_initialized = userAccount.phone==0 and userAccount.cardInfo==0 and userAccount.ups_account_name==""
+    ups_id = userAccount.ups_userid
+    not_initialized = (userAccount.phone==0 and userAccount.cardInfo==0 and userAccount.ups_username=="") or ups_id==-1
+    context["ups_username"] = userAccount.ups_username
+    if ups_id==-2:
+        context["ups_username"] = "Pending Verification"
     context["useraccount_initialized"] = None if not_initialized else True
     context["addresses"] = userAccount.addresses.all() 
     return render(request, 'account/profile.html',context)
+
 
 @login_required
 def edit_profile(request):
     curr_user = request.user
     if request.method =='POST':
-        form = Form(request.POST)
+        form = EditProfileForm(request.POST)
         if form.is_valid():
             curr_user.email = form.cleaned_data['email']
             curr_user.first_name = form.cleaned_data['first_name']
@@ -65,10 +71,16 @@ def edit_optional(request):
         if form.is_valid():
             curr_user.useraccount.phone = form.cleaned_data['phone']
             curr_user.useraccount.cardInfo = form.cleaned_data['cardInfo']
-            curr_user.useraccount.ups_account_name = form.cleaned_data['ups_account_name']
-            curr_user.useraccount.save()
-            messages.success(request, f'Your optional Info has been updated!')
-            return redirect('account-profile')
+            curr_user.useraccount.ups_username = form.cleaned_data['ups_account_name']
+            curr_user.useraccount.ups_userid = -2
+            result = check_username(form.cleaned_data["ups_account_name"])
+            if result:
+                curr_user.useraccount.save()
+                messages.success(request, f'Your optional Info has been updated!\nYour ups username is sent to ups for verification!')
+                return redirect('account-profile')
+            else:
+                messages.warning(request, f'Something failed! Please try again!')
+                return redirect('account-profile')
         else:
             form = EditOptionalForm()
             return render(request, 'account/edit_optional.html',{'form':form})
