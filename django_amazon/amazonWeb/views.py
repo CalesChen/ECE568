@@ -20,8 +20,6 @@ def checkout(request, product_id):
     result = notify_backend(package.id)
     return render(request,'amazonWeb/checkout.html',{'packageID':package.id, 'result':result})
 
-def home(request):
-    return render(request,'amazonWeb/base.html',{})
 
 
 class htmlProduct:
