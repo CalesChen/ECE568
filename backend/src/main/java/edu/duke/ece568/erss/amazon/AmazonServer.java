@@ -55,11 +55,15 @@ public class AmazonServer {
 
     private FrontEndListener frontEndListener;
 
+    // This is the global woldId, which will be valued.
+    private long worldId;
+
     public AmazonServer(){
         //warehouses = new ArrayList<>();
         this.warehouses = QueryFunctions.qWarehouses();
         this.threadPool = new ThreadPoolExecutor(20, 80, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         this.globalSeqNum = 0;
+        this.worldId = -1;
         worldRequestMap = new ConcurrentHashMap<>();
         UPSRequestMap = new ConcurrentHashMap<>();
         packageMap = new ConcurrentHashMap<>();
@@ -73,6 +77,14 @@ public class AmazonServer {
             return true;
     }
 
+    public <T extends GeneratedMessageV3.Builder<?>> boolean recvMSG(T builder, InputStream input) throws IOException{
+        CodedInputStream codedInputStream = CodedInputStream.newInstance(this.input);
+        int length = codedInputStream.readRawVarint32();
+        int parseLimit = codedInputStream.pushLimit(length);
+        builder.mergeFrom(codedInputStream.readByteArray());
+        codedInputStream.popLimit(parseLimit);
+        return true;
+    }
 
     void runFrontEndListener() {
         frontEndListener = new FrontEndListener(packageID -> {
@@ -85,9 +97,9 @@ public class AmazonServer {
         Thread worldServer = new Thread(()->{
             while(!Thread.currentThread().isInterrupted()){
                 try{
-                    CodedInputStream codedInputStream = CodedInputStream.newInstance(this.input);
-                    AResponses resp = AResponses.parseFrom(codedInputStream.readByteArray());
-                    worldResponseHandler(resp);
+                    AResponses.Builder ab = AResponses.newBuilder();
+                    recvMSG(ab, this.input);
+                    worldResponseHandler(ab.build());
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -102,14 +114,13 @@ public class AmazonServer {
             while(!Thread.currentThread().isInterrupted()){
                 if(UPSocket != null){
                     try{
-                        
                         InputStream UpsInput = UPSocket.getInputStream();
                         if(UpsInput.available() == 0){
                             continue;
                         }
-                        CodedInputStream codedInputStream = CodedInputStream.newInstance(UpsInput);
-                        UCommand resp = UCommand.parseFrom(codedInputStream.readByteArray());
-                        UPSResponseHandler(resp);
+                        UCommand.Builder ub = UCommand.newBuilder();
+                        recvMSG(ub, UpsInput);
+                        UPSResponseHandler(ub.build());
                     } catch (InvalidProtocolBufferException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -164,6 +175,7 @@ public class AmazonServer {
                 if(cWorld.hasWorldID()){
                     try{
                         System.out.println("begin world");
+                        this.worldId = cWorld.getWorldID();
                         boolean connected = amazonToWorldConnection(cWorld.getWorldID());
                         if(connected == true){
                             System.out.println("Connected to the World.");
@@ -276,6 +288,7 @@ public class AmazonServer {
         }
         if(res.hasFinished()){
             System.out.println("Amazon Disconnected from the World!");
+            amazonToWorldConnection(this.worldId);
         }
         return true;
     }
@@ -441,7 +454,8 @@ public class AmazonServer {
         threadPool.execute(()->{
             ACommands.Builder ab = ACommands.newBuilder();
             for(long packageid : packageIds) {
-                Package p = packageMap.get(packageIds);
+                Package p = packageMap.get(packageid);
+                
                 p.setStatus(Package.LOADING);
                 long seq = seqNumGenerator();
                 APutOnTruck.Builder apto = APutOnTruck.newBuilder();
@@ -449,6 +463,8 @@ public class AmazonServer {
                 apto.setWhnum(p.getwarehouseID());
                 apto.setShipid(p.getShipID());
                 apto.setTruckid(p.getTruckID());
+                System.out.println("Truck ID is " + p.getTruckID());
+                System.out.println("PackageID is "+p.getShipID());
                 ab.addLoad(apto.build());
             }
             long seq = ab.getLoad(0).getSeqnum();
@@ -465,12 +481,12 @@ public class AmazonServer {
             return;
         }
         System.out.println("The Trucking is loading");
-        List<Long> toBeLoaded = new ArrayList<>();
+        //List<Long> toBeLoaded = new ArrayList<>();
         for(long pid : packageIds){
             Package p = packageMap.get(pid);
             p.setTruckID(truckId);
             // wait for all of the package been loaded.
-            while(p.getStatus().equals(Package.PACKED)){
+            while(!p.getStatus().equals(Package.PACKED)){
                 try{
                     Thread.sleep(500);
                 }catch(Exception e){
@@ -493,8 +509,11 @@ public class AmazonServer {
             return;
         }
         System.out.println("The World have loaded the package and Ready to Deliever");
-        Package p = packageMap.get(packageIds);
-        p.setStatus(Package.LOADED);
+        for(long id : packageIds){
+            Package p = packageMap.get(id);
+            p.setStatus(Package.LOADED);
+        }
+        
         deliverPackage(packageIds);
     }
 

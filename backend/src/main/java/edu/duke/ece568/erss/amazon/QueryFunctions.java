@@ -76,7 +76,10 @@ public class QueryFunctions {
             Statement work = C.createStatement();
             String s;
             if(status == 0){
-                s = Package.FINISHED;
+                //s = Package.FINISHED;
+                work.close();
+                C.close();
+                return true;
             }else{
                 s = "Error";
             }
