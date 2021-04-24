@@ -88,15 +88,15 @@ def before_checkout(request, product_id):
             package.save()
             order = Order(customer = user,product = product,package = package, product_num=product_num)
             order.save()
-            result = notify_backend(package.id)
+            result = True #notify_backend(package.id)
             if result:
-                # subject = "Your order has been placed!"
-                # content = "You have ordered "+ product_num + product.description+"\n"
-                # content += "Delivering to "+wh+"\n"
-                # content += "Best,\nMini Amazon Team\n"
-                # from_email = settings.EMAIL_HOST_USER
-                # email_list = [user.email]
-                # send_mail(subject,content,from_email,email_list,fail_silently=False)
+                subject = "Your order has been placed!"
+                content = "You have ordered "+ product_num + product.description+"\n"
+                content += "Delivering to "+wh+"\n"
+                content += "Best,\nMini Amazon Team\n"
+                from_email = settings.EMAIL_HOST_USER
+                email_list = [user.email]
+                send_mail(subject,content,from_email,email_list,fail_silently=False)
                 messages.success(request,f'You have successfully put the order!')
                 return redirect('amazon-products')
             else:

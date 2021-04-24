@@ -134,3 +134,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'amazon-products'
 LOGIN_URL = 'account-login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.163.com' 
+EMAIL_PORT = 25 
+
+
+EMAIL_HOST_USER = 'miniamazon2021@163.com'
+EMAIL_HOST_PASSWORD = 'TLFNXYDXGMLOHFVQ' 
+EMAIL_FROM = 'miniAmazonTeam<miniamazon2021@163.com>'
