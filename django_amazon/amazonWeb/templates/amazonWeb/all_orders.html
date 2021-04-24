@@ -9,6 +9,7 @@
                     <p>Product Number: {{ order_and_pack.order.product_num }}</p>
                     <p>Status: {{ order_and_pack.package.status }}</p>
                     <p>Deliver to: ({{ order_and_pack.package.address_x }},{{ order_and_pack.package.address_y }})</p>
+                    <p>Tracking number: {{ order_and_pack.track_num }}</p>
                 </div>
             </article>
         {% endfor %}

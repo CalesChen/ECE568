@@ -48,10 +48,11 @@ def productsByCategory(request, category_id):
 
 
 class OrderAndPack:
-    def __init__(self, order, pack, product):
+    def __init__(self, order, pack, product, track_num):
         self.order = order
         self.package = pack
         self.product = product
+        self.track_num = track_num
 
 @login_required
 def allOrdersAndPackages(request):
@@ -62,7 +63,11 @@ def allOrdersAndPackages(request):
     for order in orders:
         pack = order.package
         product = order.product
-        combines.append(OrderAndPack(order,pack,product))
+        if pack.track_num==-1:
+            track_num = "not generated yet"
+        else:
+            track_num = pack.track_num
+        combines.append(OrderAndPack(order,pack,product,track_num))
     context["OrdersAndPacks"] = combines
     return render(request,'amazonWeb/all_orders.html',context)
 
