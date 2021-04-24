@@ -73,7 +73,7 @@ def edit_optional(request):
             curr_user.useraccount.cardInfo = form.cleaned_data['cardInfo']
             curr_user.useraccount.ups_username = form.cleaned_data['ups_account_name']
             curr_user.useraccount.ups_userid = -2
-            result = True # check_username(form.cleaned_data["ups_account_name"])
+            result = check_username(form.cleaned_data["ups_account_name"])
             if result:
                 curr_user.useraccount.save()
                 messages.success(request, f'Your optional Info has been updated!\nYour ups username is sent to ups for verification!')
