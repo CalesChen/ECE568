@@ -89,7 +89,7 @@ def before_checkout(request, product_id):
             package.save()
             order = Order(customer = user,product = product,package = package, product_num=product_num)
             order.save()
-            result = True #notify_backend(package.id)
+            result = notify_backend(package.id)
             if result:
                 subject = "Your order has been placed!"
                 content = f'You have ordered {product_num} {product.description}\n'
