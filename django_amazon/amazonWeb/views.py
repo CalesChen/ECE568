@@ -5,6 +5,7 @@ from .models import *
 from .forms import *
 from django.core.mail import send_mail
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -91,8 +92,8 @@ def before_checkout(request, product_id):
             result = True #notify_backend(package.id)
             if result:
                 subject = "Your order has been placed!"
-                content = "You have ordered "+ product_num + product.description+"\n"
-                content += "Delivering to "+wh+"\n"
+                content = f'You have ordered {product_num} {product.description}\n'
+                content += f'Delivering to {wh}\n'
                 content += "Best,\nMini Amazon Team\n"
                 from_email = settings.EMAIL_HOST_USER
                 email_list = [user.email]
