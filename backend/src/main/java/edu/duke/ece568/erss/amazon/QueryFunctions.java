@@ -17,7 +17,7 @@ public class QueryFunctions {
     private static final String TABLE_PACKAGE = "\"amazonWeb_package\"";
     private static final String TABLE_CATEGORY = "\"amazonWeb_category\"";
     private static final String TABLE_PRODUCT = "\"amazonWeb_product\"";
-    private static final String TABLE_USERACCOUNT = "\"useraccount\"";
+    private static final String TABLE_USERACCOUNT = "\"account_useraccount\"";
 
     private static final String dbURL = "jdbc:postgresql://localhost/AMAZON";
     private static final String dbUSER = "postgres";
@@ -195,9 +195,10 @@ public class QueryFunctions {
             C.setAutoCommit(false);
 
             Statement work = C.createStatement();
-            String sql = String.format("update %s set ups_userid = %d where ups.username = %s", TABLE_USERACCOUNT, userID, username);
+            String sql = String.format("update %s set ups_userid = %d where ups_username = \'%s\'", TABLE_USERACCOUNT, userID, username);
             work.executeUpdate(sql);
             C.commit();
+            work.close();
             C.close();
             return true;
         }catch (Exception e){

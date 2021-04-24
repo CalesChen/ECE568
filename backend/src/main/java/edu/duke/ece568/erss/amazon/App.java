@@ -14,6 +14,7 @@ public class App {
 
         while(true){
             try{
+                //s.runAll();
                 s.initiaition();
                 break;
             }catch(Exception e){

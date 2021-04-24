@@ -10,16 +10,18 @@ import java.net.Socket;
 public class FrontEndListener extends Thread{
     OrderListener orderListener;
     UsernameListener usernameListener;
-    public FrontEndListener(OrderListener orderListener, UsernameListener usernameListener){
+    private int port;
+    public FrontEndListener(OrderListener orderListener, UsernameListener usernameListener, int port){
         this.orderListener = orderListener;
         this.usernameListener = usernameListener;
         this.setDaemon(true);
+        this.port = port;
     }
     @Override
     public void run(){
         while (!Thread.currentThread().isInterrupted()){
-            try (ServerSocket daemonServer = new ServerSocket(8888)){
-                System.out.println("Listening connection from front-end at 8888");
+            try (ServerSocket daemonServer = new ServerSocket(port)){
+                System.out.println("Listening connection from front-end at "+port);
                 while (!Thread.currentThread().isInterrupted()){
                     Socket s = daemonServer.accept();
                     if (s != null){
@@ -57,7 +59,7 @@ public class FrontEndListener extends Thread{
         PrintWriter writer = new PrintWriter(s.getOutputStream());
         String req = reader.readLine();
         System.out.println("Name to be Checked is : " + req);
-        writer.write("Received Name : " + req);
+        writer.write("received " + req);
         writer.flush();
         s.close();
         if(usernameListener != null){

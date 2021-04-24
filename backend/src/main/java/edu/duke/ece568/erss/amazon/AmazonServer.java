@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 public class AmazonServer {
 
-    public static final String WORLD_HOST_IP = "vcm-19389.vm.duke.edu";
+    public static final String WORLD_HOST_IP = "vcm-18110.vm.duke.edu";
     public static final int AMAZON_PORTNUM = 23456;
 
     public static final int UPS_PORTNUM = 34567;
@@ -51,6 +51,11 @@ public class AmazonServer {
     private Map<Long, Timer> UPSRequestMap;
 
     private FrontEndListener frontEndListener;
+    private FrontEndListener checkerListener;
+
+    private static final int packagePort=8888;
+    private static final int checkPort=9999;
+    
 
     // This is the global woldId, which will be valued.
     private long worldId;
@@ -75,10 +80,10 @@ public class AmazonServer {
     }
 
     public <T extends GeneratedMessageV3.Builder<?>> boolean recvMSG(T builder, InputStream input) throws IOException{
-        CodedInputStream codedInputStream = CodedInputStream.newInstance(this.input);
+        CodedInputStream codedInputStream = CodedInputStream.newInstance(input);
         int length = codedInputStream.readRawVarint32();
         int parseLimit = codedInputStream.pushLimit(length);
-        builder.mergeFrom(codedInputStream.readByteArray());
+        builder.mergeFrom(codedInputStream);
         codedInputStream.popLimit(parseLimit);
         return true;
     }
@@ -87,14 +92,15 @@ public class AmazonServer {
         frontEndListener = new FrontEndListener(packageID -> {
             System.out.println(String.format("Receive new buying request, id: %d", packageID));
             buyOrder(packageID);
-        },null);
+        },null, packagePort);
         frontEndListener.start();
     }
     void runFrontUsernameChecker(){
-        frontEndListener = new FrontEndListener(null,username -> {
+        checkerListener = new FrontEndListener(null,username -> {
            System.out.println("Received new Username Checker, name :" + username);
            checkOrder(username);
-        });
+        }, checkPort);
+        checkerListener.start();
     }
 
     public void runWorldServer(){
@@ -138,8 +144,9 @@ public class AmazonServer {
 
     public void runAll(){
         threadPool.prestartAllCoreThreads();
-        runUPServer();
         runFrontEndListener();
+        runFrontUsernameChecker();
+        runUPServer();
         runWorldServer();
 
     }
@@ -536,7 +543,7 @@ public class AmazonServer {
         System.out.println("The world is Delivering Package");
 
         threadPool.execute(()->{
-            long seq = seqNumGenerator();
+            //long seq = seqNumGenerator();
             ACommand.Builder ab = ACommand.newBuilder();
             //ab.setIsRequest(true);
             for(long packageId : packageIds){
@@ -544,12 +551,14 @@ public class AmazonServer {
                 p.setStatus(Package.DELIVERING);
                 APack apc = p.getPack();
                 loadedPackage.Builder lb = loadedPackage.newBuilder();
-                lb.setSeqnum(seq);
+                long tmpSeq = seqNumGenerator();
+                lb.setSeqnum(tmpSeq);
                 long trackingNum = QueryFunctions.qTrackingNum(packageId);
                 lb.addTrackingNumber(trackingNum);
                 lb.setTruckID(p.getTruckID());
                 ab.addPackageLoaded(lb.build());
             }
+            long seq = ab.getPackageLoadedList().get(0).getSeqnum();
             commandToUPS(seq, ab);
         });
     }
