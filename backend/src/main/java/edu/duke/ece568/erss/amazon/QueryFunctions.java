@@ -4,10 +4,12 @@ import java.lang.Thread.State;
 import java.sql.*;
 import java.util.*;
 
+import edu.duke.ece568.erss.amazon.Address;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.AInitWarehouse;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.APurchaseMore;
 import edu.duke.ece568.erss.amazon.protos.WorldAmazon.AProduct;
+import org.checkerframework.checker.units.qual.A;
 
 public class QueryFunctions {
     private static final String TABLE_WAREHOUSE = "\"amazonWeb_warehouse\"";
@@ -15,6 +17,7 @@ public class QueryFunctions {
     private static final String TABLE_PACKAGE = "\"amazonWeb_package\"";
     private static final String TABLE_CATEGORY = "\"amazonWeb_category\"";
     private static final String TABLE_PRODUCT = "\"amazonWeb_product\"";
+    private static final String TABLE_USERACCOUNT = "\"account_useraccount\"";
 
     private static final String dbURL = "jdbc:postgresql://localhost/AMAZON";
     private static final String dbUSER = "postgres";
@@ -25,6 +28,7 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
 
             Statement work = C.createStatement();
             String sql = String.format("select * from %s", TABLE_WAREHOUSE);
@@ -50,9 +54,37 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
 
             Statement work = C.createStatement();
             String sql = String.format("update %s set status = %s where id = %d", TABLE_PACKAGE, status, packageId);
+            work.executeUpdate(sql);
+            C.commit();
+            work.close();
+            C.close();
+            return true;
+        }catch(Exception e){
+            System.err.println(e.toString());
+        }
+        return false;
+    }
+    public static boolean updateStatus(long packageId, int status){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+
+            Statement work = C.createStatement();
+            String s;
+            if(status == 0){
+                //s = Package.FINISHED;
+                work.close();
+                C.close();
+                return true;
+            }else{
+                s = "Error";
+            }
+            String sql = String.format("update %s set status = %s where id = %d", TABLE_PACKAGE, s, packageId);
             work.executeUpdate(sql);
             C.commit();
             work.close();
@@ -68,12 +100,13 @@ public class QueryFunctions {
         try{
             Class.forName("org.postgresql.Driver");
             Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
             //need product id, description, count to construct Aproduct
             //need whnum, product list, seqnum to construct Apurchasemore
             Statement work = C.createStatement();
             String sql = String.format("SELECT products.id, products.description, orders.product_num, packages.warehouse_id " +
-                    "FROM %s AS products, %s AS orders, %s AS packages " +
-                    "WHERE products.id=orders.product_id AND orders.package_id = %d AND packages.id=%d;",
+                            "FROM %s AS products, %s AS orders, %s AS packages " +
+                            "WHERE products.id=orders.product_id AND orders.package_id = %d AND packages.id = %d;",
                     TABLE_PRODUCT, TABLE_ORDER, TABLE_PACKAGE, packageId, packageId);
             ResultSet result = work.executeQuery(sql);
             APurchaseMore.Builder purchaseBuilder = APurchaseMore.newBuilder();
@@ -93,6 +126,129 @@ public class QueryFunctions {
         }
         return null;
     }
+
+    public static String qUpsUsername(long packageId){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+            Statement work = C.createStatement();
+
+            String sql = String.format("select packages.ups_username from %s as packages where packages.id = %d", TABLE_PACKAGE, packageId);
+            String username = null;
+            ResultSet result = work.executeQuery(sql);
+            while(result.next()){
+                username = result.getString("ups_username");
+            }
+            return username;
+        }catch (Exception e){
+            System.err.println(e.toString());
+        }
+        return null;
+    }
+
+    public static Address qAddress(long packageId){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+            Statement work = C.createStatement();
+            String sql = String.format("select address_x, address_y from %s where id = %d", TABLE_PACKAGE, packageId);
+            ResultSet result = work.executeQuery(sql);
+            Address dest = null;
+            while(result.next()){
+                int x = result.getInt("address_x");
+                int y = result.getInt("address_y");
+                dest = new Address(x,y);
+            }
+            work.close();
+            C.close();
+            return dest;
+        }catch(ClassNotFoundException | SQLException e){
+            System.err.println(e.toString());
+        }
+        return null;
+    }
+
+    public static boolean updateTrackingNum(long packageId, long trackingNum){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+            Statement work = C.createStatement();
+            String sql = String.format("update %s set track_num = %d where id = %d", TABLE_PACKAGE, trackingNum, packageId);
+            work.executeUpdate(sql);
+            C.commit();
+            work.close();
+            C.close();
+            return true;
+        }catch(Exception e){
+            System.err.println(e.toString());
+        }
+        return false;
+    }
+    // For UPS Username and UserID only.
+    public static boolean updateUsername(String username, long userID){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+
+            Statement work = C.createStatement();
+            String sql = String.format("update %s set ups_userid = %d where ups_username = \'%s\'", TABLE_USERACCOUNT, userID, username);
+            work.executeUpdate(sql);
+            C.commit();
+            work.close();
+            C.close();
+            return true;
+        }catch (Exception e){
+            System.err.println(e.toString());
+        }
+        return false;
+    }
+
+    public static long qTrackingNum(long packageId){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+            Statement work = C.createStatement();
+            String sql = String.format("select track_num from %s where id = %d", TABLE_PACKAGE, packageId);
+            ResultSet result = work.executeQuery(sql);
+            long trackingNum = -1;
+            while(result.next()){
+                trackingNum = result.getInt("track_num");
+            }
+            work.close();
+            C.close();
+            return trackingNum;
+        }catch(ClassNotFoundException | SQLException e){
+            System.err.println(e.toString());
+        }
+        return -1;
+    }
+
+    public static long qPackageId(long trackingNum){
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection C = DriverManager.getConnection(dbURL, dbUSER, dbPASSWD);
+            C.setAutoCommit(false);
+            Statement work = C.createStatement();
+            String sql = String.format("select id from %s where track_num = %d", TABLE_PACKAGE, trackingNum);
+            ResultSet result = work.executeQuery(sql);
+            long packageId = -1;
+            while(result.next()){
+                packageId = result.getInt("id");
+            }
+            work.close();
+            C.close();
+            return packageId;
+        }catch(ClassNotFoundException | SQLException e){
+            System.err.println(e.toString());
+        }
+        return -1;
+    }
+
 
 }
 

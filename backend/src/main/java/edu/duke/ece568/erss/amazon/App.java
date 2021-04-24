@@ -11,14 +11,16 @@ public class App {
     public static void main(String[] args) {
         //System.out.println(new App().getGreeting());
         AmazonServer s = new AmazonServer();
+
         while(true){
             try{
+                //s.runAll();
                 s.initiaition();
                 break;
             }catch(Exception e){
                 System.out.println(e.getMessage());
             }
         }
-        
+        s.runAll();
     }
 }

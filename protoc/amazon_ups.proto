@@ -1,33 +1,34 @@
 syntax = "proto2";
+// Amazon -> UPS
 message ACommand {
-    required bool isRequest=1;
-    optional bool disconnect=2;
-    optional bool finished=3;
-    repeated newShipment newShipmentCreated=4;
-    repeated loadedPackages packageLoaded=5;
-    repeated checkUsername checkUsers=6;
-    repeated int64 acks=7;
-    repeated Err error=8;
+    optional bool disconnect=1;
+    optional bool finished=2;
+    repeated newShipment newShipmentCreated=3;
+    repeated loadedPackage packageLoaded=4;
+    repeated checkUsername checkUsers=5;
+    repeated int64 acks=6;
+    repeated Err error=7;
 }
 
+// UPS -> Amazon
 message UCommand {
-    required bool isRequest=1;
-    optional bool disconnect=2;
-    optional bool finished=3;
+    optional bool disconnect=1;
+    optional bool finished=2;
     // shipID and trackingNumbers should be one-to-one in the same order
-    repeated newShipmentResponse trackingNumberCreated=4;
-    repeated truckArrival arrived=5;
-    repeated deliveredPackage delivered=6;
-    repeated changeDeliveryAddress changeAddress=7;
-    repeated checkUsernameResponse checkUser=8;
-    repeated int64 acks=9;
-    repeated Err error=10;
+    repeated newShipmentResponse trackingNumberCreated=3;
+    repeated truckArrival arrived=4;
+    repeated deliveredPackage delivered=5;
+    repeated changeDeliveryAddress changeAddress=6;
+    repeated checkUsernameResponse checkUser=7;
+    repeated int64 acks=8;
+    repeated Err error=9;
 }
 
+// error message
 message Err{
-  required string err = 1;
-  required int64 originseqnum = 2;
-  required int64 seqnum = 3;
+    required string err = 1;
+    required int64 originseqnum = 2;
+    required int64 seqnum = 3;
 }
 
 message createWorld {
@@ -35,15 +36,23 @@ message createWorld {
     required int64 seqnum=2;
 }
 
+// response
+message createWorldResponse {
+    //error status? 0:success 1:failure
+    required int32 status=1;
+}
+
+
 message checkUsername {
     required string upsUsername=1;
     required int64 seqnum=2;
 }
 
 message checkUsernameResponse {
-//-1: username does not exist
-required int64 upsUserID=1;
-required int64 seqnum=2;
+    required string upsUsername=1;
+    //-1: username does not exist
+    required int64 upsUserID=2;
+    required int64 seqnum=3;
 }
 
 message newShipment {
@@ -83,24 +92,51 @@ message warehouse{
 message truckArrival {
     required warehouse warehouseInfo=1;
     required int32 truckID=2;
-    required int64 shipID = 3;
+    repeated int64 shipID = 3;
     required int64 seqnum=4;
 }
 
+message truckArrivalResponse {
+    //error status? 0:success 1:failure
+    required int32 status = 1;
+    required int64 seqnum = 2;
+}
+// request
 message loadedPackage {
     repeated int64 trackingNumber=1;
     required int32 truckID=2;
     required int64 seqnum=3;
 }
 
+// response
+message loadedPackagesResponse {
+    repeated int32 confirmLoadedStatus=1;
+//error status? 0:success 1:failure
+    required int32 status=2;
+    required int64 seqnum=3;
+}
+
+// request
 message deliveredPackage {
     required int64 trackingNumber=1;
     required int64 seqnum=2;
 }
 
+message deliveredPackageResponse {
+//error status? 0:success 1:failure
+    required int32 status=1;
+    required int64 seqnum=2;
+}
+
+// request
 message changeDeliveryAddress {
     required int64 trackingNumber=1;
     required destination destinationInfo=2;
     required int64 seqnum=3;
 }
 
+message changeDeliveryAddressResponse {
+//error status? 0:success 1:failure
+    required int32 status=1;
+    required int64 seqnum=2;
+}
