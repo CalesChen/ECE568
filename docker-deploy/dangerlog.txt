@@ -1,0 +1,50 @@
+Author Yijia Li
+       Ke Chen
+
+2.20
+We designed the basic struture of this project, and decided which part should be done first.
+We created response class and request_info class to parse request from client and response from original server
+
+2.22
+We started to design more details about our proxy class. Proxy class burdens the most significant tasks in this 
+project. We planned to handle three methods in this class.
+
+2.25
+We finished some socket operation like creating connect and receiving message. We wrote some test for request_info and response. We found that there were many 
+other information of request and response header needed to be parsed. We updated them and added several flags. 
+
+2.28
+We finished handling connect and began to study how cache work and design the struture of cache. We also finished Makefile.
+
+3.1 
+We finished handling post method and update receive manner when socket receive request and response. We also 
+finished cache but haven't tested it.
+
+3.2 
+We implemented handleGet() method using cache and also added logfile part in code.
+
+3.3 
+We found that there were some issues in time conversion. We did more study and fixed these issues.
+
+3.4
+We added multi-thread and completed logFile writing. We tried to test our post and connect and found some bugs. Therefore, we
+rewrote more unit tests to clarify where the issue came from. We found string size is wrong when we try to convert 
+vector char to string. We fixed this issue.
+
+3.6
+We tested get method as well as cache. Through communication with TA, we found that there are some issues in 
+cache policy. We didn't check request's cache control. And the order of justify time validation also had a little
+issue. We fixed them.
+
+3.7
+We wrote more unit tests and tested more get connect and post case. We tested time checking and revalidtion mechanism's server
+correctness. And fixed several bugs.
+
+3.9
+We finished docker configuration and ran it in docker. We also finished deamon modification and then submitted it.
+
+
+Exception :
+1. We have closed the socket_fd after finishing the corresponding work. 
+2. We have deleted all of the space allocated by new. 
+3. All of our class use std class to construct and there is no pointer in them. Which means the deconstruct will perform correctly. 

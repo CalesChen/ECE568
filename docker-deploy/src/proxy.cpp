@@ -1,0 +1,362 @@
+#include "proxy.h"
+// Add Parallel Execution
+#include <pthread.h>
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+std::ofstream logFile("/var/log/erss/proxy.log");
+//必须要用portNUM吗 这是谁的portnum？？？？？？？？？
+//502报错是啥玩意儿 what's bad gateway？？？？？
+//如果contentlength跟实际不match 在哪check？报什么错？
+void Proxy::handleProxy(int capacity){
+	//create a socket to connect with client, return this socket's id
+    //int capacity = atoi(argv[1]);
+    Cache s(capacity, logFile);
+    Cache * cache = &s;
+    Helper h;
+	int server_fd = h.server_start(portNum);
+    if(server_fd == -1){
+        pthread_mutex_lock(&mutex);
+        logFile << "(no-id): ERROR in creating socket for proxy to accept"<<endl;
+        pthread_mutex_unlock(&mutex);
+    }
+	int thread_id = 0;
+	//get client id that accpeted by proxy successfully
+	while(1){
+		std::string server_ip;
+		int client_fd = h.server_accept(server_fd,&server_ip);
+		if(client_fd == -1){
+            pthread_mutex_lock(&mutex);
+            logFile<< "ERROR in connecting client"<<endl;
+            pthread_mutex_unlock(&mutex);
+        	continue;
+		}
+        pthread_t thread;
+        // The Parameter and thread_ID must be unique for every thread. So lock these.
+        pthread_mutex_lock(&mutex);
+        Parameter * parameter = new Parameter(server_fd, client_fd, thread_id, server_ip, cache);
+        thread_id++;
+        pthread_mutex_unlock(&mutex);
+		//handleReq(server_fd,client_fd,thread_id,server_ip, cache);
+        pthread_create(&thread, NULL, handleReq, parameter);
+        //Every time After an iteration, I need to close the fd
+        //close(client_fd);		
+	}
+}
+
+void * Proxy::handleReq(void * para){
+    Parameter * p = (Parameter *) para;
+    int server_fd = p->server_fd;
+    int client_fd = p->client_fd;
+    std::string ip = p->ip;
+    Cache * cache = p->cache;
+    int thread_id = p->thread_id;
+	 //std::vector<char> ori_request(1, 0);
+	 //receive original message
+	 int index = 0;
+     Helper h;
+	 //int size_req = h.recv_message(client_fd,&ori_request,false);
+	 char ori_request[65535] = {0};
+     int size_req = recv(client_fd, ori_request, sizeof(ori_request), 0);
+     cout<<"The Request is "<<size_req<<endl;
+     if(size_req == 0){
+         return NULL;
+     }
+     //convert it  to string and parse it
+	 std::string request(ori_request);
+     cout<<request<<endl;
+    //  string temp(ori_request.begin(), ori_request.end());
+	//  request.insert(request.begin(),ori_request.begin(),ori_request.end());
+	 //需不需要delete？？？？？？？
+	 request_info * parsedRequest = new request_info(request);
+	 //logfile可不可以改？？？？？？？？？
+	 std::string method = parsedRequest->method;
+     
+     pthread_mutex_lock(&mutex);
+	 logFile << thread_id << ": \"" << parsedRequest->request_line << "\" from "<< ip << " @ " << getCurrTime().append("\0");
+     pthread_mutex_unlock(&mutex);
+
+     cout<<"The Method is "<<method<<endl;
+	int oriServer_fd = connectOriginalServer(parsedRequest);
+     if(method == "GET"){
+	 	//####################
+        cout<<"In GET"<<endl;
+	 	handleGet(client_fd, oriServer_fd,thread_id, parsedRequest, cache);
+	 } else if(method == "POST"){
+	 	//##############
+	 	handlePost(client_fd,oriServer_fd, thread_id, parsedRequest);
+	 } else if(method == "CONNECT"){ 
+	 	//##############
+        cout<<method<<endl;
+	 	handleConnect(client_fd, oriServer_fd, thread_id);
+
+        pthread_mutex_lock(&mutex);
+        logFile<< thread_id << ": Tunnel closed"<<endl;
+        pthread_mutex_unlock(&mutex);
+	 } else {
+         const char * msg = "HTTP/1.1 400 Bad Request";
+         send(client_fd,msg,sizeof(msg),MSG_NOSIGNAL);
+         pthread_mutex_lock(&mutex);
+         logFile << thread_id << ": Responding \"HTTP/1.1 400 Bad Request\"" << std::endl;
+         pthread_mutex_unlock(&mutex);
+         
+     }
+     delete parsedRequest;
+     delete p;
+     close(oriServer_fd);
+     close(client_fd);
+     return NULL;
+}
+
+int Proxy::connectOriginalServer(request_info * parsedRequest){
+    Helper h;
+    //cout<<parsedRequest->request<<endl;
+    //cout<<parsedRequest->host<<endl<<parsedRequest->port<<endl;
+	int oriServer_fd = h.client_start((parsedRequest->host).c_str(), (parsedRequest->port).c_str());
+    //int oriServer_fd = h.client_start("baidu.com", (parsedRequest->port).c_str());
+	return oriServer_fd;
+}
+
+std::string Proxy::getCurrTime(){
+	time_t now =time(0);
+	const char * data = ctime(&now);
+	struct tm * gm =gmtime(&now);
+	data = asctime(gm);
+	return data;
+}
+
+//**********Ke Chen's Code Start****************//
+
+void Proxy::handleGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache* cache){
+    Response* temp;
+    //Response* temp = cache->getCache(request->uri, server_fd, thread_id, request->request_line);
+    //if request need to get resource from original server
+    if(request->CacheControl.find("no-store")!=std::string::npos){
+        temp = NULL;
+    } else{
+
+        // Lock when accessing the cache method.
+        pthread_mutex_lock(&mutex);
+        temp = cache->getCache(request->uri, server_fd, thread_id, request);
+        pthread_mutex_unlock(&mutex);
+        
+    }
+
+    // For no cache
+    
+    if(temp == NULL){
+        //logFile << thread_id << ": not in cache"<<endl;
+        //string request_temp(request->begin(), request->end());
+        //request_info request_t(request_temp);
+        pthread_mutex_lock(&mutex);
+        logFile << thread_id << ": Requesting \"" << request->request_line << "\" from "<< request->uri << endl;
+        pthread_mutex_unlock(&mutex);
+        //send(server_fd, request->request.c_str(), request->request.size(), 0);
+        send(server_fd, request->request.c_str(), request->request.size(), MSG_NOSIGNAL);
+        //cout<<request->request<<endl<<request->request.size()<<endl;
+        // THis function will receive the message and send it to the client. 
+        // I need more information for put the message into Cache
+        
+        Proxy::ServerGet(client_fd, server_fd, thread_id, request, cache);
+    }
+    // If I can find a match in the temp, I will just send the response?
+    else{
+        cout << temp->firstLine<<endl;
+        //send(client_fd, temp->response.c_str(), temp->response.size(), 0);
+        send(client_fd, temp->response.c_str(), temp->response.size(), MSG_NOSIGNAL);
+    }
+
+}
+void Proxy::ServerGet(int client_fd, int server_fd, int thread_id, request_info * request, Cache * cache){
+    vector<char> server_msg(1,0);
+    // Receive the First part
+    Helper h;
+    int server_msg_len = h.recv_message(server_fd, &server_msg, false);
+    cout<<server_msg_len<<endl;
+    // for(int i = 0 ; i < server_msg_len ; i ++){
+    //     cout<<server_msg[i];
+    // }
+    cout<<endl;
+    //No response
+    if(server_msg_len <= 1) return;
+    // Store the message to a string
+    string first_part(server_msg.begin(), server_msg.end());
+    cout<<"String"<<first_part;
+    Response resp(first_part);
+    //resp.parseResponse();
+    cout<<"Get_Thread_Id" << thread_id<<endl;
+    cout<<"FirstLine"<<resp.firstLine<<endl;
+    pthread_mutex_lock(&mutex);
+    logFile << thread_id << ": Received \"" << resp.firstLine<< " \" from " << request->uri<<endl;
+    pthread_mutex_unlock(&mutex);
+
+    bool isChunk = false;
+    int pos;
+    if((pos = first_part.find("chunked"))  != string::npos){
+        isChunk = true;
+    }
+    cout<<isChunk;
+    // Check if we need to add it into Cache
+    bool no_store = false;
+    if((pos = first_part.find("no-store")) != string::npos){
+        no_store = true;
+    }
+    cout<<no_store;
+    // If it is not Chunk, the first recv_message func will give back the right answer. 
+    if(isChunk){
+        server_msg_len = h.recv_message(server_fd, &server_msg, isChunk);
+    }else{
+        server_msg_len = h.recv_message(server_fd, &server_msg, isChunk);
+    }
+
+    cout<<server_msg.size()<<endl;
+    string all(server_msg.begin(), server_msg.end());
+    //cout<<all;
+    // If it is no 502 Bad Error, it will execute the following code
+    if(Proxy::Check502(all, client_fd, thread_id)){
+        cout<<send(client_fd, all.c_str(), all.size(), MSG_NOSIGNAL)<<endl;
+    
+
+        // Placeholder for adding to the cache
+
+        
+        Response resp_all(all);
+        
+        // Lock when accessing the cache method.
+        pthread_mutex_lock(&mutex);
+
+        cache->putCache(resp_all, request->uri, thread_id);
+        logFile<<thread_id<<": Responding \"" <<resp.firstLine << "\""<<endl;
+        
+        pthread_mutex_unlock(&mutex);
+    }
+    
+
+}
+
+void Proxy::handlePost(int client_fd, int server_fd, int thread_id, request_info * request){
+    
+    // The last parameter will help to avoid "send func" send exception. 
+    // We will handle it by the response of the server. 
+    cout<<request->request<<endl;
+
+    cout<<send(server_fd, request->request.c_str(), request->request.size(), MSG_NOSIGNAL)<<endl;
+    vector<char> response(1,0);
+    Helper h;
+    int response_len = h.recv_message(server_fd, &response, true);
+    cout<<"The Length is "<<response_len<<endl;
+    //string response_str(response.begin(), response.end());
+    if(response_len > 1){
+        // Which parameter trans in.
+        // response res;
+        // res.parseResponse();
+        //response_len = h.recv_message(server_fd, &response, false);
+        cout<<response_len<<endl;
+        std::string temp(response.begin(), response.begin() + response_len);
+        cout<<temp<<endl;
+        Response res(temp); 
+        //res.parseResponse();
+
+        // How to get the first line in the response?
+        pthread_mutex_lock(&mutex);
+        logFile << thread_id << ": Received \"" << res.firstLine << "\" from " << request->uri << endl;
+        pthread_mutex_unlock(&mutex);
+        send(client_fd, temp.c_str(), response_len, MSG_NOSIGNAL);
+
+        pthread_mutex_lock(&mutex);
+        logFile << thread_id << ": Responding \""<<res.firstLine<<endl;
+        pthread_mutex_unlock(&mutex);
+    }
+    else{
+        cout<<"Server Socket Closed\n";
+    }
+}
+
+void Proxy::handleConnect(int client_fd, int server_fd, int thread_id){
+    string msg = "HTTP/1.1 200 OK\r\n\r\n";
+    send(client_fd, msg.c_str() , msg.size(), MSG_NOSIGNAL);
+
+    pthread_mutex_lock(&mutex);
+    logFile << thread_id << ": Responding \"HTTP/1.1 200 OK\""<<endl;
+    pthread_mutex_unlock(&mutex);
+
+    fd_set fds;
+    int nfds = max(client_fd, server_fd) ;
+
+    bool flag = true;
+    while(flag){
+        FD_ZERO(&fds);
+        FD_SET(server_fd, &fds);
+        FD_SET(client_fd, &fds);
+        select(nfds + 1,&fds, NULL, NULL, NULL);
+        vector<int> fd_set_cs{client_fd, server_fd};
+
+        int len_recv;
+        int len_send;
+        //int i = 0;
+        for(int i = 0 ; i < 2 ; i ++){
+            //vector<char> msg2(65536,0);
+            char msg2[65536] = {0};
+            if(FD_ISSET(fd_set_cs[i], &fds)){
+                //len_recv = Proxy::recv_message(fd_set_cs[i], &msg2, false);
+                len_recv = recv(fd_set_cs[i], msg2, sizeof(msg2), MSG_NOSIGNAL);
+                if(len_recv <= 0){
+                    return;
+                }
+                //string temp(msg2.begin(), msg2.end());
+                // Check the len_send and len_recv
+                //len_send = send(fd_set_cs[1-i], temp.c_str(), len_recv, 0);
+                len_send = send(fd_set_cs[1-i], msg2, len_recv, MSG_NOSIGNAL);
+                // If all of the message is done.
+                if(len_send <=0){
+                    return;
+                }
+            }
+            //i++;
+        } 
+    }
+}
+
+bool Proxy::Check502(string all, int client_fd, int thread_id){
+    if(all.find("\r\n\r\n") == string::npos){
+        const char * badGateWay = "HTTP/1.1 502 Bad Gateway";
+        send(client_fd, badGateWay, sizeof(badGateWay), 0);
+        pthread_mutex_lock(&mutex);
+        logFile << thread_id << ": Responding "<<badGateWay<<endl;
+        pthread_mutex_unlock(&mutex);
+        return false;
+    }
+    return true;
+}
+
+
+// void Proxy::handleConnect(int client_fd, int server_fd, int id) {
+//   send(client_fd, "HTTP/1.1 200 OK\r\n\r\n", 19, 0);
+//   logFile << id << ": Responding \"HTTP/1.1 200 OK\"" << std::endl;
+
+//   fd_set readfds;
+//   int nfds = server_fd > client_fd ? server_fd + 1 : client_fd + 1;
+
+//   while (1) {
+//     FD_ZERO(&readfds);
+//     FD_SET(server_fd, &readfds);
+//     FD_SET(client_fd, &readfds);
+
+//     select(nfds, &readfds, NULL, NULL, NULL);
+//     int fd[2] = {server_fd, client_fd};
+//     int len;
+//     for (int i = 0; i < 2; i++) {
+//       char message[65536] = {0};
+//       if (FD_ISSET(fd[i], &readfds)) {
+//         len = recv(fd[i], message, sizeof(message), 0);
+//         if (len <= 0) {
+//           return;
+//         }
+//         else {
+//           if (send(fd[1 - i], message, len, 0) <= 0) {
+//             return;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }

@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  main:
+    build: ./src
+    user: root
+    command: bash -c "make && ./main"
+    volumes:
+      - ./logs:/var/log/erss
+      - ./src:/src
+    ports:
+      - "12345:12345"

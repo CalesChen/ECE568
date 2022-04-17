@@ -1,0 +1,205 @@
+1: "CONNECT home.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:32 2021
+0: "CONNECT aus5.mozilla.org:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:32 2021
+2: "CONNECT content-signature-2.cdn.mozilla.net:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:32 2021
+3: "CONNECT tracking.firefox.com.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:32 2021
+4: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:33 2021
+5: "CONNECT firefox.settings.services.mozilla.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:33 2021
+0: Responding "HTTP/1.1 200 OK"
+2: Responding "HTTP/1.1 200 OK"
+4: Responding "HTTP/1.1 200 OK"
+6: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:33 2021
+7: "CONNECT bookmarks-ssl.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:33 2021
+8: "GET http://addons.g-fox.cn/coba-webext.gif?action=disconnect&random=0.017610977681396522 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:33 2021
+9: "CONNECT push.services.mozilla.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:33 2021
+10: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:33 2021
+5: Responding "HTTP/1.1 200 OK"
+11: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:33 2021
+9: Responding "HTTP/1.1 200 OK"
+3: Responding "HTTP/1.1 200 OK"
+8 : not in cache
+8: Requesting "GET http://addons.g-fox.cn/coba-webext.gif?action=disconnect&random=0.017610977681396522 HTTP/1.1" from http://addons.g-fox.cn/coba-webext.gif?action=disconnect&random=0.017610977681396522 
+8: Received "HTTP/1.1 200 OK " from http://addons.g-fox.cn/coba-webext.gif?action=disconnect&random=0.017610977681396522 
+1: Responding "HTTP/1.1 200 OK"
+12: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:34 2021
+13: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:34 2021
+14: "CONNECT snippets.cdn.mozilla.net:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:34 2021
+15: "POST http://status.rapidssl.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:34 2021
+7: Responding "HTTP/1.1 200 OK"
+14: Responding "HTTP/1.1 200 OK"
+16: "POST http://status.rapidssl.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:35 2021
+17: "CONNECT entry.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:37 2021
+18: "GET http://adu.g-fox.cn/adu.gif?channelid=stub.firefox.com.cn&fxversion=79.0&ceversion=2020.6&ver=2_2&pk=%7Ba672c6dd-f658-47e3-a7ab-dc58bd14bd38%7D&uk=%7B28a3420c-9d96-4236-8adb-7d0594936cf4%7D&cehome=true&locale=zh-CN&age=956&default=false&defaultHttp=false&flash=&tracking=3&now=1615340318320 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:37 2021
+18 : not in cache
+18: Requesting "GET http://adu.g-fox.cn/adu.gif?channelid=stub.firefox.com.cn&fxversion=79.0&ceversion=2020.6&ver=2_2&pk=%7Ba672c6dd-f658-47e3-a7ab-dc58bd14bd38%7D&uk=%7B28a3420c-9d96-4236-8adb-7d0594936cf4%7D&cehome=true&locale=zh-CN&age=956&default=false&defaultHttp=false&flash=&tracking=3&now=1615340318320 HTTP/1.1" from http://adu.g-fox.cn/adu.gif?channelid=stub.firefox.com.cn&fxversion=79.0&ceversion=2020.6&ver=2_2&pk=%7Ba672c6dd-f658-47e3-a7ab-dc58bd14bd38%7D&uk=%7B28a3420c-9d96-4236-8adb-7d0594936cf4%7D&cehome=true&locale=zh-CN&age=956&default=false&defaultHttp=false&flash=&tracking=3&now=1615340318320 
+18: Received "HTTP/1.1 200 OK " from http://adu.g-fox.cn/adu.gif?channelid=stub.firefox.com.cn&fxversion=79.0&ceversion=2020.6&ver=2_2&pk=%7Ba672c6dd-f658-47e3-a7ab-dc58bd14bd38%7D&uk=%7B28a3420c-9d96-4236-8adb-7d0594936cf4%7D&cehome=true&locale=zh-CN&age=956&default=false&defaultHttp=false&flash=&tracking=3&now=1615340318320 
+18: Responding "HTTP/1.1 200 OK"
+19: "CONNECT offlintab.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+20: "CONNECT www.duba.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+17: Responding "HTTP/1.1 200 OK"
+21: "CONNECT b.zol-img.com.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+22: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+23: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+25: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+27: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+26: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+24: "CONNECT static.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+28: "CONNECT b.zol-img.com.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+29: "CONNECT fragment2.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+30: "CONNECT www.2du.net:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+31: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:38 2021
+32: "POST http://ocsp2.globalsign.com/gsorganizationvalsha2g2 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:39 2021
+29: Responding "HTTP/1.1 200 OK"
+25: Responding "HTTP/1.1 200 OK"
+24: Responding "HTTP/1.1 200 OK"
+22: Responding "HTTP/1.1 200 OK"
+27: Responding "HTTP/1.1 200 OK"
+23: Responding "HTTP/1.1 200 OK"
+26: Responding "HTTP/1.1 200 OK"
+20: Responding "HTTP/1.1 200 OK"
+19: Responding "HTTP/1.1 200 OK"
+22: Tunnel closed
+26: Tunnel closed
+27: Tunnel closed
+23: Tunnel closed
+33: "POST http://ocsp.globalsign.com/gsrsaovsslca2018 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:40 2021
+25: Tunnel closed
+21: Responding "HTTP/1.1 200 OK"
+28: Responding "HTTP/1.1 200 OK"
+34: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:40 2021
+35: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:40 2021
+30: Responding "HTTP/1.1 200 OK"
+36: "POST http://ocsp.sectigo.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:41 2021
+37: "CONNECT api2.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:42 2021
+20: Tunnel closed
+28: Tunnel closed
+21: Tunnel closed
+30: Tunnel closed
+38: "CONNECT www.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:42 2021
+37: Responding "HTTP/1.1 200 OK"
+37: Tunnel closed
+38: Responding "HTTP/1.1 200 OK"
+39: "CONNECT hectorstatic.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:45 2021
+40: "CONNECT sp1.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:45 2021
+41: "CONNECT sp2.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:45 2021
+40: Responding "HTTP/1.1 200 OK"
+41: Responding "HTTP/1.1 200 OK"
+39: Responding "HTTP/1.1 200 OK"
+42: "CONNECT publish-pic-cpu.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:46 2021
+43: "CONNECT publish-pic-cpu.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:46 2021
+44: "CONNECT publish-pic-cpu.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:46 2021
+45: "CONNECT publish-pic-cpu.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:46 2021
+46: "CONNECT publish-pic-cpu.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:46 2021
+47: "CONNECT publish-pic-cpu.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:46 2021
+48: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+49: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+50: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+51: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+52: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+53: "CONNECT passport.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+54: "CONNECT sp0.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+55: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+42: Responding "HTTP/1.1 200 OK"
+46: Responding "HTTP/1.1 200 OK"
+44: Responding "HTTP/1.1 200 OK"
+47: Responding "HTTP/1.1 200 OK"
+45: Responding "HTTP/1.1 200 OK"
+43: Responding "HTTP/1.1 200 OK"
+56: "CONNECT sp3.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:47 2021
+53: Responding "HTTP/1.1 200 OK"
+54: Responding "HTTP/1.1 200 OK"
+48: Responding "HTTP/1.1 200 OK"
+52: Responding "HTTP/1.1 200 OK"
+51: Responding "HTTP/1.1 200 OK"
+49: Responding "HTTP/1.1 200 OK"
+55: Responding "HTTP/1.1 200 OK"
+50: Responding "HTTP/1.1 200 OK"
+57: "POST http://ocsp2.globalsign.com/gsorganizationvalsha2g2 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:48 2021
+56: Responding "HTTP/1.1 200 OK"
+46: Tunnel closed
+44: Tunnel closed
+47: Tunnel closed
+58: "CONNECT www.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:48 2021
+45: Tunnel closed
+43: Tunnel closed
+58: Responding "HTTP/1.1 200 OK"
+49: Tunnel closed
+51: Tunnel closed
+55: Tunnel closed
+50: Tunnel closed
+59: "POST http://ocsp2.globalsign.com/gsorganizationvalsha2g2 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:49 2021
+60: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:38:49 2021
+48: Tunnel closed
+60 : not in cache
+60: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from http://httpbin.org/forms/post 
+60: Received "HTTP/1.1 200 OK " from http://httpbin.org/forms/post 
+61: "CONNECT download.api.bsb.baidu.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:03 2021
+61: Responding "HTTP/1.1 200 OK"
+62: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:04 2021
+63: "CONNECT sb.firefox.com.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:06 2021
+63: Responding "HTTP/1.1 200 OK"
+64: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:07 2021
+65: "CONNECT sbc.firefox.com.cn:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:09 2021
+65: Responding "HTTP/1.1 200 OK"
+66: "CONNECT shavar.services.mozilla.com:443 HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:11 2021
+66: Responding "HTTP/1.1 200 OK"
+67: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:12 2021
+53: Tunnel closed
+39: Tunnel closed
+6: Received "HTTP/1.1 502 Bad Gateway" from http://ocsp.digicert.com/ 
+6: Responding "HTTP/1.1 502 Bad Gateway
+68: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:34 2021
+69: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:34 2021
+70: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:35 2021
+71: "POST http://status.rapidssl.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:35 2021
+72: "POST http://status.rapidssl.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:36 2021
+7: Tunnel closed
+17: Tunnel closed
+73: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:42 2021
+36: Received "HTTP/1.1 408 Request Timeout" from http://ocsp.sectigo.com/ 
+36: Responding "HTTP/1.1 408 Request Timeout
+74: "POST http://ocsp.dcocsp.cn/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:42 2021
+41: Tunnel closed
+40: Tunnel closed
+54: Tunnel closed
+56: Tunnel closed
+60: Responding "HTTP/1.1 200 OK"
+38: Tunnel closed
+75: "GET http://httpbin.org/favicon.ico HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:50 2021
+75 : not in cache
+75: Requesting "GET http://httpbin.org/favicon.ico HTTP/1.1" from http://httpbin.org/favicon.ico 
+75: Received "HTTP/1.1 404 NOT FOUND " from http://httpbin.org/favicon.ico 
+58: Tunnel closed
+76: "POST http://httpbin.org/post HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:39:58 2021
+77: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:40:04 2021
+64: Received "HTTP/1.1 502 Bad Gateway" from http://ocsp.digicert.com/ 
+64: Responding "HTTP/1.1 502 Bad Gateway
+61: Tunnel closed
+78: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.200.112.165 @ Wed Mar 10 01:40:13 2021
+66: Tunnel closed
+14: Tunnel closed
+5: Tunnel closed
+8: Responding "HTTP/1.1 200 OK"
+68: Received "HTTP/1.1 502 Bad Gateway" from http://ocsp.digicert.com/ 
+68: Responding "HTTP/1.1 502 Bad Gateway
+10: Responding "HTTP/1.1 200 OK"
+10: Tunnel closed
+31: Responding "HTTP/1.1 200 OK"
+31: Tunnel closed
+75: Responding "HTTP/1.1 404 NOT FOUND"
+76: Received "HTTP/1.1 200 OK" from http://httpbin.org/post 
+76: Responding "HTTP/1.1 200 OK
+77: Received "HTTP/1.1 502 Bad Gateway" from http://ocsp.digicert.com/ 
+77: Responding "HTTP/1.1 502 Bad Gateway
+24: Tunnel closed
+19: Tunnel closed
+65: Tunnel closed
+29: Tunnel closed
+63: Tunnel closed
+42: Tunnel closed
+3: Tunnel closed
+4: Tunnel closed
+52: Tunnel closed
+0: Tunnel closed
+9: Tunnel closed
+1: Tunnel closed
+2: Tunnel closed
