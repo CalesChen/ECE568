@@ -1,0 +1,29 @@
+{% extends "users/base.html" %}
+{% block content %}
+    <h2>Your Task</h2>
+    {% for driver in drivers %}
+        <article class="media content-section">
+            <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ driver.ride.destination }} // </a>
+                <small class="text-muted">arrive at {{ driver.ride.arrival_time }} // </small>
+                <small class="text-muted">{{ driver.ride.passenger_number }} Passengers // </small>
+                <small class="text-muted">vehicle type is {{ driver.ride.vehicle_type }}</small>
+            </div>
+            
+            
+            <h2>Sharer</h2>
+            {% for pa in driver.ride.sharer.all %}
+                <a class="article-content">{{ pa.username }} // </a>
+            {% endfor %}
+            <h2>Special_Request</h2>
+            <p class="article-content">{{ driver.ride.special_request }}</p>
+            </div>
+            {% if driver.ride.status == 'confirmed' %}
+                <h2><a class="article-title" href="/driver_complete/{{driver.ride.id}}/", type = submit>Complete</a></h2>
+            {% else %}
+                <h2>Finish</h2>
+            {% endif %}
+        </article>
+    {% endfor %}
+{%endblock content%}

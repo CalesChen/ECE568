@@ -1,0 +1,47 @@
+{% extends "users/base.html" %}
+{% block content %}
+    <h2>Own Ride</h2>
+    {% for ride in ride_own %}
+        <article class="media content-section">
+            <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ ride.destination }} // </a>
+                <small class="text-muted">arrive at {{ ride.arrival_time }} // </small>
+                <small class="text-muted">{{ ride.passenger_number }} Passengers // </small>
+                <small class="text-muted">vehicle type is {{ ride.vehicle_type }}</small>
+            </div>
+            
+            
+            <h2>Sharer</h2>
+            {% for pa in ride.sharer.all %}
+                <a class="article-content">{{ pa.username }} // </a>
+            {% endfor %}
+            <h2>Special_Request</h2>
+            <p class="article-content">{{ ride.special_request }}</p>
+            </div>
+            {% if ride.status == 'open' %}
+                <h2><a class="article-title" href="/ride_request_modify/{{ride.id}}/">Modify</a></h2>
+            {% elif ride.status == 'confirmed'%}
+                <h2>Confirmed</h2>
+            {% else%}
+                <h2>Completed</h2>
+            {% endif %}
+        </article>
+    {% endfor %}
+    <h2>Share Ride</h2>
+    {% for ride in ride_share %}
+        <article class="media content-section">
+            <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ ride.destination }}</a>
+                <small class="text-muted">{{ ride.arrival_time }}</small>
+                <small class="text-muted">{{ ride.passenger_number }}</small>
+                <small class="text-muted">{{ ride.vehicle_type }}</small>
+            </div>
+            <h2><a class="article-title" href="#">Owner {{ ride.owner }}</a></h2>
+            <p class="article-content">{{ ride.sharer }}</p>
+            <p class="article-content">{{ ride.special_request }}</p>
+            </div>
+        </article>
+    {% endfor %}
+{%endblock content%}

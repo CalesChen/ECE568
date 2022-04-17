@@ -1,0 +1,27 @@
+{% extends "users/base.html" %}
+{% block content %}
+    <h2>Open Ride</h2>
+    {% for ride in rides %}
+        <article class="media content-section">
+            <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#"> Destination : {{ ride.destination }} // </a>
+                <small class="text-muted">arrive at {{ ride.arrival_time }} // </small>
+                <small class="text-muted">{{ ride.passenger_number }} Passengers // </small>
+                <small class="text-muted">vehicle type is {{ ride.vehicle_type }}</small>
+            </div>
+            
+            {% for pa in ride.sharer.all %}
+                <a class="article-content">{{ pa.username }} // </a>
+            {% endfor %}
+            
+            <p class="article-content">{{ ride.special_request }}</p>
+
+            {% if ride.status == 'open' %}
+                <h2><a class="article-title" href="{% url 'sharer_join' ride.id %}">Join</a></h2>
+            {% endif %}
+
+            </div>
+        </article>
+    {% endfor %}
+{%endblock content%}
