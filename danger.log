@@ -1,0 +1,37 @@
+3/17 2021
+Today we discussed the details of this project. Firstly, we talked about the table and the corresponding attribute that we need to add .
+Then we talked about many strategy to create the table. And In the end, we think we need Postion, Symbol, Account, Transactions, Deal and CancelTime. 
+We can combine different tables to get what we want. 
+
+
+3/22 2021
+
+Tody we began to construct the DataBase and Construct the Parser of the XML. For the DataBase, we will make every thread has its own DataBase connection, so that we can test the scalibility. For the Parser, we will use Xerces, which is suggested by Prof.Rogers. 
+
+For the SQL. Nontransaction and Work is different. We firstly use Nontransaction to run Select SQL while we found that it conflict with the Work and then it reports the error. 
+So both of the select and update sql has beed wrapped into the Work and execute them together.
+
+3/24 2021
+
+When we are using the Xerces, we encounted a problem that the API is very complicated but we know for sure that we will not use that much complicated functionality. After searching for the usable resources, we finally decide to only use the DOM related API and parse the XML to the customized Class. In our program, it is Create and Transaction.
+
+We found that we don't need a Postion Serial num as Position ID. So we combine the symbol name and the account Id as the Primary key, which will be more convienient and clear.
+
+3/27 2021
+Today we will write code for the Match Order. The Match order will perform every time there is a new request. So that every possible order will be matched. The Match will get the order and compare the price and time. And it will give the fair result after we match order(For earlier time, higher price).
+We left the test of the Match order as we need futher development.
+
+3/29 2021
+
+Today we have something that can not be solved. Which is the docker, the docker can not connect to the Database. 
+After consulting the team that consulting Prof. Rogers, we found the right solution.
+
+3/30 2021
+We found that our program has error in parallel running, which will cause the program broken. However, we can not solve it and we decide to consult
+Prof. Rogers. As we have checked all of our code and it shows that there is nothing wrong. 
+
+3/31 2021
+Prof. Rogers solved the problem. As Xercer Initialize function should be placed outside of the pthread create function. As API Document said that we should do this, but we did not figure out why we need to do this. However, the program now can run correctly. Great!
+Now we can submit our work. 
+
+ 
