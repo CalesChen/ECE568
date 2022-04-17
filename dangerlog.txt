@@ -1,0 +1,30 @@
+Danger log
+before 4.11
+we discussed about our protobuf and we almost make a final decision of our protobuf.
+
+4.12
+Today we talked about our structure of the AMAZON. We would like to seperate the front-end and the back-end because this seperation will give us more flexibility to
+test and fix our code. For the Front-end, we will use Django and for the back-end, we will use Java and gradle.
+
+4.15
+Today we discussed about our handler of our AMAZON server. Firstly, we believe we need to send an ACK ASAP if there is a message. Secondly, we believe we need to 
+Iterate over all of the repeated fields of our message to handle every request. Thirdly, we need to care about the multi thread behavior when we execute some method accessing some map. And We set the corresponding map as concurrentMap, which will help us avoid problematic behavior.
+
+4.16
+Today, we found that we need to care about the resend behavior. And we also thought that we need seperate server, front-end, upsListener as 3 different part of our server.
+For the fron-end, as we also want to check our username, so we need to seperate front-end into two different server. 
+
+4.18
+Today, we almost have finished our server and we plan to test it with UPS group. And actually, the serilization is correct and the package have been delievered. And in the process, we found that the inputstream and outputstream transport information in byte data. And we use the protocal to parse the information.
+
+4.20
+Today, we continue to test our server. And in this day we are trying to make it buy different packages and in different counts. And based on the test result, every thing is correct. And we begin to test our multi-thread.
+
+4.21
+Today we are focusing on the front-end. And we are considering shopping cart. Furthermore, we would like to make the user able to modify their profile as they want. And we want to make user validate their ups_Username before they begin their shopping, which is natural and reasonable. Because we think only when a user have a valid profile, they can begin their shopping or their goods will not be able to delivered correctly.
+
+4.22
+Today we are focusing on the resend. And we want to use Timer to achieve the resend. Because Timer can schedule a work and it can use the cancel method to cancel the corresponding work as they want. Furthermore, we also use a map to track these timers. 
+
+4.23
+Today we are refractoring our Front-end code. In Front-end, we added some feature than now user can receive email from our mainbox(790281847@qq.com). And for better recognization, we use a EMAIL_FROM = 'miniAmazonTeam<790281847@qq.com>' to express our email.

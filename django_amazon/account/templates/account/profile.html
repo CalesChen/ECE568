@@ -1,0 +1,45 @@
+{% extends "account/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <p class="mr-2">User: <strong>{{ user.username }}</strong></p>
+            </div>
+            <p class="mr-2"><strong>Profile:</strong><a class="ml-2" href="{% url 'account-profile-edit' %}">Edit profile</a></p>
+            <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+            <p>Email: {{ user.email }}</p>
+            <p class="mr-2"><strong>Optional Info:</strong>
+                {% if useraccount_initialized %}
+                    <a class="ml-2" href="{% url 'account-profile-optional-edit' %}">Edit optional info</a>
+                {% else %}
+                    <a class="ml-2" href="{% url 'account-profile-optional-edit' %}">Input phone, card, and ups username</a>
+                {% endif %}
+            </p>
+            {% if useraccount_initialized %}
+                <p>Phone: {{ useraccount.phone }}</p>
+                <p>Credit card: {{ useraccount.cardInfo }}</p>
+                <p>ups_account: {{ ups_username }}</p>
+            {% endif %}
+            <p class="mr-2"><strong>Addresses:</strong></p>
+            {% if addresses %}
+                {% for address in addresses %}
+                    <article class="media content-section">
+                        <div class="media-body">
+                            <div class="article-metadata">
+                                <p class="mr-2"><strong>{{ address.addressName }}</strong></p>
+                            </div>
+                            <p>Tag: {{address.tag}}</p>
+                            <p>Location: ({{ address.address_x }},{{ address.address_y }})</p>
+                        </div>
+                    </article>
+                    
+                {% endfor %}
+                <a class="ml-2" href="{% url 'account-profile-add-address' %}">Add a new Address</a>
+            {% else %}
+                <a class="ml-2" href="{% url 'account-profile-add-address' %}">Add a new Address</a>
+            {% endif %}
+        </div>
+        
+    </article>
+{% endblock content%}
